@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { tribes } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq, asc } from "drizzle-orm";
+import { translateForStorage } from "@/lib/translate";
 
 export async function GET() {
   try {
@@ -31,7 +32,15 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
-    const [item] = await db.insert(tribes).values(body).returning();
+    const translations = await translateForStorage(
+      body,
+      ["name", "excerpt"],
+      ["content"],
+    );
+    const [item] = await db
+      .insert(tribes)
+      .values({ ...body, translations })
+      .returning();
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {
     console.error("Failed to create tribe:", error);

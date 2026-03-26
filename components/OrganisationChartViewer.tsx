@@ -31,6 +31,7 @@ import {
 } from "@react-pdf-viewer/full-screen";
 import { printPlugin, RenderPrintProps } from "@react-pdf-viewer/print";
 import { getFilePlugin, RenderDownloadProps } from "@react-pdf-viewer/get-file";
+import { useTranslation } from "@/lib/i18n/use-translation";
 
 // CSS imports
 import "@react-pdf-viewer/core/lib/styles/index.css";
@@ -43,6 +44,8 @@ import "@react-pdf-viewer/print/lib/styles/index.css";
 const PDF_FILE = "/organisational-chart.pdf";
 
 export default function OrganisationChartPage() {
+  const { dict } = useTranslation();
+  const oc = dict.orgChart;
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -104,16 +107,15 @@ export default function OrganisationChartPage() {
                 <Network className="w-3.5 h-3.5 text-[#f4c430]" />
               </div>
               <span className="text-[11px] font-bold uppercase tracking-[.18em] text-[#f4c430]">
-                About / Organisation
+                {oc.subtitle}
               </span>
             </div>
             <h1 className="font-display font-bold text-white text-[clamp(26px,4vw,44px)] leading-tight tracking-tight mb-3">
-              Organisation Chart
+              {oc.title}
             </h1>
             <div className="w-14 h-[3px] rounded-full bg-[#f4c430] mb-4" />
             <p className="text-white/65 text-[15px] max-w-xl leading-relaxed">
-              Official organisational structure of the Tribal Research Institute
-              &amp; Training Centre, Government of Sikkim.
+              {oc.description}
             </p>
 
             {/* Action pills */}
@@ -124,7 +126,7 @@ export default function OrganisationChartPage() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-semibold border border-white/20 text-white/80 hover:bg-[#f4c430] hover:text-[#1a1550] hover:border-[#f4c430] transition-all duration-200"
               >
                 <Download className="w-3.5 h-3.5" />
-                Download PDF
+                {oc.downloadPdf}
               </a>
               <a
                 href={PDF_FILE}
@@ -133,7 +135,7 @@ export default function OrganisationChartPage() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[13px] font-semibold border border-white/20 text-white/80 hover:bg-white/10 transition-all duration-200"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
-                Open in New Tab
+                {oc.openNewTab}
               </a>
             </div>
           </motion.div>
@@ -158,14 +160,14 @@ export default function OrganisationChartPage() {
             </div>
             <div>
               <h2 className="font-display font-bold text-[#1a1550] text-[20px] leading-tight">
-                Official Organisation Chart
+                {oc.officialChart}
               </h2>
               <div
                 className="w-8 h-[3px] rounded-full mt-1.5"
                 style={{ background: "#f4c430" }}
               />
               <p className="text-[#1a1550]/50 text-[13px] mt-1">
-                Tribal Research Institute &amp; Training Centre, Sikkim
+                {oc.chartSubtitle}
               </p>
             </div>
           </div>
@@ -253,7 +255,7 @@ export default function OrganisationChartPage() {
             {/* Centre: label */}
             <div className="hidden sm:block">
               <span className="text-white/60 text-[12px] font-medium tracking-wide uppercase">
-                Organisation Chart — TRITC Sikkim
+                {oc.toolbarLabel}
               </span>
             </div>
 
@@ -366,10 +368,10 @@ export default function OrganisationChartPage() {
                       </div>
                       <div className="text-center">
                         <p className="font-display font-bold text-[#1a1550] text-[15px]">
-                          Loading Document
+                          {oc.loadingDocument}
                         </p>
                         <p className="text-[#1a1550]/40 text-[13px] mt-1">
-                          {Math.round(percentage)}% complete
+                          {Math.round(percentage)}% {oc.percentComplete}
                         </p>
                       </div>
                       {/* Progress bar */}
@@ -392,11 +394,10 @@ export default function OrganisationChartPage() {
                     </div>
                     <div>
                       <p className="font-display font-bold text-[#1a1550] text-[16px] mb-1">
-                        Unable to load PDF
+                        {oc.unableToLoad}
                       </p>
                       <p className="text-[#1a1550]/50 text-[13px] leading-relaxed max-w-xs">
-                        The document could not be displayed. Please try
-                        downloading it directly.
+                        {oc.unableToLoadDesc}
                       </p>
                     </div>
                     <a
@@ -406,7 +407,7 @@ export default function OrganisationChartPage() {
                       style={{ background: "#1077A6" }}
                     >
                       <Download className="w-4 h-4" />
-                      Download PDF
+                      {oc.downloadPdf}
                     </a>
                   </div>
                 )}
@@ -419,12 +420,12 @@ export default function OrganisationChartPage() {
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#f4c430]" />
               <span className="text-[12px] text-[#1a1550]/50 font-medium">
-                Government of Sikkim — Social Welfare Department
+                {oc.footerLabel}
               </span>
             </div>
             {isLoaded && (
               <span className="text-[12px] text-[#1077A6] font-semibold">
-                {totalPages} page{totalPages !== 1 ? "s" : ""}
+                {totalPages} {totalPages !== 1 ? oc.pages : oc.page}
               </span>
             )}
           </div>
@@ -439,15 +440,15 @@ export default function OrganisationChartPage() {
         >
           <span className="flex items-center gap-1.5">
             <ZoomIn className="w-3.5 h-3.5" />
-            Scroll to zoom
+            {oc.scrollToZoom}
           </span>
           <span className="flex items-center gap-1.5">
             <Maximize2 className="w-3.5 h-3.5" />
-            Click fullscreen for best viewing
+            {oc.fullscreenTip}
           </span>
           <span className="flex items-center gap-1.5">
             <Download className="w-3.5 h-3.5" />
-            Download for offline use
+            {oc.downloadTip}
           </span>
         </motion.div>
       </div>

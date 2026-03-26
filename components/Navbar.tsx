@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   ChevronDown,
@@ -15,30 +16,58 @@ import {
   ImageIcon,
   Mail,
   Accessibility,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation, langHref } from "@/lib/i18n/use-translation";
+import { locales, localeNames, type Locale } from "@/lib/i18n/config";
 
-const ABOUT_LINKS = [
-  { label: "About Us", href: "/about" },
-  { label: "Organisation Chart", href: "/about/organisation-chart" },
-  { label: "Who's Who", href: "/about/whos-who" },
-];
+function getNavData(
+  dict: ReturnType<typeof useTranslation>["dict"],
+  lang: string,
+) {
+  const ABOUT_LINKS = [
+    { label: dict.nav.aboutUs, href: langHref(lang, "/about") },
+    {
+      label: dict.nav.organisationChart,
+      href: langHref(lang, "/about/organisation-chart"),
+    },
+    { label: dict.nav.whosWho, href: langHref(lang, "/about/whos-who") },
+  ];
 
-const UPDATES_LINKS = [
-  { label: "Training & Workshop", href: "/updates/training-workshop" },
-  { label: "News and Events", href: "/updates/news-events" },
-  { label: "Activities", href: "/updates/activities" },
-  { label: "Circulars & Notifications", href: "/updates/circulars" },
-];
+  const UPDATES_LINKS = [
+    {
+      label: dict.nav.trainingWorkshop,
+      href: langHref(lang, "/updates/training-workshop"),
+    },
+    {
+      label: dict.nav.newsEvents,
+      href: langHref(lang, "/updates/news-events"),
+    },
+    { label: dict.nav.activities, href: langHref(lang, "/updates/activities") },
+    { label: dict.nav.circulars, href: langHref(lang, "/updates/circulars") },
+  ];
 
-const NAV_ITEMS = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "About", href: "#", icon: Info, dropdown: ABOUT_LINKS },
-  { label: "Tribes", href: "/tribes", icon: Users },
-  { label: "Updates", href: "#", icon: BookOpen, dropdown: UPDATES_LINKS },
-  { label: "Gallery", href: "/gallery", icon: ImageIcon },
-  { label: "Contact Us", href: "/contact", icon: Mail },
-] as const;
+  const NAV_ITEMS = [
+    { label: dict.nav.home, href: langHref(lang, "/"), icon: Home },
+    { label: dict.nav.about, href: "#", icon: Info, dropdown: ABOUT_LINKS },
+    { label: dict.nav.tribes, href: langHref(lang, "/tribes"), icon: Users },
+    {
+      label: dict.nav.updates,
+      href: "#",
+      icon: BookOpen,
+      dropdown: UPDATES_LINKS,
+    },
+    {
+      label: dict.nav.gallery,
+      href: langHref(lang, "/gallery"),
+      icon: ImageIcon,
+    },
+    { label: dict.nav.contactUs, href: langHref(lang, "/contact"), icon: Mail },
+  ] as const;
+
+  return { ABOUT_LINKS, UPDATES_LINKS, NAV_ITEMS };
+}
 
 const LOGOS = [
   { src: "/Emblem_of_India.png", alt: "Emblem of India", height: 80 },
@@ -118,12 +147,23 @@ function VDivider() {
 }
 
 export default function Navbar() {
+  const { lang, dict } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { NAV_ITEMS } = getNavData(dict, lang);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  // Track which mobile dropdowns are expanded
   const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>(
     {},
   );
+
+  const switchLang = (newLang: Locale) => {
+    if (newLang === lang) return;
+    // Replace the current locale prefix with the new one
+    const rest = pathname.replace(new RegExp(`^/${lang}`), "") || "/";
+    document.cookie = `locale=${newLang};path=/;max-age=${365 * 24 * 60 * 60};samesite=lax`;
+    router.push(`/${newLang}${rest}`);
+  };
 
   const toggleMobileDropdown = (label: string) => {
     setMobileExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -142,13 +182,30 @@ export default function Navbar() {
 
   return (
     <header className="w-full font-body sticky top-0 z-50 shadow-md">
-      <div className="bg-[#1077A6] text-white py-1.5 px-4 md:px-8 flex justify-end items-center">
+      <div className="bg-[#1077A6] text-white py-1.5 px-4 md:px-8 flex justify-end items-center gap-4">
+        <div className="flex items-center gap-1.5">
+          <Globe className="w-3.5 h-3.5 text-white/60" />
+          {locales.map((l) => (
+            <button
+              key={l}
+              onClick={() => switchLang(l)}
+              className={cn(
+                "text-[11px] tracking-wide px-2 py-0.5 rounded transition-colors duration-200",
+                l === lang
+                  ? "bg-[#f4c430] text-black font-bold"
+                  : "text-white/70 hover:text-[#f4c430]",
+              )}
+            >
+              {localeNames[l]}
+            </button>
+          ))}
+        </div>
         <Link
-          href="/screen-reader"
+          href={langHref(lang, "/screen-reader")}
           className="flex items-center gap-2 text-[11px] tracking-wide text-white/80 hover:text-[#f4c430] transition-colors duration-200"
         >
           <Accessibility className="w-3.5 h-3.5" />
-          Screen Reader Access
+          {dict.nav.screenReaderAccess}
         </Link>
       </div>
 
@@ -167,13 +224,13 @@ export default function Navbar() {
               <VDivider />
               <div>
                 <h1 className="font-display font-bold text-[#322880] text-2xl lg:text-2xl leading-tight tracking-tight whitespace-nowrap">
-                  Tribal Research Institute & Training Centre
+                  {dict.header.instituteName}
                 </h1>
                 <p className="text-[#322880] text-base lg:text-lg font-medium mt-1 tracking-wide">
-                  Social Welfare Department
+                  {dict.header.department}
                 </p>
                 <p className="text-[#322880] text-sm lg:text-base font-medium tracking-wide">
-                  Government of Sikkim
+                  {dict.header.government}
                 </p>
               </div>
             </div>
@@ -214,10 +271,10 @@ export default function Navbar() {
             </div>
             <div className="text-center border-t pt-2 mt-2 border-[#322880]/10">
               <h1 className="font-display font-bold text-[#322880] text-sm leading-tight px-2">
-                Tribal Research Institute & Training Centre
+                {dict.header.instituteName}
               </h1>
               <p className="text-[#322880] text-[10px] font-semibold mt-0.5 tracking-wide px-2">
-                Social Welfare Department, Government of Sikkim
+                {dict.header.shortDepartment}
               </p>
             </div>
           </div>
@@ -253,7 +310,7 @@ export default function Navbar() {
 
           <div className="md:hidden flex items-center justify-between py-1.5">
             <div className="text-white/70 text-xs font-medium tracking-wide select-none">
-              Navigation Menu
+              {dict.nav.navigationMenu}
             </div>
             <button
               className="flex items-center justify-center w-10 h-10 text-white bg-white/10 rounded-lg hover:bg-white/20 active:bg-white/30 transition-all duration-200 touch-manipulation"
@@ -372,13 +429,20 @@ export default function Navbar() {
   );
 }
 
+interface NavItemData {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+  dropdown?: { label: string; href: string }[];
+}
+
 function NavItem({
   item,
   active,
   onEnter,
   onLeave,
 }: {
-  item: (typeof NAV_ITEMS)[number];
+  item: NavItemData;
   active: boolean;
   onEnter: () => void;
   onLeave: () => void;

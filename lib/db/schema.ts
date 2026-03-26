@@ -36,6 +36,7 @@ export const heroSlides = pgTable("hero_slides", {
   statLabel: varchar("stat_label", { length: 100 }),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -47,6 +48,7 @@ export const dignitaries = pgTable("dignitaries", {
   image: text("image").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -71,6 +73,7 @@ export const tribes = pgTable("tribes", {
   gallery: jsonb("gallery").notNull().default("[]"),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -82,6 +85,7 @@ export const staff = pgTable("staff", {
   position: varchar("position", { length: 255 }).notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -93,6 +97,7 @@ export const galleryCategories = pgTable("gallery_categories", {
   description: text("description"),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -107,6 +112,7 @@ export const galleryImages = pgTable("gallery_images", {
   caption: text("caption"),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -127,6 +133,7 @@ export const pages = pgTable("pages", {
   slug: varchar("slug", { length: 100 }).notNull().unique(),
   title: varchar("title", { length: 255 }).notNull(),
   content: jsonb("content").notNull().default("{}"),
+  translations: jsonb("translations"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
@@ -141,6 +148,7 @@ export const updates = pgTable("updates", {
   image: text("image"),
   publishedAt: timestamp("published_at").defaultNow().notNull(),
   active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

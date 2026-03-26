@@ -5,19 +5,21 @@ import { motion, Variants } from "framer-motion";
 import { ArrowRight, MapPin, Building2, Mountain, Users } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslation, langHref } from "@/lib/i18n/use-translation";
 
 interface Dignitary {
   id: number;
   name: string;
   role: string;
   image: string;
+  translations?: { hi?: { name?: string; role?: string } } | null;
 }
 
-const SIKKIM_FACTS = [
-  { icon: MapPin, value: "7,096 km²", label: "Total Area" },
-  { icon: Users, value: "6,07,688", label: "Population (2011)" },
-  { icon: Mountain, value: "8,586 m", label: "Kangchenjunga Peak" },
-  { icon: Building2, value: "35%", label: "UNESCO Heritage Area" },
+const SIKKIM_FACT_DATA = [
+  { icon: MapPin, value: "7,096 km²", labelKey: "totalArea" as const },
+  { icon: Users, value: "6,07,688", labelKey: "population" as const },
+  { icon: Mountain, value: "8,586 m", labelKey: "kangchenjungaPeak" as const },
+  { icon: Building2, value: "35%", labelKey: "unescoArea" as const },
 ];
 
 const fadeUp: Variants = {
@@ -48,6 +50,8 @@ const fadeRight: Variants = {
 };
 
 export default function AboutSection() {
+  const { lang, dict } = useTranslation();
+  const d = dict.aboutSection;
   const [dignitaries, setDignitaries] = useState<Dignitary[]>([]);
 
   useEffect(() => {
@@ -70,7 +74,7 @@ export default function AboutSection() {
             viewport={{ once: true }}
             className="text-center text-[11px] font-bold uppercase tracking-[.18em] text-[#f4c430] mb-8"
           >
-            Distinguished Leadership
+            {d.distinguishedLeadership}
           </motion.p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
@@ -83,7 +87,19 @@ export default function AboutSection() {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                <DignitaryCard {...person} />
+                <DignitaryCard
+                  name={
+                    lang !== "en" && person.translations?.hi?.name
+                      ? person.translations.hi.name
+                      : person.name
+                  }
+                  role={
+                    lang !== "en" && person.translations?.hi?.role
+                      ? person.translations.hi.role
+                      : person.role
+                  }
+                  image={person.image}
+                />
               </motion.div>
             ))}
           </div>
@@ -98,40 +114,25 @@ export default function AboutSection() {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <SectionLabel icon={Mountain} text="Geography & Heritage" />
-            <SectionTitle>About Sikkim</SectionTitle>
+            <SectionLabel icon={Mountain} text={d.geographyHeritage} />
+            <SectionTitle>{d.aboutSikkim}</SectionTitle>
 
             <div className="space-y-4 text-[15px] text-[#1a1550]/80 leading-[1.85] mt-6">
+              <p>{d.sikkimPara1}</p>
               <p>
-                Sikkim, a state in India, is located in the northeastern part of
-                the country, within the eastern Himalayas. It stands as one of
-                the smallest states in India. Sikkim shares its borders with the
-                Tibet Autonomous Region of China to the north and northeast,
-                Bhutan to the southeast, the Indian state of West Bengal to the
-                south, and Nepal to the west. The capital is Gangtok, situated
-                in the southeastern part of the state.
+                {d.sikkimPara2.split(d.unescoWorldHeritage).length > 1 ? (
+                  <>
+                    {d.sikkimPara2.split(d.unescoWorldHeritage)[0]}
+                    <strong className="text-[#1a1550] font-semibold">
+                      {d.unescoWorldHeritage}
+                    </strong>
+                    {d.sikkimPara2.split(d.unescoWorldHeritage)[1]}
+                  </>
+                ) : (
+                  d.sikkimPara2
+                )}
               </p>
-              <p>
-                A part of the Eastern Himalaya, Sikkim is notable for its
-                biodiversity, including alpine and subtropical climates, as well
-                as being a host to Kangchenjunga, the highest peak in India and
-                the third highest on Earth. Notably, Khangchendzonga National
-                Park, situated within Sikkim&apos;s borders, holds the
-                prestigious status of being a{" "}
-                <strong className="text-[#1a1550] font-semibold">
-                  UNESCO World Heritage Site
-                </strong>
-                . Covering almost 35% of the state, this protected area
-                showcases remarkable natural beauty and ecological significance.
-              </p>
-              <p>
-                Long a sovereign political entity, Sikkim became a protectorate
-                of India in 1950 and an Indian state in 1975. Despite its small
-                size, Sikkim is of great political and strategic importance for
-                India because of its location along several international
-                boundaries. The state covers an area of 2,740 square miles
-                (7,096 sq km) and had a population of 607,688 as of 2011.
-              </p>
+              <p>{d.sikkimPara3}</p>
             </div>
           </motion.div>
 
@@ -154,18 +155,18 @@ export default function AboutSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#1077A6]/80 via-transparent to-transparent" />
               <div className="absolute bottom-5 left-5 right-5">
                 <p className="text-white font-display font-bold text-lg leading-tight">
-                  The Organic State of India
+                  {d.organicState}
                 </p>
                 <p className="text-[#f4c430] text-[12px] mt-1 tracking-wide">
-                  Northeast Himalayas · Gangtok Capital
+                  {d.northeastHimalayas}
                 </p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              {SIKKIM_FACTS.map((fact, i) => (
+              {SIKKIM_FACT_DATA.map((fact, i) => (
                 <motion.div
-                  key={fact.label}
+                  key={fact.labelKey}
                   custom={i}
                   variants={fadeUp}
                   initial="hidden"
@@ -180,7 +181,7 @@ export default function AboutSection() {
                     {fact.value}
                   </div>
                   <div className="text-[#1a1550]/50 group-hover:text-white/60 text-[11.5px] mt-1 tracking-wide transition-colors duration-300">
-                    {fact.label}
+                    {d[fact.labelKey]}
                   </div>
                 </motion.div>
               ))}
@@ -205,20 +206,20 @@ export default function AboutSection() {
             <div className="grid grid-cols-1 gap-4">
               <TRICard
                 number="01"
-                title="Research & Documentation"
-                description="Preservation of Tribal Community knowledge, oral traditions, and cultural practices through systematic documentation."
+                title={d.card01Title}
+                description={d.card01Desc}
                 accent="#f4c430"
               />
               <TRICard
                 number="02"
-                title="Training & Capacity Building"
-                description="Empowering tribal communities through training on laws, constitutional provisions, and socio-economic programs."
+                title={d.card02Title}
+                description={d.card02Desc}
                 accent="#f4c430"
               />
               <TRICard
                 number="03"
-                title="Grants & Financial Support"
-                description="Facilitating Grants-in-Aid under the Ministry of Tribal Affairs' 'Research and Mass Information' scheme."
+                title={d.card03Title}
+                description={d.card03Desc}
                 accent="#f4c430"
               />
             </div>
@@ -231,38 +232,25 @@ export default function AboutSection() {
             viewport={{ once: true }}
             className="order-1 lg:order-2"
           >
-            <SectionLabel icon={Building2} text="Our Institution" />
-            <SectionTitle>About Tribal Research Institute</SectionTitle>
+            <SectionLabel icon={Building2} text={d.aboutInstitute} />
+            <SectionTitle>{d.aboutTritc}</SectionTitle>
 
             <div className="space-y-4 text-[15px] text-[#1a1550]/80 leading-[1.85] mt-6">
               <p>
-                The Schemes of the Government of India reveals that, through the
-                Ministry of Tribal Affairs, Government of India has decided to
-                continue the scheme Grants-in-Aid to Tribal Research Institutes,
-                Sikkim as a component of the{" "}
-                <strong className="text-[#1a1550] font-semibold">
-                  &ldquo;Research and Mass Information&rdquo;
-                </strong>{" "}
-                scheme, with revised financial norms and identified
-                interventions.
+                {d.institutePara1.split(d.researchMassInfo).length > 1 ? (
+                  <>
+                    {d.institutePara1.split(d.researchMassInfo)[0]}
+                    <strong className="text-[#1a1550] font-semibold">
+                      &ldquo;{d.researchMassInfo}&rdquo;
+                    </strong>
+                    {d.institutePara1.split(d.researchMassInfo)[1]}
+                  </>
+                ) : (
+                  d.institutePara1
+                )}
               </p>
-              <p>
-                Identifying challenges in the field of socio-economic
-                development of Schedule Tribe&apos;s and understanding,
-                promoting, and preserving their culture become important when
-                formulating various developmental programs. The basic objectives
-                of the scheme are to strengthen Tribal Research Institute (TRI)
-                in the area of research and documentation (Preservation of
-                Tribal Community), training and capacity-building on
-                laws/constitutional provisions, capacity building of
-                functionaries and the Tribal representation on socio-economic
-                programs.
-              </p>
-              <p>
-                Grants will be given to Tribal Research Institute (TRI) set up
-                for various State Governments, keeping in view the considerable
-                percentage of Scheduled Tribe population in the State of Sikkim.
-              </p>
+              <p>{d.institutePara2}</p>
+              <p>{d.institutePara3}</p>
             </div>
 
             <motion.div
@@ -273,10 +261,10 @@ export default function AboutSection() {
               className="mt-8"
             >
               <Link
-                href="/about"
+                href={langHref(lang, "/about")}
                 className="group inline-flex items-center gap-2.5 bg-[#1077A6] hover:bg-[#f4c430] text-white hover:text-black px-6 py-3 rounded-lg text-[14px] font-semibold tracking-wide transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-[#f4c430]/25"
               >
-                Read More
+                {dict.common.readMore}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </motion.div>

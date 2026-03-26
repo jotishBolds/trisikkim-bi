@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { heroSlides } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq, asc } from "drizzle-orm";
+import { translateForStorage } from "@/lib/translate";
 
 export async function GET() {
   try {
@@ -32,7 +33,17 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const [slide] = await db.insert(heroSlides).values(body).returning();
+    const translations = await translateForStorage(body, [
+      "tag",
+      "headline",
+      "subtext",
+      "ctaLabel",
+      "statLabel",
+    ]);
+    const [slide] = await db
+      .insert(heroSlides)
+      .values({ ...body, translations })
+      .returning();
     return NextResponse.json({ success: true, data: slide }, { status: 201 });
   } catch (error) {
     console.error("Failed to create hero slide:", error);

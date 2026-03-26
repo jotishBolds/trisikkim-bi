@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { galleryImages } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { translateForStorage } from "@/lib/translate";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +15,11 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
-    const [item] = await db.insert(galleryImages).values(body).returning();
+    const translations = await translateForStorage(body, ["alt", "caption"]);
+    const [item] = await db
+      .insert(galleryImages)
+      .values({ ...body, translations })
+      .returning();
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {
     console.error("Failed to create gallery image:", error);

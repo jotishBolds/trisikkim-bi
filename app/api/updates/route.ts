@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { updates } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq, desc, and } from "drizzle-orm";
+import { translateForStorage } from "@/lib/translate";
 
 export async function GET(request: NextRequest) {
   try {
@@ -55,6 +56,11 @@ export async function POST(request: NextRequest) {
       active,
       publishedAt,
     } = body;
+    const translations = await translateForStorage(
+      { title, excerpt, content },
+      ["title", "excerpt"],
+      ["content"],
+    );
     const [item] = await db
       .insert(updates)
       .values({
@@ -65,6 +71,7 @@ export async function POST(request: NextRequest) {
         content,
         image,
         active,
+        translations,
         publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
       })
       .returning();

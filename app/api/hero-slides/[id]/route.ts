@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { heroSlides } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { translateForStorage } from "@/lib/translate";
 
 export async function PUT(
   request: NextRequest,
@@ -20,10 +21,23 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id: _id, createdAt: _ca, updatedAt: _ua, ...safeBody } = body;
+    const {
+      id: _id,
+      createdAt: _ca,
+      updatedAt: _ua,
+      translations: _tr,
+      ...safeBody
+    } = body;
+    const translations = await translateForStorage(safeBody, [
+      "tag",
+      "headline",
+      "subtext",
+      "ctaLabel",
+      "statLabel",
+    ]);
     const [updated] = await db
       .update(heroSlides)
-      .set(safeBody)
+      .set({ ...safeBody, translations })
       .where(eq(heroSlides.id, parseInt(id)))
       .returning();
 

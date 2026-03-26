@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { pages } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { translateText, translateHtml } from "@/lib/translate";
 
 export async function GET(
   request: NextRequest,
@@ -46,6 +47,22 @@ export async function PUT(
     const { slug } = await params;
     const body = await request.json();
 
+    // Translate page content for Hindi
+    const pageTitle = body.title || slug;
+    const contentObj = body.content || {};
+    const htmlContent =
+      typeof contentObj.content === "string" ? contentObj.content : "";
+
+    let translations: Record<string, Record<string, string>> | null = null;
+    try {
+      const hi: Record<string, string> = {};
+      if (pageTitle) hi.title = await translateText(pageTitle, "hi");
+      if (htmlContent) hi.content = await translateHtml(htmlContent, "hi");
+      if (Object.keys(hi).length > 0) translations = { hi };
+    } catch {
+      // translation failure is non-blocking
+    }
+
     // Upsert: create if not exists, update if exists
     const existing = await db
       .select()
@@ -58,8 +75,9 @@ export async function PUT(
         .insert(pages)
         .values({
           slug,
-          title: body.title || slug,
-          content: body.content || {},
+          title: pageTitle,
+          content: contentObj,
+          translations,
         })
         .returning();
       return NextResponse.json(
@@ -70,7 +88,7 @@ export async function PUT(
 
     const [updated] = await db
       .update(pages)
-      .set({ ...body, updatedAt: new Date() })
+      .set({ ...body, translations, updatedAt: new Date() })
       .where(eq(pages.slug, slug))
       .returning();
 

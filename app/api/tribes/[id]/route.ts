@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { tribes } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { translateForStorage } from "@/lib/translate";
 
 export async function GET(
   request: NextRequest,
@@ -57,6 +58,11 @@ export async function PUT(
       sortOrder,
       active,
     } = body;
+    const translations = await translateForStorage(
+      { name, excerpt, content },
+      ["name", "excerpt"],
+      ["content"],
+    );
     const [updated] = await db
       .update(tribes)
       .set({
@@ -70,6 +76,7 @@ export async function PUT(
         gallery: gallery ?? [],
         sortOrder,
         active,
+        translations,
         updatedAt: new Date(),
       })
       .where(eq(tribes.id, id))

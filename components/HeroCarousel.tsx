@@ -15,6 +15,11 @@ import {
   Leaf,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation, langHref } from "@/lib/i18n/use-translation";
+
+interface Translations {
+  hi?: Record<string, string>;
+}
 
 interface SlideData {
   id: number;
@@ -28,6 +33,7 @@ interface SlideData {
   accent: string;
   statValue: string;
   statLabel: string;
+  translations?: Translations | null;
 }
 
 const TAG_ICONS: Record<string, React.ElementType> = {
@@ -37,23 +43,6 @@ const TAG_ICONS: Record<string, React.ElementType> = {
   Users,
   Award,
 };
-
-const FALLBACK_SLIDES: SlideData[] = [
-  {
-    id: 1,
-    image: "/DJI_0057-scaled.jpg",
-    tag: "Heritage & Culture",
-    tagIcon: "Leaf",
-    headline: "Preserving the Living\nLegacy of Sikkim's Tribes",
-    subtext:
-      "Dedicated to the documentation, research, and celebration of the indigenous communities that define the cultural fabric of Sikkim.",
-    ctaLabel: "Explore Tribes",
-    ctaHref: "/tribes",
-    accent: "#f4c430",
-    statValue: "12+",
-    statLabel: "Tribal Communities",
-  },
-];
 
 const INTERVAL = 5500;
 
@@ -90,7 +79,23 @@ const fadeLeft: Variants = {
 };
 
 export default function HeroCarousel() {
-  const [slides, setSlides] = useState<SlideData[]>(FALLBACK_SLIDES);
+  const { lang, dict } = useTranslation();
+  const fallbackSlides: SlideData[] = [
+    {
+      id: 1,
+      image: "/DJI_0057-scaled.jpg",
+      tag: dict.hero.fallbackTag,
+      tagIcon: "Leaf",
+      headline: dict.hero.fallbackHeadline,
+      subtext: dict.hero.fallbackSubtext,
+      ctaLabel: dict.hero.fallbackCtaLabel,
+      ctaHref: "/tribes",
+      accent: "#f4c430",
+      statValue: dict.hero.fallbackStatValue,
+      statLabel: dict.hero.fallbackStatLabel,
+    },
+  ];
+  const [slides, setSlides] = useState<SlideData[]>(fallbackSlides);
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
@@ -107,8 +112,19 @@ export default function HeroCarousel() {
       .catch(() => {});
   }, []);
 
-  const slide = slides[current] || slides[0];
-  const TagIcon = TAG_ICONS[slide.tagIcon] || Leaf;
+  const rawSlide = slides[current] || slides[0];
+  const TagIcon = TAG_ICONS[rawSlide.tagIcon] || Leaf;
+
+  // Use stored translations from DB when available
+  const t = lang !== "en" ? rawSlide.translations?.hi : null;
+  const slide = {
+    ...rawSlide,
+    tag: t?.tag || rawSlide.tag,
+    headline: t?.headline || rawSlide.headline,
+    subtext: t?.subtext || rawSlide.subtext,
+    ctaLabel: t?.ctaLabel || rawSlide.ctaLabel,
+    statLabel: t?.statLabel || rawSlide.statLabel,
+  };
 
   const goTo = useCallback((idx: number, dir: number) => {
     setDirection(dir);
@@ -249,7 +265,7 @@ export default function HeroCarousel() {
                 className="flex items-center gap-4 flex-wrap"
               >
                 <Link
-                  href={slide.ctaHref}
+                  href={langHref(lang, slide.ctaHref)}
                   className="group flex items-center gap-2 px-6 py-3 rounded-lg text-[14px] font-semibold tracking-wide transition-all duration-300 shadow-lg hover:scale-105"
                   style={{
                     background: "#f4c430",

@@ -1,12 +1,5 @@
-import AboutSection from "@/components/AboutSection";
-import HeroCarousel from "@/components/HeroCarousel";
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return (
-    <>
-      <HeroCarousel />
-      {/* <QuickStats /> */}
-      <AboutSection />
-    </>
-  );
+  redirect("/en");
 }

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { ExternalLink, Users, Clock, Eye } from "lucide-react";
+import { useTranslation, langHref } from "@/lib/i18n/use-translation";
 
 const DEFAULT_LINKS = [
   { label: "National Tribal Research Portal", href: "https://tribal.nic.in" },
@@ -42,6 +43,7 @@ const linkVariant: Variants = {
 };
 
 export default function Footer() {
+  const { lang, dict } = useTranslation();
   const [visitors, setVisitors] = useState("—");
   const [lastUpdated, setLastUpdated] = useState("—");
   const [relatedLinks, setRelatedLinks] = useState(DEFAULT_LINKS);
@@ -98,7 +100,7 @@ export default function Footer() {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <SectionHeading>Related Links</SectionHeading>
+            <SectionHeading>{dict.footer.relatedLinks}</SectionHeading>
             <ul className="mt-5 space-y-[10px]">
               {relatedLinks.map((link, i) => (
                 <motion.li
@@ -149,14 +151,22 @@ export default function Footer() {
 
             <div>
               <p className="font-display font-bold text-[14px] leading-snug tracking-tight">
-                Tribal Research Institute
-                <br />
-                &amp; Training Centre
+                {dict.header.instituteName.split("&").length > 1 ? (
+                  <>
+                    {dict.header.instituteName.split("&")[0].trim()}
+                    <br />
+                    &amp; {dict.header.instituteName.split("&")[1].trim()}
+                  </>
+                ) : (
+                  dict.header.instituteName
+                )}
               </p>
               <p className="text-white/55 text-[12px] mt-1">
-                Social Welfare Department
+                {dict.header.department}
               </p>
-              <p className="text-white/45 text-[11px]">Government of Sikkim</p>
+              <p className="text-white/45 text-[11px]">
+                {dict.header.government}
+              </p>
             </div>
           </motion.div>
 
@@ -167,17 +177,17 @@ export default function Footer() {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <SectionHeading>Website Info</SectionHeading>
+            <SectionHeading>{dict.footer.websiteInfo}</SectionHeading>
             <div className="mt-5 space-y-4">
               <InfoRow
                 icon={<Users className="w-4 h-4" />}
-                label="Number of Visitors"
+                label={dict.footer.numberOfVisitors}
                 value={visitors}
               />
 
               <InfoRow
                 icon={<Clock className="w-4 h-4" />}
-                label="Last Updated"
+                label={dict.footer.lastUpdated}
                 value={lastUpdated}
               />
 
@@ -187,13 +197,13 @@ export default function Footer() {
                 </IconBox>
                 <div>
                   <p className="text-white/45 text-[10.5px] uppercase tracking-widest mb-0.5">
-                    Accessibility
+                    {dict.footer.accessibility}
                   </p>
                   <Link
-                    href="/screen-reader"
+                    href={langHref(lang, "/screen-reader")}
                     className="text-[13px] text-white/70 hover:text-black transition-colors font-medium group-hover:bg-[#f4c430] group-hover:px-2 group-hover:py-0.5 group-hover:-my-0.5 group-hover:rounded transition-all duration-200"
                   >
-                    Screen Reader Access
+                    {dict.footer.screenReaderAccess}
                   </Link>
                 </div>
               </div>
@@ -206,8 +216,7 @@ export default function Footer() {
             {/* Small yellow dot decoration */}
             <div className="absolute left-1/2 -top-[2px] transform -translate-x-1/2 w-12 h-[3px] bg-[#f4c430] rounded-b-full opacity-50" />
             <p className="text-white/50 text-[12px] tracking-wide">
-              Copyright &copy; 2026 Tribal Research Institute, Government of
-              Sikkim. All Rights Reserved.
+              {dict.footer.copyright}
             </p>
           </div>
         </div>

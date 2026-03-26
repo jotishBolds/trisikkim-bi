@@ -16,6 +16,7 @@ import {
   Zap,
   ScanLine,
 } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/use-translation";
 
 // ─── State shape ──────────────────────────────────────────────────
 type LineSpacing = "default" | "relaxed" | "loose";
@@ -97,6 +98,8 @@ function isDefault(s: A11yState) {
 
 // ─── Main component ───────────────────────────────────────────────
 export default function AccessibilityToolbar() {
+  const { dict } = useTranslation();
+  const a = dict.a11y;
   const [open, setOpen] = useState(false);
   const [prefs, setPrefs] = useState<A11yState>(DEFAULT);
   const [mounted, setMounted] = useState(false);
@@ -211,10 +214,10 @@ export default function AccessibilityToolbar() {
               </div>
               <div>
                 <p className="text-[12px] font-bold text-[#1a1550] leading-none">
-                  Accessibility
+                  {a.title}
                 </p>
                 <p className="text-[10px] text-[#1a1550]/40 mt-0.5">
-                  Adjust display preferences
+                  {a.subtitle}
                 </p>
               </div>
             </div>
@@ -231,7 +234,7 @@ export default function AccessibilityToolbar() {
             {/* ── 1. Font Size ── */}
             <Section
               icon={<CaseSensitive className="w-4 h-4" />}
-              title="Text Size"
+              title={a.fontSize}
             >
               <div className="flex items-center gap-3">
                 <button
@@ -275,7 +278,7 @@ export default function AccessibilityToolbar() {
             {/* ── 2. Line Spacing ── */}
             <Section
               icon={<AlignJustify className="w-4 h-4" />}
-              title="Line Spacing"
+              title={a.lineSpacing}
             >
               <div className="grid grid-cols-3 gap-1.5">
                 {(["default", "relaxed", "loose"] as LineSpacing[]).map((v) => (
@@ -286,10 +289,10 @@ export default function AccessibilityToolbar() {
                     aria-label={`Line spacing: ${v}`}
                   >
                     {v === "default"
-                      ? "Normal"
+                      ? a.normal
                       : v === "relaxed"
-                        ? "Relaxed"
-                        : "Loose"}
+                        ? a.relaxed
+                        : a.loose}
                   </SegBtn>
                 ))}
               </div>
@@ -298,7 +301,7 @@ export default function AccessibilityToolbar() {
             {/* ── 3. Letter Spacing ── */}
             <Section
               icon={<ScanLine className="w-4 h-4" />}
-              title="Letter Spacing"
+              title={a.letterSpacing}
             >
               <div className="grid grid-cols-3 gap-1.5">
                 {(["default", "wide", "wider"] as LetterSpacing[]).map((v) => (
@@ -309,10 +312,10 @@ export default function AccessibilityToolbar() {
                     aria-label={`Letter spacing: ${v}`}
                   >
                     {v === "default"
-                      ? "Normal"
+                      ? a.normal
                       : v === "wide"
-                        ? "Wide"
-                        : "Wider"}
+                        ? a.wide
+                        : a.wider}
                   </SegBtn>
                 ))}
               </div>
@@ -321,26 +324,26 @@ export default function AccessibilityToolbar() {
             {/* ── 4. Colour & Contrast ── */}
             <Section
               icon={<Palette className="w-4 h-4" />}
-              title="Colour & Contrast"
+              title={a.highContrast}
             >
               <div className="space-y-1.5">
                 <Toggle
-                  label="High Contrast"
-                  description="Sharpen colours for easier reading"
+                  label={a.highContrastLabel}
+                  description={a.highContrastDesc}
                   active={prefs.highContrast}
                   onClick={() => update({ highContrast: !prefs.highContrast })}
                   icon={<Contrast className="w-3.5 h-3.5" />}
                 />
                 <Toggle
-                  label="Grayscale"
-                  description="Remove all colour"
+                  label={a.grayscaleLabel}
+                  description={a.grayscaleDesc}
                   active={prefs.grayscale}
                   onClick={() => update({ grayscale: !prefs.grayscale })}
                   icon={<ScanLine className="w-3.5 h-3.5" />}
                 />
                 <Toggle
-                  label="Invert Colours"
-                  description="Reverse light and dark"
+                  label={a.invertLabel}
+                  description={a.invertDesc}
                   active={prefs.invertColors}
                   onClick={() => update({ invertColors: !prefs.invertColors })}
                   icon={<Palette className="w-3.5 h-3.5" />}
@@ -349,11 +352,14 @@ export default function AccessibilityToolbar() {
             </Section>
 
             {/* ── 5. Reading Aids ── */}
-            <Section icon={<Link2 className="w-4 h-4" />} title="Reading Aids">
+            <Section
+              icon={<Link2 className="w-4 h-4" />}
+              title={a.highlightLinks}
+            >
               <div className="space-y-1.5">
                 <Toggle
-                  label="Highlight Links"
-                  description="Add yellow background to all links"
+                  label={a.highlightLinksLabel}
+                  description={a.highlightLinksDesc}
                   active={prefs.highlightLinks}
                   onClick={() =>
                     update({ highlightLinks: !prefs.highlightLinks })
@@ -361,8 +367,8 @@ export default function AccessibilityToolbar() {
                   icon={<Link2 className="w-3.5 h-3.5" />}
                 />
                 <Toggle
-                  label="Enhanced Focus"
-                  description="Larger focus ring for keyboard nav"
+                  label={a.enhancedFocusLabel}
+                  description={a.enhancedFocusDesc}
                   active={prefs.enhancedFocus}
                   onClick={() =>
                     update({ enhancedFocus: !prefs.enhancedFocus })
@@ -370,8 +376,8 @@ export default function AccessibilityToolbar() {
                   icon={<Focus className="w-3.5 h-3.5" />}
                 />
                 <Toggle
-                  label="Reduce Motion"
-                  description="Disable animations & transitions"
+                  label={a.reduceMotionLabel}
+                  description={a.reduceMotionDesc}
                   active={prefs.reduceMotion}
                   onClick={() => update({ reduceMotion: !prefs.reduceMotion })}
                   icon={<Zap className="w-3.5 h-3.5" />}
@@ -386,7 +392,7 @@ export default function AccessibilityToolbar() {
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-semibold border border-[#1077A6]/20 text-[#1077A6] hover:bg-[#1077A6]/8 disabled:opacity-35 disabled:cursor-not-allowed transition-colors"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              Reset All to Default
+              {a.resetAll}
             </button>
           </div>
         </div>
