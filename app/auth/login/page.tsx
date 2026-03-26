@@ -319,6 +319,15 @@ export default function LoginPage() {
                     <span className="absolute -bottom-0.5 left-0 w-0 h-[1.5px] bg-[#1077a6] group-hover:w-full transition-all duration-300" />
                   </Link>
                 </p>
+                <p className="text-center text-xs sm:text-sm text-[#1a1550]/35">
+                  <Link
+                    href="/"
+                    className="inline-flex items-center gap-1 text-[#1077a6] font-semibold hover:text-[#0e6590] transition-colors relative group"
+                  >
+                    ← Go to Home
+                    <span className="absolute -bottom-0.5 left-0 w-0 h-[1.5px] bg-[#1077a6] group-hover:w-full transition-all duration-300" />
+                  </Link>
+                </p>
               </div>
             </CardFooter>
           </Card>
