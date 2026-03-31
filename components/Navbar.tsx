@@ -28,11 +28,20 @@ function getNavData(
 ) {
   const ABOUT_LINKS = [
     { label: dict.nav.aboutUs, href: langHref(lang, "/about") },
+    // {
+    //   label: dict.nav.organisationChart,
+    //   href: langHref(lang, "/about/organisation-chart"),
+    // },
+    // { label: dict.nav.whosWho, href: langHref(lang, "/about/whos-who") },
     {
-      label: dict.nav.organisationChart,
-      href: langHref(lang, "/about/organisation-chart"),
+      label: dict.nav.listOfOfficers,
+      href: langHref(lang, "/about/list-of-officers"),
     },
-    { label: dict.nav.whosWho, href: langHref(lang, "/about/whos-who") },
+    {
+      label: dict.nav.listOfStaff,
+      href: langHref(lang, "/about/list-of-staff"),
+    },
+    ,
   ];
 
   const UPDATES_LINKS = [

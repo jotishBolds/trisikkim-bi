@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { galleryCategories, galleryImages } from "@/lib/db/schema";
+import { galleryVideos } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq, asc } from "drizzle-orm";
 import { translateForStorage } from "@/lib/translate";
@@ -10,32 +10,19 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const categories = await db
+    const videos = await db
       .select()
-      .from(galleryCategories)
-      .where(eq(galleryCategories.active, true))
-      .orderBy(asc(galleryCategories.sortOrder));
+      .from(galleryVideos)
+      .where(eq(galleryVideos.active, true))
+      .orderBy(asc(galleryVideos.sortOrder));
 
-    const images = await db
-      .select()
-      .from(galleryImages)
-      .where(eq(galleryImages.active, true))
-      .orderBy(asc(galleryImages.sortOrder));
+    console.log("[Gallery Videos GET] Found:", videos.length, "videos");
 
-    const data = categories.map((cat) => ({
-      id: cat.id,
-      name: cat.label,
-      slug: cat.slug,
-      description: cat.description,
-      translations: cat.translations,
-      images: images.filter((img) => img.categoryId === cat.id),
-    }));
-
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ success: true, data: videos });
   } catch (error) {
-    console.error("Failed to fetch gallery:", error);
+    console.error("Failed to fetch gallery videos:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch gallery." },
+      { success: false, error: "Failed to fetch gallery videos." },
       { status: 500 },
     );
   }
@@ -53,23 +40,23 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    if (!body.slug || !body.label) {
+    if (!body.title || !body.youtubeUrl) {
       return NextResponse.json(
-        { success: false, error: "Slug and label are required." },
+        { success: false, error: "Title and YouTube URL are required." },
         { status: 400 },
       );
     }
 
     const translations = await translateForStorage(body, [
-      "label",
+      "title",
       "description",
     ]);
 
     const [item] = await db
-      .insert(galleryCategories)
+      .insert(galleryVideos)
       .values({
-        slug: body.slug,
-        label: body.label,
+        title: body.title,
+        youtubeUrl: body.youtubeUrl,
         description: body.description || null,
         sortOrder: body.sortOrder ?? 0,
         active: body.active ?? true,
@@ -77,11 +64,13 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
+    console.log("[Gallery Videos POST] Created video:", item.id, item.title);
+
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {
-    console.error("Failed to create gallery category:", error);
+    console.error("Failed to create gallery video:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to create gallery category." },
+      { success: false, error: "Failed to create gallery video." },
       { status: 500 },
     );
   }

@@ -1,21 +1,12 @@
+// components/hero/HeroCarousel.tsx
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ArrowRight,
-  MapPin,
-  BookOpen,
-  Users,
-  Award,
-  Leaf,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTranslation, langHref } from "@/lib/i18n/use-translation";
+import { useTranslation } from "@/lib/i18n/use-translation";
 
 interface Translations {
   hi?: Record<string, string>;
@@ -24,29 +15,13 @@ interface Translations {
 interface SlideData {
   id: number;
   image: string;
-  tag: string;
-  tagIcon: string;
   headline: string;
-  subtext: string;
-  ctaLabel: string;
-  ctaHref: string;
-  accent: string;
-  statValue: string;
-  statLabel: string;
   translations?: Translations | null;
 }
 
-const TAG_ICONS: Record<string, React.ElementType> = {
-  Leaf,
-  MapPin,
-  BookOpen,
-  Users,
-  Award,
-};
-
 const INTERVAL = 5500;
 
-const slideVariants: Variants = {
+const imageVariants: Variants = {
   enter: (dir: number) => ({
     x: dir > 0 ? "100%" : "-100%",
     opacity: 0,
@@ -54,28 +29,23 @@ const slideVariants: Variants = {
   center: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
   },
   exit: (dir: number) => ({
     x: dir < 0 ? "100%" : "-100%",
     opacity: 0,
-    transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 };
 
-const contentContainer: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.35 } },
-};
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
-const fadeLeft: Variants = {
-  hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
+const textVariants: Variants = {
+  enter: { opacity: 0, y: 20 },
+  center: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: 0.2 },
+  },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
 };
 
 export default function HeroCarousel() {
@@ -83,16 +53,8 @@ export default function HeroCarousel() {
   const fallbackSlides: SlideData[] = [
     {
       id: 1,
-      image: "/DJI_0057-scaled.jpg",
-      tag: dict.hero.fallbackTag,
-      tagIcon: "Leaf",
-      headline: dict.hero.fallbackHeadline,
-      subtext: dict.hero.fallbackSubtext,
-      ctaLabel: dict.hero.fallbackCtaLabel,
-      ctaHref: "/tribes",
-      accent: "#f4c430",
-      statValue: dict.hero.fallbackStatValue,
-      statLabel: dict.hero.fallbackStatLabel,
+      image: "/tri.jpeg",
+      headline: dict.hero?.fallbackHeadline || "Welcome",
     },
   ];
   const [slides, setSlides] = useState<SlideData[]>(fallbackSlides);
@@ -113,17 +75,10 @@ export default function HeroCarousel() {
   }, []);
 
   const rawSlide = slides[current] || slides[0];
-  const TagIcon = TAG_ICONS[rawSlide.tagIcon] || Leaf;
-
-  // Use stored translations from DB when available
   const t = lang !== "en" ? rawSlide.translations?.hi : null;
   const slide = {
     ...rawSlide,
-    tag: t?.tag || rawSlide.tag,
     headline: t?.headline || rawSlide.headline,
-    subtext: t?.subtext || rawSlide.subtext,
-    ctaLabel: t?.ctaLabel || rawSlide.ctaLabel,
-    statLabel: t?.statLabel || rawSlide.statLabel,
   };
 
   const goTo = useCallback((idx: number, dir: number) => {
@@ -171,228 +126,102 @@ export default function HeroCarousel() {
 
   return (
     <section
-      className="relative w-full overflow-hidden"
-      style={{ height: "calc(100vh - 145px)", minHeight: 500, maxHeight: 780 }}
+      className="w-full"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-label="Hero image carousel"
     >
-      <AnimatePresence initial={false} custom={direction} mode="popLayout">
-        <motion.div
-          key={current}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          className={cn("absolute inset-0 slide-active")}
-        >
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="slide-bg absolute inset-0">
-              <Image
-                src={slide.image}
-                alt={slide.headline.replace("\n", " ")}
-                fill
-                priority={current === 0}
-                className="object-cover"
-                unoptimized
-              />
-            </div>
-
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1077A6]/90 via-[#1077A6]/60 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1077A6]/80 via-transparent to-transparent" />
-
-            <div
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-                backgroundRepeat: "repeat",
-                backgroundSize: "128px",
-              }}
+      <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px] overflow-hidden bg-gray-100">
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          <motion.div
+            key={current}
+            custom={direction}
+            variants={imageVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="absolute inset-0"
+          >
+            <Image
+              src={slide.image}
+              alt={slide.headline.replace("\n", " ")}
+              fill
+              priority={current === 0}
+              className="object-cover"
+              unoptimized
             />
-          </div>
+          </motion.div>
+        </AnimatePresence>
 
-          <div className="relative h-full max-w-7xl mx-auto px-6 md:px-10 flex flex-col justify-center">
-            <motion.div
-              key={`content-${current}`}
-              variants={contentContainer}
-              initial="hidden"
-              animate="visible"
-              className="max-w-2xl"
-            >
-              <motion.div
-                variants={fadeLeft}
-                className="flex items-center gap-2 mb-5"
-              >
-                <div
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[.14em] uppercase border"
-                  style={{
-                    background: `#f4c43018`,
-                    borderColor: `#f4c43040`,
-                    color: "#f4c430",
-                  }}
-                >
-                  <TagIcon className="w-3 h-3" />
-                  {slide.tag}
-                </div>
-              </motion.div>
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+          <span className="text-white text-xs sm:text-sm font-mono">
+            {String(current + 1).padStart(2, "0")} /{" "}
+            {String(slides.length).padStart(2, "0")}
+          </span>
+        </div>
+      </div>
 
-              <motion.h2
-                variants={fadeUp}
-                className="font-display font-bold text-white text-[clamp(28px,4.5vw,58px)] leading-[1.1] tracking-tight mb-5"
+      <div className="bg-[#1077A6] relative">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[#0d5f82]">
+          <motion.div
+            className="h-full bg-[#f4c430]"
+            style={{ width: `${progress}%` }}
+            transition={{ duration: 0 }}
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-5 sm:py-6 md:py-8">
+            {/* Title */}
+            <AnimatePresence mode="wait">
+              <motion.h1
+                key={current}
+                variants={textVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="font-display font-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight"
               >
                 {slide.headline.split("\n").map((line, i) => (
-                  <span key={i} className="block">
+                  <span key={i}>
                     {i === 1 ? (
-                      <span style={{ color: "#f4c430" }}>{line}</span>
+                      <span className="text-[#f4c430]"> {line}</span>
                     ) : (
                       line
                     )}
                   </span>
                 ))}
-              </motion.h2>
+              </motion.h1>
+            </AnimatePresence>
 
-              <motion.p
-                variants={fadeUp}
-                className="text-white/70 text-[15px] md:text-[16.5px] leading-relaxed mb-8 max-w-lg"
-              >
-                {slide.subtext}
-              </motion.p>
+            <div className="flex items-center gap-4 sm:gap-6">
+              <div className="flex items-center gap-2">
+                {slides.map((s, i) => (
+                  <button
+                    key={s.id}
+                    onClick={() => goTo(i, i > current ? 1 : -1)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    className="group p-1"
+                  >
+                    <span
+                      className={cn(
+                        "block rounded-full transition-all duration-300",
+                        i === current
+                          ? "w-8 h-2 bg-[#f4c430]"
+                          : "w-2 h-2 bg-white/40 group-hover:bg-white/70",
+                      )}
+                    />
+                  </button>
+                ))}
+              </div>
 
-              <motion.div
-                variants={fadeUp}
-                className="flex items-center gap-4 flex-wrap"
-              >
-                <Link
-                  href={langHref(lang, slide.ctaHref)}
-                  className="group flex items-center gap-2 px-6 py-3 rounded-lg text-[14px] font-semibold tracking-wide transition-all duration-300 shadow-lg hover:scale-105"
-                  style={{
-                    background: "#f4c430",
-                    color: "#1077A6",
-                  }}
-                >
-                  {slide.ctaLabel}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-                </Link>
-
-                <div className="flex items-center gap-3 px-5 py-2.5 rounded-lg bg-white/10 backdrop-blur-sm border border-white/15">
-                  <div>
-                    <div
-                      className="text-white font-display font-bold text-[22px] leading-none"
-                      style={{ color: "#f4c430" }}
-                    >
-                      {slide.statValue}
-                    </div>
-                    <div className="text-white/55 text-[11px] tracking-wide mt-0.5">
-                      {slide.statLabel}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="absolute right-0 top-0 bottom-0 w-[30%] pointer-events-none hidden lg:block">
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-[80px] opacity-20"
-          style={{ background: "#f4c430" }}
-        />
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`deco-${current}`}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              transition: { delay: 0.5, duration: 0.8 },
-            }}
-            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.3 } }}
-            className="absolute right-12 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3"
-          >
-            <div
-              className="text-[80px] font-display font-bold leading-none select-none"
-              style={{ color: "#f4c43015" }}
-            >
-              {String(current + 1).padStart(2, "0")}
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      <div className="absolute bottom-0 left-0 right-0">
-        <div className="h-[2px] bg-white/10 w-full">
-          <motion.div
-            className="h-full"
-            style={{ width: `${progress}%`, background: "#f4c430" }}
-            transition={{ duration: 0 }}
-          />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {slides.map((s, i) => (
-              <button
-                key={s.id}
-                onClick={() => goTo(i, i > current ? 1 : -1)}
-                aria-label={`Go to slide ${i + 1}`}
-                className="relative flex items-center justify-center"
-              >
-                <span
-                  className={cn(
-                    "block rounded-full transition-all duration-400",
-                    i === current ? "w-6 h-2" : "w-2 h-2 hover:bg-white/60",
-                  )}
-                  style={{
-                    background:
-                      i === current ? "#f4c430" : "rgba(255,255,255,0.35)",
-                  }}
-                />
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-4">
-            <span className="text-white/40 text-[12px] font-mono tracking-widest hidden sm:block">
-              {String(current + 1).padStart(2, "0")} /{" "}
-              {String(slides.length).padStart(2, "0")}
-            </span>
-
-            <div className="flex gap-2">
-              <NavButton onClick={prev} dir="prev" />
-              <NavButton onClick={next} dir="next" />
+              <div className="flex gap-2">
+                <NavButton onClick={prev} dir="prev" />
+                <NavButton onClick={next} dir="next" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="absolute right-6 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-2">
-        {slides.map((s, i) => (
-          <button
-            key={s.id}
-            onClick={() => goTo(i, i > current ? 1 : -1)}
-            aria-label={`Go to slide ${i + 1}`}
-            className={cn(
-              "relative w-12 h-8 rounded overflow-hidden border transition-all duration-300",
-              i === current
-                ? "border-[#f4c430] scale-110 shadow-lg"
-                : "border-white/20 opacity-50 hover:opacity-80 hover:scale-105",
-            )}
-          >
-            <Image
-              src={s.image}
-              alt={`Slide ${i + 1}`}
-              fill
-              className="object-cover"
-              unoptimized
-            />
-            {i === current && (
-              <div className="absolute inset-0 bg-[#f4c430]/20" />
-            )}
-          </button>
-        ))}
       </div>
     </section>
   );
@@ -407,16 +236,22 @@ function NavButton({
 }) {
   return (
     <motion.button
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.94 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
       onClick={onClick}
       aria-label={dir === "prev" ? "Previous slide" : "Next slide"}
-      className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center text-white hover:border-[#f4c430] hover:bg-[#f4c430]/20 transition-all duration-200"
+      className={cn(
+        "w-9 h-9 sm:w-10 sm:h-10 rounded-full",
+        "bg-white/10 border border-white/20",
+        "flex items-center justify-center text-white",
+        "hover:bg-white/20 hover:border-white/40",
+        "transition-all duration-200",
+      )}
     >
       {dir === "prev" ? (
-        <ChevronLeft className="w-4 h-4" />
+        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
       ) : (
-        <ChevronRight className="w-4 h-4" />
+        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
       )}
     </motion.button>
   );

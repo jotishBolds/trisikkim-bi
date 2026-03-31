@@ -5,22 +5,24 @@ import { auth } from "@/lib/auth";
 import { eq, asc, and } from "drizzle-orm";
 import { translateForStorage } from "@/lib/translate";
 
+
 export async function GET() {
   try {
     const data = await db
       .select()
       .from(staff)
-      .where(and(eq(staff.active, true), eq(staff.type, "staff")))
+      .where(and(eq(staff.active, true), eq(staff.type, "officer")))
       .orderBy(asc(staff.sortOrder));
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    console.error("Failed to fetch staff:", error);
+    console.error("Failed to fetch officers:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to fetch staff." },
+      { success: false, error: "Failed to fetch officers." },
       { status: 500 },
     );
   }
 }
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,13 +41,13 @@ export async function POST(request: NextRequest) {
     ]);
     const [item] = await db
       .insert(staff)
-      .values({ ...body, type: "staff", translations })
+      .values({ ...body, type: "officer", translations })
       .returning();
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {
-    console.error("Failed to create staff:", error);
+    console.error("Failed to create officer:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to create staff." },
+      { success: false, error: "Failed to create officer." },
       { status: 500 },
     );
   }

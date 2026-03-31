@@ -1,3 +1,4 @@
+// components/admin/HeroSlidesAdmin.tsx
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -20,43 +21,17 @@ import Image from "next/image";
 interface HeroSlide {
   id: number;
   image: string;
-  tag: string;
-  tagIcon: string;
   headline: string;
-  subtext: string;
-  ctaLabel: string;
-  ctaHref: string;
-  accent: string;
-  statValue: string | null;
-  statLabel: string | null;
   sortOrder: number;
   active: boolean;
 }
 
 const EMPTY: Omit<HeroSlide, "id"> = {
   image: "",
-  tag: "",
-  tagIcon: "Leaf",
   headline: "",
-  subtext: "",
-  ctaLabel: "",
-  ctaHref: "/",
-  accent: "#f4c430",
-  statValue: "",
-  statLabel: "",
   sortOrder: 0,
   active: true,
 };
-
-const ICONS = [
-  "Leaf",
-  "BookOpen",
-  "Users",
-  "Globe",
-  "Award",
-  "GraduationCap",
-  "Heart",
-];
 
 const inputCls =
   "h-9 text-xs border-[#1077a6]/[0.15] rounded-lg focus:border-[#1077a6] focus:ring-1 focus:ring-[#1077a6]/10 text-[#1a1550] placeholder:text-[#1a1550]/20";
@@ -180,95 +155,22 @@ export default function HeroSlidesAdmin() {
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className={labelCls}>Tag Text</label>
-                    <Input
-                      value={editing.tag || ""}
-                      onChange={(e) =>
-                        setEditing({ ...editing, tag: e.target.value })
-                      }
-                      placeholder="e.g. Preserving Heritage"
-                      className={inputCls}
-                    />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Tag Icon</label>
-                    <select
-                      value={editing.tagIcon || "Leaf"}
-                      onChange={(e) =>
-                        setEditing({ ...editing, tagIcon: e.target.value })
-                      }
-                      className={`w-full ${inputCls} px-3`}
-                    >
-                      {ICONS.map((i) => (
-                        <option key={i} value={i}>
-                          {i}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
                   <div className="sm:col-span-2">
-                    <label className={labelCls}>Headline</label>
+                    <label className={labelCls}>Page Title</label>
                     <textarea
                       value={editing.headline || ""}
                       onChange={(e) =>
                         setEditing({ ...editing, headline: e.target.value })
                       }
                       rows={2}
+                      placeholder="Enter page title (use line break for accent color on second line)"
                       className={`w-full resize-none ${inputCls} py-2 px-3 h-auto`}
                     />
+                    <p className="text-[10px] text-[#1a1550]/30 mt-1">
+                      Tip: Second line will be highlighted in accent color
+                    </p>
                   </div>
-                  <div className="sm:col-span-2">
-                    <label className={labelCls}>Subtext</label>
-                    <textarea
-                      value={editing.subtext || ""}
-                      onChange={(e) =>
-                        setEditing({ ...editing, subtext: e.target.value })
-                      }
-                      rows={2}
-                      className={`w-full resize-none ${inputCls} py-2 px-3 h-auto`}
-                    />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Button Label</label>
-                    <Input
-                      value={editing.ctaLabel || ""}
-                      onChange={(e) =>
-                        setEditing({ ...editing, ctaLabel: e.target.value })
-                      }
-                      className={inputCls}
-                    />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Button Link</label>
-                    <Input
-                      value={editing.ctaHref || ""}
-                      onChange={(e) =>
-                        setEditing({ ...editing, ctaHref: e.target.value })
-                      }
-                      className={inputCls}
-                    />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Accent Color</label>
-                    <div className="flex gap-2">
-                      <input
-                        type="color"
-                        value={editing.accent || "#f4c430"}
-                        onChange={(e) =>
-                          setEditing({ ...editing, accent: e.target.value })
-                        }
-                        className="w-9 h-9 rounded-md border border-[#1077a6]/[0.15] cursor-pointer"
-                      />
-                      <Input
-                        value={editing.accent || "#f4c430"}
-                        onChange={(e) =>
-                          setEditing({ ...editing, accent: e.target.value })
-                        }
-                        className={`${inputCls} flex-1`}
-                      />
-                    </div>
-                  </div>
+
                   <div>
                     <label className={labelCls}>Sort Order</label>
                     <Input
@@ -283,43 +185,23 @@ export default function HeroSlidesAdmin() {
                       className={inputCls}
                     />
                   </div>
-                  <div>
-                    <label className={labelCls}>Stat Value</label>
-                    <Input
-                      value={editing.statValue || ""}
-                      onChange={(e) =>
-                        setEditing({ ...editing, statValue: e.target.value })
-                      }
-                      placeholder="e.g. 200+"
-                      className={inputCls}
-                    />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Stat Label</label>
-                    <Input
-                      value={editing.statLabel || ""}
-                      onChange={(e) =>
-                        setEditing({ ...editing, statLabel: e.target.value })
-                      }
-                      placeholder="e.g. Publications"
-                      className={inputCls}
-                    />
+
+                  <div className="flex items-end">
+                    <label className="flex items-center gap-2 text-xs text-[#1a1550] pb-2">
+                      <input
+                        type="checkbox"
+                        checked={editing.active ?? true}
+                        onChange={(e) =>
+                          setEditing({ ...editing, active: e.target.checked })
+                        }
+                        className="w-3.5 h-3.5 rounded accent-[#1077a6]"
+                      />
+                      Active
+                    </label>
                   </div>
                 </div>
 
-                <label className="flex items-center gap-2 text-xs text-[#1a1550]">
-                  <input
-                    type="checkbox"
-                    checked={editing.active ?? true}
-                    onChange={(e) =>
-                      setEditing({ ...editing, active: e.target.checked })
-                    }
-                    className="w-3.5 h-3.5 rounded accent-[#1077a6]"
-                  />
-                  Active
-                </label>
-
-                <div className="flex gap-2">
+                <div className="flex gap-2 pt-2">
                   <Button
                     size="sm"
                     onClick={handleSave}
@@ -355,9 +237,7 @@ export default function HeroSlidesAdmin() {
               <tr className="bg-[#1077a6] text-white">
                 <th className="px-3 py-2.5 text-left font-semibold">#</th>
                 <th className="px-3 py-2.5 text-left font-semibold">Image</th>
-                <th className="px-3 py-2.5 text-left font-semibold">
-                  Tag / Headline
-                </th>
+                <th className="px-3 py-2.5 text-left font-semibold">Title</th>
                 <th className="px-3 py-2.5 text-left font-semibold hidden sm:table-cell">
                   Active
                 </th>
@@ -383,7 +263,7 @@ export default function HeroSlidesAdmin() {
                       <div className="relative w-12 h-8 rounded overflow-hidden bg-[#1077a6]/[0.05]">
                         <Image
                           src={s.image}
-                          alt={s.tag}
+                          alt={s.headline}
                           fill
                           className="object-cover"
                           unoptimized
@@ -396,9 +276,8 @@ export default function HeroSlidesAdmin() {
                     )}
                   </td>
                   <td className="px-3 py-2.5">
-                    <p className="font-semibold text-[#1a1550]">{s.tag}</p>
-                    <p className="text-[10px] text-[#1a1550]/30 truncate max-w-[180px]">
-                      {s.headline}
+                    <p className="font-semibold text-[#1a1550] truncate max-w-[200px]">
+                      {s.headline.replace("\n", " ")}
                     </p>
                   </td>
                   <td className="px-3 py-2.5 hidden sm:table-cell">

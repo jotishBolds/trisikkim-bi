@@ -19,17 +19,11 @@ export async function PUT(
     }
     const { id } = await params;
     const body = await request.json();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {
-      id: _id,
-      createdAt: _ca,
-      updatedAt: _ua,
-      translations: _tr,
-      ...safeBody
-    } = body;
+    const { id: _id, createdAt: _ca, translations: _tr, ...safeBody } = body;
     const translations = await translateForStorage(safeBody, [
       "name",
-      "position",
+      "designation",
+      "cadre",
     ]);
     const [updated] = await db
       .update(staff)

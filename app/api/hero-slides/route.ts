@@ -1,3 +1,4 @@
+// app/api/hero-slides/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { heroSlides } from "@/lib/db/schema";
@@ -33,17 +34,21 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const translations = await translateForStorage(body, [
-      "tag",
-      "headline",
-      "subtext",
-      "ctaLabel",
-      "statLabel",
-    ]);
+
+    // CR-10: Only translate headline
+    const translations = await translateForStorage(body, ["headline"]);
+
     const [slide] = await db
       .insert(heroSlides)
-      .values({ ...body, translations })
+      .values({
+        image: body.image,
+        headline: body.headline,
+        sortOrder: body.sortOrder || 0,
+        active: body.active ?? true,
+        translations,
+      })
       .returning();
+
     return NextResponse.json({ success: true, data: slide }, { status: 201 });
   } catch (error) {
     console.error("Failed to create hero slide:", error);

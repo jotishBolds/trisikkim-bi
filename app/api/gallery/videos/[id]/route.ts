@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { galleryCategories } from "@/lib/db/schema";
+import { galleryVideos } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { translateForStorage } from "@/lib/translate";
@@ -17,25 +17,29 @@ export async function PUT(
         { status: 401 },
       );
     }
+
     const { id } = await params;
     const body = await request.json();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {
-      id: _id,
-      createdAt: _ca,
-      updatedAt: _ua,
-      translations: _tr,
-      ...safeBody
-    } = body;
-    const translations = await translateForStorage(safeBody, [
-      "label",
+
+    const updateData: Record<string, unknown> = {};
+    if (body.title !== undefined) updateData.title = body.title;
+    if (body.youtubeUrl !== undefined) updateData.youtubeUrl = body.youtubeUrl;
+    if (body.description !== undefined)
+      updateData.description = body.description;
+    if (body.sortOrder !== undefined) updateData.sortOrder = body.sortOrder;
+    if (body.active !== undefined) updateData.active = body.active;
+
+    const translations = await translateForStorage(updateData, [
+      "title",
       "description",
     ]);
+
     const [updated] = await db
-      .update(galleryCategories)
-      .set({ ...safeBody, translations })
-      .where(eq(galleryCategories.id, parseInt(id)))
+      .update(galleryVideos)
+      .set({ ...updateData, translations })
+      .where(eq(galleryVideos.id, parseInt(id)))
       .returning();
+
     if (!updated) {
       return NextResponse.json(
         { success: false, error: "Not found." },
@@ -44,7 +48,7 @@ export async function PUT(
     }
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
-    console.error("Failed to update gallery category:", error);
+    console.error("Failed to update gallery video:", error);
     return NextResponse.json(
       { success: false, error: "Failed to update." },
       { status: 500 },
@@ -66,8 +70,8 @@ export async function DELETE(
     }
     const { id } = await params;
     const [deleted] = await db
-      .delete(galleryCategories)
-      .where(eq(galleryCategories.id, parseInt(id)))
+      .delete(galleryVideos)
+      .where(eq(galleryVideos.id, parseInt(id)))
       .returning();
     if (!deleted) {
       return NextResponse.json(
@@ -77,7 +81,7 @@ export async function DELETE(
     }
     return NextResponse.json({ success: true, data: deleted });
   } catch (error) {
-    console.error("Failed to delete gallery category:", error);
+    console.error("Failed to delete gallery video:", error);
     return NextResponse.json(
       { success: false, error: "Failed to delete." },
       { status: 500 },

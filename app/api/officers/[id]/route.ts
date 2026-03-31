@@ -1,7 +1,6 @@
-// app/api/hero-slides/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { heroSlides } from "@/lib/db/schema";
+import { staff } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { translateForStorage } from "@/lib/translate";
@@ -18,36 +17,30 @@ export async function PUT(
         { status: 401 },
       );
     }
-
     const { id } = await params;
     const body = await request.json();
-
-    // CR-10: Only translate headline
-    const translations = await translateForStorage(body, ["headline"]);
-
+    const { id: _id, createdAt: _ca, translations: _tr, ...safeBody } = body;
+    const translations = await translateForStorage(safeBody, [
+      "name",
+      "designation",
+      "cadre",
+    ]);
     const [updated] = await db
-      .update(heroSlides)
-      .set({
-        image: body.image,
-        headline: body.headline,
-        sortOrder: body.sortOrder || 0,
-        active: body.active ?? true,
-        translations,
-      })
-      .where(eq(heroSlides.id, parseInt(id)))
+      .update(staff)
+      .set({ ...safeBody, translations })
+      .where(eq(staff.id, parseInt(id)))
       .returning();
-
     if (!updated) {
       return NextResponse.json(
-        { success: false, error: "Slide not found." },
+        { success: false, error: "Not found." },
         { status: 404 },
       );
     }
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
-    console.error("Failed to update hero slide:", error);
+    console.error("Failed to update officer:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to update hero slide." },
+      { success: false, error: "Failed to update officer." },
       { status: 500 },
     );
   }
@@ -65,24 +58,22 @@ export async function DELETE(
         { status: 401 },
       );
     }
-
     const { id } = await params;
     const [deleted] = await db
-      .delete(heroSlides)
-      .where(eq(heroSlides.id, parseInt(id)))
+      .delete(staff)
+      .where(eq(staff.id, parseInt(id)))
       .returning();
-
     if (!deleted) {
       return NextResponse.json(
-        { success: false, error: "Slide not found." },
+        { success: false, error: "Not found." },
         { status: 404 },
       );
     }
     return NextResponse.json({ success: true, data: deleted });
   } catch (error) {
-    console.error("Failed to delete hero slide:", error);
+    console.error("Failed to delete officer:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to delete hero slide." },
+      { success: false, error: "Failed to delete officer." },
       { status: 500 },
     );
   }

@@ -20,6 +20,9 @@
     "aboutUs": "About Us",
     "organisationChart": "Organisation Chart",
     "whosWho": "Who's Who",
+
+    "listOfOfficers": "List of Officers",
+    "listOfStaff": "List of Staff",
     "tribes": "Tribes",
     "updates": "Updates",
     "trainingWorkshop": "Training & Workshop",
@@ -84,6 +87,19 @@
     "visitOffice": "Visit Our Office",
     "messageUs": "Message Us",
     "firstName": "First Name",
+    "verifyEmail": "Verify Email",
+    "getOtp": "Get OTP",
+    "enterOtp": "Enter OTP",
+    "otpSent": "OTP sent to your email",
+    "otpPlaceholder": "Enter 6-digit OTP",
+    "verifyOtp": "Verify OTP",
+    "verifying": "Verifying...",
+    "emailVerified": "Email verified",
+    "resendOtp": "Resend OTP",
+    "resendIn": "Resend in",
+    "seconds": "s",
+    "sendingOtp": "Sending OTP...",
+    "otpRequired": "Please verify your email first.",
     "lastName": "Last Name",
     "emailAddress": "Email Address",
     "yourMessage": "Your Message",
@@ -101,13 +117,16 @@
     "visitUs": "Visit Us"
   },
   "gallery": {
-    "subtitle": "Photo Gallery",
     "title": "Gallery",
-    "description": "A visual record of our programmes, cultural celebrations, and community engagements across the tribal communities of Sikkim.",
+    "subtitle": "Photo & Video Gallery",
     "allSections": "All Sections",
-    "photos": "photos",
-    "total": "total",
-    "loading": "Loading gallery..."
+    "loading": "Loading gallery...",
+    "photos": "Photos",
+    "noPhotos": "No photos available.",
+    "photoGallery": "Photo Gallery",
+    "videoGallery": "Video Gallery",
+    "noVideos": "No videos available yet.",
+    "videosCount": "Videos"
   },
   "tribes": {
     "subtitle": "Indigenous Communities",
@@ -146,10 +165,11 @@
     "relatedLinks": "Related Links",
     "websiteInfo": "Website Info",
     "numberOfVisitors": "Number of Visitors",
+
     "lastUpdated": "Last Updated",
     "accessibility": "Accessibility",
     "screenReaderAccess": "Screen Reader Access",
-    "copyright": "Copyright © 2026 Tribal Research Institute, Government of Sikkim. All Rights Reserved."
+    "copyright": "Copyright © 2026 Tribal Research and Training Institute, Government of Sikkim. All Rights Reserved."
   },
   "screenReader": {
     "title": "Screen Reader Access",
@@ -176,6 +196,9 @@
     "title": "Who's Who",
     "description": "Meet the dedicated team behind the Tribal Research Institute & Training Centre.",
     "searchPlaceholder": "Search by Name or Position...",
+    "designation": "Designation",
+    "cadre": "Cadre",
+    "email": "Email",
     "name": "Name",
     "position": "Position",
     "noStaff": "No staff found."
@@ -235,5 +258,25 @@
     "en": "EN",
     "hi": "हिन्दी",
     "switchLanguage": "Switch Language"
+  },
+  "listOfOfficers": {
+    "breadcrumb": "About / List of Officers",
+    "title": "List of Officers",
+    "description": "Officers of the Tribal Research and Training Institute, Sikkim.",
+    "countLabel": "Officers",
+    "searchPlaceholder": "Search by name, designation or cadre…",
+    "showing": "Showing",
+    "of": "of",
+    "officers": "officers"
+  },
+  "listOfStaff": {
+    "breadcrumb": "About / List of Staff",
+    "title": "List of Staff",
+    "description": "Staff members of the Tribal Research and Training Institute, Sikkim.",
+    "countLabel": "Staff Members",
+    "searchPlaceholder": "Search by name, designation or cadre…",
+    "showing": "Showing",
+    "of": "of",
+    "staffMembers": "staff members"
   }
 }

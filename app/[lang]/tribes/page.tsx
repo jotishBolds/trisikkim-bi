@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Users, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Users } from "lucide-react";
 import { useTranslation, langHref } from "@/lib/i18n/use-translation";
+import PageHero from "@/components/PageHero";
 
 interface TribeTranslations {
   hi?: { name?: string; excerpt?: string; content?: string };
@@ -50,80 +51,11 @@ export default function TribesPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f7fc] font-body">
-      <div className="relative bg-[#1077A6] overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#f4c430 1px, transparent 1px), linear-gradient(90deg, #f4c430 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(244,196,48,0.18),transparent)]" />
-        <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-[#1a1550]/30 to-transparent pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto px-5 md:px-10 py-10 md:py-14">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <motion.div
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6"
-            >
-              <div className="w-8 h-8 rounded-lg bg-[#f4c430]/15 border border-[#f4c430]/20 flex items-center justify-center">
-                <Users className="w-4 h-4 text-[#f4c430]" />
-              </div>
-              <span className="text-[11px] font-bold uppercase tracking-[.2em] text-[#f4c430]">
-                {dict.tribes.subtitle}
-              </span>
-            </motion.div>
-
-            <h1
-              className="font-display font-black text-white leading-[1.05] tracking-tight mb-5"
-              style={{ fontSize: "clamp(42px, 7vw, 80px)" }}
-            >
-              {dict.tribes.title}
-              <br />
-              <span className="text-[#f4c430]">
-                {dict.tribes.titleHighlight}
-              </span>
-            </h1>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-white/60 text-[16px] md:text-[18px] max-w-lg leading-relaxed"
-            >
-              {dict.tribes.description}
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="absolute right-10 top-1/2 -translate-y-1/2 hidden lg:block"
-          >
-            <div className="w-48 h-48 rounded-full border-2 border-[#f4c430]/10 flex items-center justify-center">
-              <div className="w-32 h-32 rounded-full border-2 border-[#f4c430]/15 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-[#f4c430]/10 border border-[#f4c430]/20 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-[#f4c430]/60" />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        <div
-          className="absolute bottom-0 left-0 right-0 h-12 bg-[#f8f7fc]"
-          style={{ clipPath: "ellipse(55% 100% at 50% 100%)" }}
-        />
-      </div>
+      <PageHero
+        badge={dict.tribes.subtitle}
+        title={`${dict.tribes.title} ${dict.tribes.titleHighlight}`}
+        icon={<Users className="w-3.5 h-3.5 text-[#f4c430]" />}
+      />
 
       <div className="max-w-7xl mx-auto px-5 md:px-10 pt-8 pb-20">
         {loading ? (
@@ -208,7 +140,7 @@ function TribeCard({
               src={tribe.image}
               alt={tribe.name}
               fill
-              className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               unoptimized
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
@@ -241,7 +173,6 @@ function TribeCard({
               {dict.tribes.noDescription}
             </p>
           )}
-
           <div className="mt-4 pt-4 border-t border-[#1077A6]/8 flex items-center justify-between">
             <span className="text-[12px] font-bold text-[#1077A6] group-hover:text-[#f4c430] transition-colors flex items-center gap-1.5">
               {dict.tribes.exploreCulture}

@@ -25,21 +25,12 @@ export const users = pgTable("users", {
 export const heroSlides = pgTable("hero_slides", {
   id: serial("id").primaryKey(),
   image: text("image").notNull(),
-  tag: varchar("tag", { length: 255 }).notNull(),
-  tagIcon: varchar("tag_icon", { length: 100 }).notNull().default("Leaf"),
   headline: text("headline").notNull(),
-  subtext: text("subtext").notNull(),
-  ctaLabel: varchar("cta_label", { length: 100 }).notNull(),
-  ctaHref: varchar("cta_href", { length: 255 }).notNull(),
-  accent: varchar("accent", { length: 20 }).notNull().default("#f4c430"),
-  statValue: varchar("stat_value", { length: 50 }),
-  statLabel: varchar("stat_label", { length: 100 }),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
   translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
-
 // ─── Dignitaries ─────────────────────────────────────────────────────
 export const dignitaries = pgTable("dignitaries", {
   id: serial("id").primaryKey(),
@@ -78,11 +69,15 @@ export const tribes = pgTable("tribes", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// ─── Staff (Who's Who) ──────────────────────────────────────────────
+// ─── Staff (Officers & Staff) ────────────────────────────────────────
 export const staff = pgTable("staff", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  position: varchar("position", { length: 255 }).notNull(),
+  designation: varchar("designation", { length: 255 }).notNull(), // renamed from position
+  cadre: varchar("cadre", { length: 255 }), // new, optional
+  email: varchar("email", { length: 255 }), // new, optional
+  phone: varchar("phone", { length: 50 }), // new, optional
+  type: varchar("type", { length: 20 }).notNull().default("staff"),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
   translations: jsonb("translations"),
@@ -113,6 +108,19 @@ export const galleryImages = pgTable("gallery_images", {
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
   translations: jsonb("translations"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ─── Gallery Videos (YouTube) ───────────────────────────────────────
+export const galleryVideos = pgTable("gallery_videos", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  youtubeUrl: text("youtube_url").notNull(),
+  description: text("description"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
+  publishedAt: timestamp("published_at").defaultNow().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -152,6 +160,17 @@ export const updates = pgTable("updates", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+// ─── OTP Tokens ─────────────────────────────────────────────────────
+export const otpTokens = pgTable("otp_tokens", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull(),
+  otp: varchar("otp", { length: 6 }).notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  verified: boolean("verified").notNull().default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type OtpToken = typeof otpTokens.$inferSelect;
 
 // ─── Type exports ────────────────────────────────────────────────────
 export type User = typeof users.$inferSelect;
@@ -167,3 +186,7 @@ export type ContactMessage = typeof contactMessages.$inferSelect;
 export type Page = typeof pages.$inferSelect;
 export type Update = typeof updates.$inferSelect;
 export type SiteSetting = typeof siteSettings.$inferSelect;
+export type GalleryVideo = typeof galleryVideos.$inferSelect;
+export type NewGalleryVideo = typeof galleryVideos.$inferInsert;
+
+export type NewStaff = typeof staff.$inferInsert;

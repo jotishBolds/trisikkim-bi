@@ -1,7 +1,6 @@
-// app/api/hero-slides/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { heroSlides } from "@/lib/db/schema";
+import { galleryCategories } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { translateForStorage } from "@/lib/translate";
@@ -22,32 +21,37 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    // CR-10: Only translate headline
-    const translations = await translateForStorage(body, ["headline"]);
+    // Build update payload with only editable fields
+    const updateData: Record<string, unknown> = {};
+    if (body.slug !== undefined) updateData.slug = body.slug;
+    if (body.label !== undefined) updateData.label = body.label;
+    if (body.description !== undefined)
+      updateData.description = body.description;
+    if (body.sortOrder !== undefined) updateData.sortOrder = body.sortOrder;
+    if (body.active !== undefined) updateData.active = body.active;
+
+    const translations = await translateForStorage(updateData, [
+      "label",
+      "description",
+    ]);
 
     const [updated] = await db
-      .update(heroSlides)
-      .set({
-        image: body.image,
-        headline: body.headline,
-        sortOrder: body.sortOrder || 0,
-        active: body.active ?? true,
-        translations,
-      })
-      .where(eq(heroSlides.id, parseInt(id)))
+      .update(galleryCategories)
+      .set({ ...updateData, translations })
+      .where(eq(galleryCategories.id, parseInt(id)))
       .returning();
 
     if (!updated) {
       return NextResponse.json(
-        { success: false, error: "Slide not found." },
+        { success: false, error: "Not found." },
         { status: 404 },
       );
     }
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
-    console.error("Failed to update hero slide:", error);
+    console.error("Failed to update gallery category:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to update hero slide." },
+      { success: false, error: "Failed to update." },
       { status: 500 },
     );
   }
@@ -65,24 +69,22 @@ export async function DELETE(
         { status: 401 },
       );
     }
-
     const { id } = await params;
     const [deleted] = await db
-      .delete(heroSlides)
-      .where(eq(heroSlides.id, parseInt(id)))
+      .delete(galleryCategories)
+      .where(eq(galleryCategories.id, parseInt(id)))
       .returning();
-
     if (!deleted) {
       return NextResponse.json(
-        { success: false, error: "Slide not found." },
+        { success: false, error: "Not found." },
         { status: 404 },
       );
     }
     return NextResponse.json({ success: true, data: deleted });
   } catch (error) {
-    console.error("Failed to delete hero slide:", error);
+    console.error("Failed to delete gallery category:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to delete hero slide." },
+      { success: false, error: "Failed to delete." },
       { status: 500 },
     );
   }

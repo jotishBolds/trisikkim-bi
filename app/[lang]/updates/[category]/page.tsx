@@ -12,6 +12,7 @@ import {
   Clock,
 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import PageHero from "@/components/PageHero";
 
 interface UpdateTranslations {
   hi?: { title?: string; excerpt?: string; content?: string };
@@ -36,7 +37,6 @@ const CATEGORY_COLORS: Record<string, string> = {
   circulars: "bg-amber-100 text-amber-700",
 };
 
-/* ── Skeleton card ── */
 function SkeletonCard() {
   return (
     <div className="bg-white rounded-2xl overflow-hidden border border-[#1077A6]/8 animate-pulse">
@@ -51,7 +51,6 @@ function SkeletonCard() {
   );
 }
 
-/* ── Card component ── */
 function UpdateCard({
   item,
   index,
@@ -71,10 +70,8 @@ function UpdateCard({
 }) {
   const badgeClass =
     CATEGORY_COLORS[item.category] ?? "bg-gray-100 text-gray-600";
-
   const words = item.content.replace(/<[^>]+>/g, "").split(/\s+/).length;
   const mins = Math.max(1, Math.round(words / 200));
-
   const tr = lang !== "en" ? item.translations?.hi : null;
   const tTitle = tr?.title || item.title;
   const tExcerpt = tr?.excerpt || item.excerpt || "";
@@ -90,7 +87,7 @@ function UpdateCard({
     >
       <div className="relative h-48 bg-gradient-to-br from-[#1077A6]/10 to-[#1a1550]/10 overflow-hidden flex-shrink-0">
         {item.image ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={item.image}
             alt={item.title}
@@ -123,18 +120,15 @@ function UpdateCard({
             {mins} {readTimeLabel}
           </span>
         </div>
-
         <h3 className="font-display font-bold text-[#1a1550] text-[16px] leading-snug mb-2 line-clamp-2 group-hover:text-[#1077A6] transition-colors">
           {tTitle}
         </h3>
-
         {item.excerpt && (
           <p className="text-[#1a1550]/55 text-[13.5px] leading-relaxed line-clamp-3 flex-1">
             {tExcerpt}
           </p>
         )}
-
-        <div className="mt-4 pt-4 border-t border-[#1077A6]/8 flex items-center justify-between">
+        <div className="mt-4 pt-4 border-t border-[#1077A6]/8">
           <span className="text-[12px] font-semibold text-[#1077A6] group-hover:text-[#f4c430] transition-colors">
             {readFullLabel} →
           </span>
@@ -144,7 +138,6 @@ function UpdateCard({
   );
 }
 
-/* ── Detail view ── */
 function DetailView({
   item,
   label,
@@ -164,10 +157,8 @@ function DetailView({
 }) {
   const badgeClass =
     CATEGORY_COLORS[item.category] ?? "bg-gray-100 text-gray-600";
-
   const words = item.content.replace(/<[^>]+>/g, "").split(/\s+/).length;
   const mins = Math.max(1, Math.round(words / 200));
-
   const tr = lang !== "en" ? item.translations?.hi : null;
   const tTitle = tr?.title || item.title;
   const tExcerpt = tr?.excerpt || item.excerpt || "";
@@ -188,7 +179,7 @@ function DetailView({
           className="flex items-center gap-2 text-[#1077A6] text-[13px] font-semibold hover:text-[#f4c430] transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          ← {label}
+          {label}
         </button>
       </div>
 
@@ -248,8 +239,8 @@ function DetailView({
             prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
             prose-a:text-[#1077A6] prose-a:no-underline hover:prose-a:underline
             prose-strong:text-[#1a1550]
-            prose-img:rounded-xl prose-img:shadow-md prose-img:border prose-img:border-[#1077A6]/10
-            prose-blockquote:border-[#f4c430] prose-blockquote:bg-[#f4c430]/5 prose-blockquote:rounded-r-lg prose-blockquote:py-1
+            prose-img:rounded-xl prose-img:shadow-md
+            prose-blockquote:border-[#f4c430] prose-blockquote:bg-[#f4c430]/5
             prose-ul:text-[#1a1550]/75 prose-ol:text-[#1a1550]/75
             prose-code:bg-[#1077A6]/8 prose-code:px-1.5 prose-code:rounded"
           dangerouslySetInnerHTML={{ __html: tContent }}
@@ -261,7 +252,7 @@ function DetailView({
             className="flex items-center gap-2 text-[#1077A6] text-[13px] font-semibold hover:text-[#f4c430] transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            ← {label}
+            {label}
           </button>
           <span className="text-[12px] text-[#1a1550]/35">
             {publishedLabel}{" "}
@@ -277,7 +268,6 @@ function DetailView({
   );
 }
 
-/* ── Main page ── */
 export default function UpdatesCategoryPage() {
   const params = useParams();
   const category = params.category as string;
@@ -314,41 +304,11 @@ export default function UpdatesCategoryPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f7fc] font-body">
-      <div className="bg-[#1077A6] relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#f4c430 1px, transparent 1px), linear-gradient(90deg, #f4c430 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 rounded bg-[#f4c430]/15 flex items-center justify-center">
-                <Newspaper className="w-3.5 h-3.5 text-[#f4c430]" />
-              </div>
-              <span className="text-[11px] font-bold uppercase tracking-[.18em] text-[#f4c430]">
-                {dict.nav.updates}
-              </span>
-            </div>
-            <h1 className="font-display font-bold text-white text-[clamp(26px,4vw,44px)] leading-tight tracking-tight mb-3">
-              {selected ? selectedTitle : label}
-            </h1>
-            {!selected && (
-              <p className="text-white/55 text-[15px] max-w-xl leading-relaxed">
-                {dict.updates.latestFrom}
-              </p>
-            )}
-          </motion.div>
-        </div>
-      </div>
+      <PageHero
+        badge={dict.nav.updates}
+        title={selected ? selectedTitle : label}
+        icon={<Newspaper className="w-3.5 h-3.5 text-[#f4c430]" />}
+      />
 
       <AnimatePresence mode="wait">
         {selected ? (

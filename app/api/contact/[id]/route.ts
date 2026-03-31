@@ -18,7 +18,7 @@ export async function PUT(
     }
     const { id } = await params;
     const body = await request.json();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { id: _id, createdAt: _ca, updatedAt: _ua, ...safeBody } = body;
     const [updated] = await db
       .update(contactMessages)

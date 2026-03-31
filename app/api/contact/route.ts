@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { contactMessages } from "@/lib/db/schema";
+import { contactMessages, otpTokens } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and } from "drizzle-orm";
 
 export async function GET() {
   try {
@@ -42,10 +42,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const [verifiedOtp] = await db
+      .select()
+      .from(otpTokens)
+      .where(and(eq(otpTokens.email, email), eq(otpTokens.verified, true)))
+      .limit(1);
+
+    if (!verifiedOtp) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Email not verified. Please verify your OTP first.",
+        },
+        { status: 403 },
+      );
+    }
+
     const [item] = await db
       .insert(contactMessages)
       .values({ firstName, lastName, email, message })
       .returning();
+
+    await db.delete(otpTokens).where(eq(otpTokens.email, email));
 
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {

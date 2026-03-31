@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ZoomIn, Images } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n/use-translation";
+import PageHero from "@/components/PageHero";
 
 interface GalleryImage {
   id: number;
@@ -23,15 +24,6 @@ interface GallerySection {
   images: GalleryImage[];
   translations?: { hi?: { label?: string; description?: string } } | null;
 }
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.06, duration: 0.5 },
-  }),
-};
 
 const gridItem = {
   hidden: { opacity: 0, scale: 0.94 },
@@ -108,62 +100,13 @@ export default function GalleryPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f7fc] font-body">
-      <div className="bg-[#1077A6] relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#f4c430 1px, transparent 1px), linear-gradient(90deg, #f4c430 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
+      <PageHero
+        badge={dict.gallery.subtitle}
+        title={dict.gallery.title}
+        icon={<Images className="w-3.5 h-3.5 text-[#f4c430]" />}
+      />
 
-        <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 rounded bg-[#f4c430]/15 flex items-center justify-center">
-                <Images className="w-3.5 h-3.5 text-[#f4c430]" />
-              </div>
-              <span className="text-[11px] font-bold uppercase tracking-[.18em] text-[#f4c430]">
-                {dict.gallery.subtitle}
-              </span>
-            </div>
-            <h1 className="font-display font-bold text-white text-[clamp(26px,4vw,44px)] leading-tight tracking-tight mb-3">
-              {dict.gallery.title}
-            </h1>
-            <p className="text-white/55 text-[15px] max-w-xl leading-relaxed">
-              {dict.gallery.description}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-5 mt-6">
-              {sections.map((s) => (
-                <div key={s.id} className="flex items-center gap-2">
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: "#f4c430" }}
-                  />
-                  <span className="text-white/50 text-[12.5px]">
-                    {s.images.length} {dict.gallery.photos}
-                  </span>
-                </div>
-              ))}
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-white/30" />
-                <span className="text-white/50 text-[12.5px]">
-                  {sections.reduce((a, s) => a + s.images.length, 0)}{" "}
-                  {dict.gallery.total}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
+      {/* Filter tabs */}
       <div className="sticky top-[var(--navbar-height,0)] z-30 bg-white border-b border-[#1077A6]/8 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-hide">
@@ -209,6 +152,7 @@ export default function GalleryPage() {
                 sectionIdx={realSectionIdx}
                 onOpen={openLightbox}
                 lang={lang}
+                dict={dict}
               />
             );
           })
@@ -330,11 +274,13 @@ function GallerySectionComp({
   sectionIdx,
   onOpen,
   lang,
+  dict,
 }: {
   section: GallerySection;
   sectionIdx: number;
   onOpen: (sIdx: number, iIdx: number) => void;
   lang: string;
+  dict: any;
 }) {
   const sectionName =
     (lang !== "en" && section.translations?.hi?.label) || section.name;
@@ -358,7 +304,7 @@ function GallerySectionComp({
             {sectionName}
           </h2>
           <p className="text-[#1a1550]/40 text-[12px]">
-            {section.images.length} photos
+            {section.images.length} {dict.gallery.photos}
           </p>
         </div>
       </div>
