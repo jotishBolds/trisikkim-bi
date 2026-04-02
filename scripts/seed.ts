@@ -51,46 +51,19 @@ async function seed() {
     .values([
       {
         image: "/gallery/tribal-festivals/1.jpg",
-        tag: "Preserving Heritage",
-        tagIcon: "Leaf",
         headline: "Tribal Research Institute\n& Training Centre",
-        subtext:
-          "Under the Government of Sikkim · Preserving the cultural heritage and empowering the tribal communities of Sikkim.",
-        ctaLabel: "Explore Our Work",
-        ctaHref: "/about",
-        accent: "#f4c430",
-        statValue: "4",
-        statLabel: "Tribal Communities",
         sortOrder: 0,
         active: true,
       },
       {
         image: "/gallery/janjatiya-gaurav/1.jpg",
-        tag: "Research & Documentation",
-        tagIcon: "BookOpen",
         headline: "Documenting Tribal\nHeritage & Knowledge",
-        subtext:
-          "Comprehensive research on the Lepcha, Bhutia, Limboo, and Tamang communities — their traditions, languages, and art forms.",
-        ctaLabel: "View Research",
-        ctaHref: "/about",
-        accent: "#4fd1c5",
-        statValue: "200+",
-        statLabel: "Publications",
         sortOrder: 1,
         active: true,
       },
       {
         image: "/gallery/exchange-visit/1.jpg",
-        tag: "Capacity Building",
-        tagIcon: "Users",
         headline: "Empowering Tribal\nCommunities",
-        subtext:
-          "Training programs, skill development workshops, and educational support for the tribal youth of Sikkim.",
-        ctaLabel: "Training Programs",
-        ctaHref: "/updates/training-workshop",
-        accent: "#f4c430",
-        statValue: "5000+",
-        statLabel: "Beneficiaries",
         sortOrder: 2,
         active: true,
       },
@@ -289,25 +262,25 @@ async function seed() {
   await db
     .insert(staff)
     .values([
-      { name: "Dr. A.B. Subba", position: "Director", sortOrder: 0 },
+      { name: "Dr. A.B. Subba", designation: "Director", sortOrder: 0 },
       {
         name: "Shri R.K. Sharma",
-        position: "Research Officer",
+        designation: "Research Officer",
         sortOrder: 1,
       },
       {
         name: "Smt. D. Lepcha",
-        position: "Administrative Officer",
+        designation: "Administrative Officer",
         sortOrder: 2,
       },
       {
         name: "Shri P. Tamang",
-        position: "Research Assistant",
+        designation: "Research Assistant",
         sortOrder: 3,
       },
       {
         name: "Smt. K. Bhutia",
-        position: "Documentation Officer",
+        designation: "Documentation Officer",
         sortOrder: 4,
       },
     ])

@@ -1,189 +1,467 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import dynamic from "next/dynamic";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  AlertCircle,
+  Save,
+  X,
+  Images,
+  Loader2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import ImageUpload from "@/components/admin/ImageUpload";
 import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, Users } from "lucide-react";
-import { useTranslation, langHref } from "@/lib/i18n/use-translation";
-import PageHero from "@/components/PageHero";
 
-interface TribeTranslations {
-  hi?: { name?: string; excerpt?: string };
-}
+const RichEditor = dynamic(() => import("@/components/admin/RichEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="border border-[#1077a6]/[0.12] rounded-lg p-3 text-xs text-[#1a1550]/25">
+      Loading editor...
+    </div>
+  ),
+});
 
-interface TribeData {
+interface TribeItem {
   id: string;
   name: string;
   image: string;
   excerpt: string;
-  accent?: string;
-  translations?: TribeTranslations | null;
+  content: string;
+  accent: string;
+  heroImage: string;
+  gallery: Array<{ url: string; label: string }>;
+  sortOrder: number;
+  active: boolean;
 }
 
-function SkeletonCard() {
-  return (
-    <div className="rounded-2xl overflow-hidden animate-pulse bg-white border border-[#1077A6]/8">
-      <div className="h-64 bg-gradient-to-br from-[#1077A6]/10 to-[#1a1550]/8" />
-      <div className="p-6 space-y-3">
-        <div className="h-6 w-2/3 bg-[#1a1550]/8 rounded-full" />
-        <div className="h-4 w-full bg-[#1a1550]/6 rounded-full" />
-        <div className="h-4 w-4/5 bg-[#1a1550]/6 rounded-full" />
-      </div>
-    </div>
-  );
-}
+const inputCls =
+  "h-9 text-xs border-[#1077a6]/[0.15] rounded-lg focus:border-[#1077a6] focus:ring-1 focus:ring-[#1077a6]/10 text-[#1a1550] placeholder:text-[#1a1550]/20";
+const labelCls = "text-[11px] font-medium text-[#1a1550]/40 mb-1 block";
 
-export default function TribesPage() {
-  const { lang, dict } = useTranslation();
-  const [tribes, setTribes] = useState<TribeData[]>([]);
+export default function TribesAdmin() {
+  const [items, setItems] = useState<TribeItem[]>([]);
+  const [error, setError] = useState("");
+  const [editing, setEditing] = useState<Partial<TribeItem> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/tribes")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) setTribes(d.data);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+  const fetch_ = useCallback(async () => {
+    try {
+      const r = await fetch("/api/tribes");
+      const d = await r.json();
+      if (d.success) setItems(d.data);
+      else setError(d.error);
+    } catch {
+      setError("Failed to load.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return (
-    <div className="min-h-screen bg-[#f8f7fc] font-body">
-      <PageHero
-        badge={dict.tribes.subtitle}
-        title={`${dict.tribes.title} ${dict.tribes.titleHighlight}`}
-        icon={<Users className="w-3.5 h-3.5 text-[#f4c430]" />}
-      />
+  useEffect(() => {
+    fetch_();
+  }, [fetch_]);
 
-      <div className="max-w-7xl mx-auto px-5 md:px-10 pt-8 pb-20">
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <SkeletonCard key={i} />
-            ))}
-          </div>
-        ) : tribes.length === 0 ? (
-          <div className="text-center py-32">
-            <Users className="w-16 h-16 text-[#1a1550]/10 mx-auto mb-4" />
-            <p className="text-[#1a1550]/40 text-[16px]">
-              {dict.tribes.noTribes}
-            </p>
-          </div>
-        ) : (
-          <>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-[13px] font-medium text-[#1a1550]/35 mb-8 tracking-wide"
-            >
-              {tribes.length}{" "}
-              {tribes.length !== 1
-                ? dict.tribes.tribesPlural
-                : dict.tribes.tribe}{" "}
-              {dict.tribes.documented}
-            </motion.p>
+  const handleSave = async () => {
+    if (!editing) return;
+    setError("");
+    setSaving(true);
+    try {
+      const isNew = !items.find((i) => i.id === editing.id);
+      const r = await fetch(
+        isNew ? "/api/tribes" : `/api/tribes/${editing.id}`,
+        {
+          method: isNew ? "POST" : "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(editing),
+        },
+      );
+      const d = await r.json();
+      if (d.success) {
+        setEditing(null);
+        fetch_();
+      } else setError(d.error);
+    } catch {
+      setError("Failed to save.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {tribes.map((tribe, i) => (
-                <TribeCard
-                  key={tribe.id}
-                  tribe={tribe}
-                  index={i}
-                  lang={lang}
-                  dict={dict}
-                />
-              ))}
-            </div>
-          </>
-        )}
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete?")) return;
+    try {
+      const r = await fetch(`/api/tribes/${id}`, { method: "DELETE" });
+      const d = await r.json();
+      if (d.success) fetch_();
+      else setError(d.error);
+    } catch {
+      setError("Failed to delete.");
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="w-5 h-5 text-[#1077a6] animate-spin" />
       </div>
-    </div>
-  );
-}
-
-function TribeCard({
-  tribe,
-  index,
-  lang,
-  dict,
-}: {
-  tribe: TribeData;
-  index: number;
-  lang: string;
-  dict: ReturnType<typeof useTranslation>["dict"];
-}) {
-  const tr = lang !== "en" ? tribe.translations?.hi : null;
-  const translatedName = tr?.name || tribe.name;
-  const translatedExcerpt = tr?.excerpt || tribe.excerpt;
+    );
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{
-        delay: index * 0.08,
-        duration: 0.55,
-        ease: [0.22, 1, 0.36, 1],
-      }}
+      className="space-y-3"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
     >
-      <Link
-        href={langHref(lang, `/tribes/${tribe.id}`)}
-        className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-[#1077A6]/10 hover:border-[#f4c430]/40 hover:shadow-2xl hover:shadow-[#1077A6]/10 transition-all duration-400 h-full"
-      >
-        <div className="relative h-64 overflow-hidden bg-gradient-to-br from-[#1077A6]/10 to-[#1a1550]/10 flex-shrink-0">
-          {tribe.image ? (
-            <Image
-              src={tribe.image}
-              alt={tribe.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              unoptimized
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Users className="w-12 h-12 text-[#1077A6]/20" />
-            </div>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1550]/70 via-[#1a1550]/10 to-transparent" />
-          <div className="absolute top-4 left-4">
-            <span className="inline-flex items-center gap-1.5 bg-[#1a1550]/50 backdrop-blur-sm text-[#f4c430] text-[10px] font-bold uppercase tracking-[.14em] px-2.5 py-1.5 rounded-full border border-[#f4c430]/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#f4c430]" />
-              {dict.tribes.badge}
-            </span>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <h2 className="font-display font-black text-white text-[22px] md:text-[24px] leading-tight tracking-tight group-hover:text-[#f4c430] transition-colors duration-300">
-              {translatedName}
-            </h2>
-          </div>
-        </div>
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="flex items-center gap-2 bg-red-50 text-red-600 rounded-lg p-2.5 text-xs border border-red-100"
+          >
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <div className="p-5 flex flex-col flex-1">
-          {tribe.excerpt ? (
-            <p className="text-[#1a1550]/55 text-[13.5px] leading-relaxed line-clamp-3 flex-1">
-              {translatedExcerpt}
-            </p>
-          ) : (
-            <p className="text-[#1a1550]/25 text-[13.5px] italic flex-1">
-              {dict.tribes.noDescription}
-            </p>
-          )}
-          <div className="mt-4 pt-4 border-t border-[#1077A6]/8 flex items-center justify-between">
-            <span className="text-[12px] font-bold text-[#1077A6] group-hover:text-[#f4c430] transition-colors flex items-center gap-1.5">
-              {dict.tribes.exploreCulture}
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform duration-300" />
-            </span>
-            <div className="w-7 h-7 rounded-full bg-[#1077A6]/8 group-hover:bg-[#f4c430]/15 flex items-center justify-center transition-colors duration-300">
-              <ArrowRight className="w-3 h-3 text-[#1077A6] group-hover:text-[#f4c430] group-hover:translate-x-0.5 transition-all duration-300" />
-            </div>
-          </div>
-        </div>
-      </Link>
+      <div className="flex justify-end">
+        <Button
+          size="sm"
+          onClick={() =>
+            setEditing({
+              id: "",
+              name: "",
+              image: "",
+              excerpt: "",
+              content: "",
+              accent: "#4fd1c5",
+              heroImage: "",
+              gallery: [],
+              sortOrder: 0,
+              active: true,
+            })
+          }
+          className="h-8 text-xs gap-1.5 bg-[#1077a6] hover:bg-[#1077a6]/90 rounded-lg"
+        >
+          <Plus className="w-3.5 h-3.5" /> Add Tribe
+        </Button>
+      </div>
+
+      <AnimatePresence>
+        {editing && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+          >
+            <Card className="border-[#1077a6]/20 shadow-sm">
+              <CardContent className="p-4 space-y-3">
+                <p className="text-sm font-bold text-[#1a1550]">
+                  {items.find((i) => i.id === editing.id) ? "Edit" : "New"}{" "}
+                  Tribe
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <ImageUpload
+                    value={editing.image || ""}
+                    onChange={(url) => setEditing({ ...editing, image: url })}
+                    label="Thumbnail"
+                  />
+                  <ImageUpload
+                    value={editing.heroImage || ""}
+                    onChange={(url) =>
+                      setEditing({ ...editing, heroImage: url })
+                    }
+                    label="Hero Banner"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className={labelCls}>ID (slug)</label>
+                    <Input
+                      value={editing.id || ""}
+                      onChange={(e) =>
+                        setEditing({ ...editing, id: e.target.value })
+                      }
+                      disabled={!!items.find((i) => i.id === editing.id)}
+                      className={`${inputCls} disabled:opacity-40`}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Name</label>
+                    <Input
+                      value={editing.name || ""}
+                      onChange={(e) =>
+                        setEditing({ ...editing, name: e.target.value })
+                      }
+                      className={inputCls}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Accent Color</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="color"
+                        value={editing.accent || "#4fd1c5"}
+                        onChange={(e) =>
+                          setEditing({ ...editing, accent: e.target.value })
+                        }
+                        className="w-9 h-9 rounded-md border border-[#1077a6]/[0.15] cursor-pointer"
+                      />
+                      <Input
+                        value={editing.accent || "#4fd1c5"}
+                        onChange={(e) =>
+                          setEditing({ ...editing, accent: e.target.value })
+                        }
+                        className={`${inputCls} flex-1`}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelCls}>Sort Order</label>
+                    <Input
+                      type="number"
+                      value={editing.sortOrder || 0}
+                      onChange={(e) =>
+                        setEditing({
+                          ...editing,
+                          sortOrder: parseInt(e.target.value) || 0,
+                        })
+                      }
+                      className={inputCls}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className={labelCls}>Short Excerpt</label>
+                  <textarea
+                    value={editing.excerpt || ""}
+                    onChange={(e) =>
+                      setEditing({ ...editing, excerpt: e.target.value })
+                    }
+                    rows={2}
+                    className={`w-full resize-none ${inputCls} py-2 px-3 h-auto`}
+                  />
+                </div>
+
+                <RichEditor
+                  content={editing.content || ""}
+                  onChange={(html) => setEditing({ ...editing, content: html })}
+                  label="Full Content"
+                  placeholder="Write about this tribe..."
+                />
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] font-medium text-[#1a1550]/40 flex items-center gap-1">
+                      <Images className="w-3 h-3" /> Gallery
+                    </span>
+                    <button
+                      onClick={() =>
+                        setEditing({
+                          ...editing,
+                          gallery: [
+                            ...(editing.gallery ?? []),
+                            { url: "", label: "" },
+                          ],
+                        })
+                      }
+                      className="text-[10px] font-semibold text-[#1077a6] hover:text-[#f4c430] flex items-center gap-1"
+                    >
+                      <Plus className="w-3 h-3" /> Add Image
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {(editing.gallery ?? []).map((g, idx) => (
+                      <div
+                        key={idx}
+                        className="flex flex-col sm:flex-row gap-2 p-2.5 rounded-lg border border-[#1077a6]/[0.08] bg-[#1077a6]/[0.02]"
+                      >
+                        <div className="w-full sm:w-36 shrink-0">
+                          <ImageUpload
+                            value={g.url}
+                            onChange={(url) => {
+                              const arr = [...(editing.gallery ?? [])];
+                              arr[idx] = { ...arr[idx], url };
+                              setEditing({ ...editing, gallery: arr });
+                            }}
+                            label=""
+                            endpoint="galleryUploader"
+                          />
+                        </div>
+                        <div className="flex flex-1 min-w-0 gap-2 items-start">
+                          <div className="flex-1">
+                            <label className={labelCls}>Label</label>
+                            <Input
+                              value={g.label}
+                              onChange={(e) => {
+                                const arr = [...(editing.gallery ?? [])];
+                                arr[idx] = {
+                                  ...arr[idx],
+                                  label: e.target.value,
+                                };
+                                setEditing({ ...editing, gallery: arr });
+                              }}
+                              className={`${inputCls} h-8`}
+                            />
+                          </div>
+                          <button
+                            onClick={() => {
+                              const arr = (editing.gallery ?? []).filter(
+                                (_, i) => i !== idx,
+                              );
+                              setEditing({ ...editing, gallery: arr });
+                            }}
+                            className="mt-5 p-1 rounded-md hover:bg-red-50 text-red-400 shrink-0"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {(editing.gallery ?? []).length === 0 && (
+                      <p className="text-[10px] text-[#1a1550]/20 italic">
+                        No gallery images yet.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <label className="flex items-center gap-2 text-xs text-[#1a1550]">
+                  <input
+                    type="checkbox"
+                    checked={editing.active ?? true}
+                    onChange={(e) =>
+                      setEditing({ ...editing, active: e.target.checked })
+                    }
+                    className="w-3.5 h-3.5 accent-[#1077a6]"
+                  />{" "}
+                  Active
+                </label>
+
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="h-8 text-xs gap-1.5 bg-[#1077a6] hover:bg-[#1077a6]/90 rounded-lg"
+                  >
+                    {saving ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Save className="w-3.5 h-3.5" />
+                    )}{" "}
+                    Save
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setEditing(null)}
+                    className="h-8 text-xs gap-1.5 rounded-lg border-[#1077a6]/20"
+                  >
+                    <X className="w-3.5 h-3.5" /> Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="bg-white rounded-lg border border-[#1077a6]/[0.12] overflow-hidden">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="bg-[#1077a6] text-white">
+              <th className="px-3 py-2.5 text-left font-semibold">Image</th>
+              <th className="px-3 py-2.5 text-left font-semibold hidden sm:table-cell">
+                ID
+              </th>
+              <th className="px-3 py-2.5 text-left font-semibold">Name</th>
+              <th className="px-3 py-2.5 text-left font-semibold hidden sm:table-cell">
+                Active
+              </th>
+              <th className="px-3 py-2.5 text-right font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, i) => (
+              <motion.tr
+                key={item.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: i * 0.03 }}
+                className="border-t border-[#1077a6]/[0.06] hover:bg-[#1077a6]/[0.02]"
+              >
+                <td className="px-3 py-2.5">
+                  {item.image ? (
+                    <div className="relative w-9 h-9 rounded-lg overflow-hidden bg-[#1077a6]/[0.05]">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-9 h-9 rounded-lg bg-[#1077a6]/[0.08] flex items-center justify-center text-[9px] font-bold text-[#1077a6]">
+                      {item.name.charAt(0)}
+                    </div>
+                  )}
+                </td>
+                <td className="px-3 py-2.5 font-mono text-[10px] text-[#1a1550]/40 hidden sm:table-cell">
+                  {item.id}
+                </td>
+                <td className="px-3 py-2.5 font-semibold text-[#1a1550]">
+                  {item.name}
+                </td>
+                <td className="px-3 py-2.5 hidden sm:table-cell">
+                  <span
+                    className={`w-2 h-2 rounded-full inline-block ${item.active ? "bg-emerald-400" : "bg-[#1a1550]/15"}`}
+                  />
+                </td>
+                <td className="px-3 py-2.5 text-right">
+                  <div className="flex items-center justify-end gap-1">
+                    <button
+                      onClick={() => setEditing(item)}
+                      className="p-1.5 rounded-md hover:bg-[#1077a6]/10 text-[#1077a6]"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="p-1.5 rounded-md hover:bg-red-50 text-red-400"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </td>
+              </motion.tr>
+            ))}
+            {items.length === 0 && (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="px-3 py-10 text-center text-[#1a1550]/25"
+                >
+                  No tribes yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </motion.div>
   );
 }

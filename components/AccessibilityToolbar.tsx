@@ -149,27 +149,24 @@ export default function AccessibilityToolbar() {
 
   return (
     <>
-      {/* ── Trigger tab ────────────────────────────────── */}
+      {/* ── FAB trigger ────────────────────────────────── */}
       <button
         onClick={() => setOpen((o) => !o)}
-        aria-label={
-          open ? "Close accessibility options" : "Open accessibility options"
-        }
+        aria-label="Accessibility Options"
         aria-expanded={open}
         title="Accessibility Tools"
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-[9999] w-10 h-auto min-h-[44px] py-2.5 flex flex-col items-center justify-center gap-1 bg-[#1077A6] text-white shadow-lg hover:bg-[#0e6590] active:bg-[#0c5a80] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4c430]"
+        className="fixed bottom-6 right-6 z-[9999] w-12 h-12 flex items-center justify-center bg-[#1077A6] text-white rounded-full shadow-lg hover:bg-[#0e6590] active:bg-[#0c5a80] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#f4c430]"
         style={{
-          borderRadius: "8px 0 0 8px",
-          boxShadow: "-2px 2px 14px rgba(16,119,166,0.4)",
+          boxShadow: "0 4px 18px rgba(16,119,166,0.45)",
         }}
       >
         {open ? (
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         ) : (
-          <Accessibility className="w-4 h-4" />
+          <Accessibility className="w-5 h-5" />
         )}
         {hasChanges && !open && (
-          <span className="absolute -top-1 -left-1 w-2.5 h-2.5 bg-[#f4c430] rounded-full border-2 border-white" />
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#f4c430] rounded-full border-2 border-white" />
         )}
       </button>
 
@@ -188,13 +185,12 @@ export default function AccessibilityToolbar() {
           role="dialog"
           aria-label="Accessibility toolbar"
           className={[
-            // Mobile: bottom sheet
-            "fixed bottom-0 left-0 right-0 z-[9998]",
-            "sm:bottom-auto sm:left-auto sm:right-10",
-            "sm:top-1/2 sm:-translate-y-1/2",
+            // Mobile: bottom sheet — leave space above FAB
+            "fixed bottom-20 left-0 right-0 z-[9998]",
+            "sm:bottom-20 sm:left-auto sm:right-6",
             // Sizing
             "w-full sm:w-[300px]",
-            "max-h-[78vh] sm:max-h-[92vh]",
+            "max-h-[70vh] sm:max-h-[80vh]",
             // Style
             "bg-white border border-[#1077A6]/15",
             "rounded-t-2xl sm:rounded-2xl",

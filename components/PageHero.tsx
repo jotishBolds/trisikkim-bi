@@ -9,7 +9,7 @@ type PageHeroProps = {
   icon?: ReactNode;
 };
 
-export default function PageHero({ badge, title, icon }: PageHeroProps) {
+export default function PageHero({ title }: PageHeroProps) {
   return (
     <div className="bg-[#1077A6] relative overflow-hidden">
       <div
@@ -28,19 +28,6 @@ export default function PageHero({ badge, title, icon }: PageHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {badge && (
-            <div className="flex items-center gap-2 mb-3">
-              {icon && (
-                <div className="w-6 h-6 rounded bg-[#f4c430]/15 flex items-center justify-center">
-                  {icon}
-                </div>
-              )}
-              <span className="text-[11px] font-bold uppercase tracking-[.18em] text-[#f4c430]">
-                {badge}
-              </span>
-            </div>
-          )}
-
           <h1 className="font-display font-bold text-white text-[clamp(22px,3vw,36px)] leading-tight tracking-tight mb-3">
             {title}
           </h1>

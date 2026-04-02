@@ -2,14 +2,15 @@
 
 import { useState, useCallback } from "react";
 import { useUploadThing } from "@/lib/uploadthing-client";
-import { Upload, X, Loader2, AlertCircle } from "lucide-react";
+import { Upload, X, Loader2, AlertCircle, FileText } from "lucide-react";
 import Image from "next/image";
 
 interface ImageUploadProps {
   value: string;
   onChange: (url: string) => void;
   label?: string;
-  endpoint?: "imageUploader" | "galleryUploader";
+  endpoint?: "imageUploader" | "galleryUploader" | "pdfUploader";
+  fileType?: "image" | "pdf";
 }
 
 export default function ImageUpload({
@@ -17,6 +18,7 @@ export default function ImageUpload({
   onChange,
   label = "Image",
   endpoint = "imageUploader",
+  fileType = "image",
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -42,20 +44,32 @@ export default function ImageUpload({
       setError("");
 
       // Client-side validation
-      if (file.size > 1 * 1024 * 1024) {
-        setError("File must be under 1MB");
-        return;
-      }
-
-      if (!file.type.startsWith("image/")) {
-        setError("Only image files are allowed");
-        return;
+      if (fileType === "pdf") {
+        if (file.size > 4 * 1024 * 1024) {
+          setError("File must be under 4MB");
+          return;
+        }
+        if (file.type !== "application/pdf") {
+          setError(
+            "Only PDF files are accepted for circulars and notifications.",
+          );
+          return;
+        }
+      } else {
+        if (file.size > 32 * 1024 * 1024) {
+          setError("File must be under 32MB");
+          return;
+        }
+        if (!file.type.startsWith("image/")) {
+          setError("Only image files are allowed");
+          return;
+        }
       }
 
       setUploading(true);
       await startUpload([file]);
     },
-    [startUpload],
+    [startUpload, fileType],
   );
 
   return (
@@ -66,15 +80,29 @@ export default function ImageUpload({
 
       {value ? (
         <div className="relative w-full max-w-xs">
-          <div className="relative aspect-video rounded-lg overflow-hidden border border-[#1077A6]/15 bg-[#f8f7fc]">
-            <Image
-              src={value}
-              alt="Uploaded"
-              fill
-              className="object-cover"
-              unoptimized
-            />
-          </div>
+          {fileType === "pdf" ? (
+            <a
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 p-3 border border-[#1077A6]/15 rounded-lg bg-[#f8f7fc] hover:bg-[#1077A6]/5 transition-colors"
+            >
+              <FileText className="w-5 h-5 text-red-500 flex-shrink-0" />
+              <span className="text-xs text-[#1a1550] truncate">
+                PDF Document
+              </span>
+            </a>
+          ) : (
+            <div className="relative aspect-video rounded-lg overflow-hidden border border-[#1077A6]/15 bg-[#f8f7fc]">
+              <Image
+                src={value}
+                alt="Uploaded"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+          )}
           <button
             type="button"
             onClick={() => onChange("")}
@@ -94,13 +122,15 @@ export default function ImageUpload({
             <div className="flex flex-col items-center gap-2">
               <Upload className="w-6 h-6 text-[#1077A6]/40" />
               <span className="text-xs text-[#1a1550]/50">
-                Click to upload (max 1MB)
+                {fileType === "pdf"
+                  ? "Click to upload PDF (max 4MB)"
+                  : "Click to upload image (min 10MB, max 32MB)"}
               </span>
             </div>
           )}
           <input
             type="file"
-            accept="image/*"
+            accept={fileType === "pdf" ? "application/pdf" : "image/*"}
             onChange={handleFile}
             className="hidden"
             disabled={uploading}

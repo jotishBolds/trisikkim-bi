@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Newspaper,
@@ -10,9 +11,17 @@ import {
   Calendar,
   Tag,
   Clock,
+  FileText,
 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import PageHero from "@/components/PageHero";
+
+const PdfViewer = dynamic(() => import("@/components/PdfViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center py-8">Loading PDF...</div>
+  ),
+});
 
 interface UpdateTranslations {
   hi?: { title?: string; excerpt?: string; content?: string };
@@ -26,6 +35,7 @@ interface UpdateItem {
   excerpt: string | null;
   content: string;
   image: string | null;
+  pdfUrl: string | null;
   publishedAt: string;
   translations?: UpdateTranslations | null;
 }
@@ -35,6 +45,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "news-events": "bg-blue-100 text-blue-700",
   activities: "bg-green-100 text-green-700",
   circulars: "bg-amber-100 text-amber-700",
+  publications: "bg-rose-100 text-rose-700",
 };
 
 function SkeletonCard() {
@@ -86,7 +97,11 @@ function UpdateCard({
       className="group bg-white rounded-2xl overflow-hidden border border-[#1077A6]/10 hover:border-[#f4c430]/40 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
     >
       <div className="relative h-48 bg-gradient-to-br from-[#1077A6]/10 to-[#1a1550]/10 overflow-hidden flex-shrink-0">
-        {item.image ? (
+        {item.pdfUrl ? (
+          <div className="w-full h-full flex items-center justify-center bg-red-50">
+            <FileText className="w-12 h-12 text-red-500" />
+          </div>
+        ) : item.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={item.image}
@@ -232,19 +247,27 @@ function DetailView({
           <div className="h-px flex-1 bg-[#1077A6]/10" />
         </div>
 
-        <div
-          className="prose prose-base max-w-none
-            text-[#1a1550]/80
-            prose-headings:text-[#1a1550] prose-headings:font-display
-            prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
-            prose-a:text-[#1077A6] prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-[#1a1550]
-            prose-img:rounded-xl prose-img:shadow-md
-            prose-blockquote:border-[#f4c430] prose-blockquote:bg-[#f4c430]/5
-            prose-ul:text-[#1a1550]/75 prose-ol:text-[#1a1550]/75
-            prose-code:bg-[#1077A6]/8 prose-code:px-1.5 prose-code:rounded"
-          dangerouslySetInnerHTML={{ __html: tContent }}
-        />
+        {item.pdfUrl && (
+          <div className="mb-8">
+            <PdfViewer fileUrl={item.pdfUrl} />
+          </div>
+        )}
+
+        {tContent && (
+          <div
+            className="prose prose-base max-w-none
+              text-[#1a1550]/80
+              prose-headings:text-[#1a1550] prose-headings:font-display
+              prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
+              prose-a:text-[#1077A6] prose-a:no-underline hover:prose-a:underline
+              prose-strong:text-[#1a1550]
+              prose-img:rounded-xl prose-img:shadow-md
+              prose-blockquote:border-[#f4c430] prose-blockquote:bg-[#f4c430]/5
+              prose-ul:text-[#1a1550]/75 prose-ol:text-[#1a1550]/75
+              prose-code:bg-[#1077A6]/8 prose-code:px-1.5 prose-code:rounded"
+            dangerouslySetInnerHTML={{ __html: tContent }}
+          />
+        )}
 
         <div className="mt-10 pt-6 border-t border-[#1077A6]/10 flex items-center justify-between flex-wrap gap-4">
           <button

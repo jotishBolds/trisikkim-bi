@@ -28,11 +28,6 @@ function getNavData(
 ) {
   const ABOUT_LINKS = [
     { label: dict.nav.aboutUs, href: langHref(lang, "/about") },
-    // {
-    //   label: dict.nav.organisationChart,
-    //   href: langHref(lang, "/about/organisation-chart"),
-    // },
-    // { label: dict.nav.whosWho, href: langHref(lang, "/about/whos-who") },
     {
       label: dict.nav.listOfOfficers,
       href: langHref(lang, "/about/list-of-officers"),
@@ -41,7 +36,6 @@ function getNavData(
       label: dict.nav.listOfStaff,
       href: langHref(lang, "/about/list-of-staff"),
     },
-    ,
   ];
 
   const UPDATES_LINKS = [
@@ -55,6 +49,10 @@ function getNavData(
     },
     { label: dict.nav.activities, href: langHref(lang, "/updates/activities") },
     { label: dict.nav.circulars, href: langHref(lang, "/updates/circulars") },
+    {
+      label: dict.nav.publications ?? "Publications",
+      href: langHref(lang, "/updates/publications"),
+    },
   ];
 
   const NAV_ITEMS = [
@@ -79,13 +77,13 @@ function getNavData(
 }
 
 const LOGOS = [
-  { src: "/Emblem_of_India.png", alt: "Emblem of India", height: 80 },
-  { src: "/main-logo.png", alt: "Government of Sikkim", height: 80 },
+  { src: "/Emblem_of_India.png", alt: "Emblem of India", height: 60 },
+  { src: "/main-logo.png", alt: "Government of Sikkim", height: 60 },
 ];
 
 const RIGHT_LOGOS = [
-  { src: "/tribal.png", alt: "TRITC Sikkim", height: 85 },
-  { src: "/Sunawlo-Sikkim.webp", alt: "Saamarth Sikkim", height: 75 },
+  { src: "/tribal.png", alt: "TRITC Sikkim", height: 60 },
+  { src: "/Sunawlo-Sikkim.webp", alt: "Saamarth Sikkim", height: 60 },
 ];
 
 const dropdownVariants: Variants = {
@@ -227,7 +225,7 @@ export default function Navbar() {
                   key={logo.alt}
                   src={logo.src}
                   alt={logo.alt}
-                  height={80}
+                  height={44}
                 />
               ))}
               <VDivider />
@@ -249,7 +247,7 @@ export default function Navbar() {
                   key={logo.alt}
                   src={logo.src}
                   alt={logo.alt}
-                  height={logo.height}
+                  height={60}
                 />
               ))}
             </div>
@@ -273,7 +271,7 @@ export default function Navbar() {
                     key={logo.alt}
                     src={logo.src}
                     alt={logo.alt}
-                    height={logo.height === 85 ? 60 : 50}
+                    height={44}
                   />
                 ))}
               </div>

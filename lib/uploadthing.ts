@@ -5,7 +5,7 @@ const f = createUploadthing();
 export const ourFileRouter = {
   imageUploader: f({
     image: {
-      maxFileSize: "1MB",
+      maxFileSize: "32MB",
       maxFileCount: 1,
     },
   })
@@ -18,8 +18,21 @@ export const ourFileRouter = {
 
   galleryUploader: f({
     image: {
-      maxFileSize: "1MB",
+      maxFileSize: "32MB",
       maxFileCount: 10,
+    },
+  })
+    .middleware(() => {
+      return {};
+    })
+    .onUploadComplete(({ file }) => {
+      return { url: file.ufsUrl };
+    }),
+
+  pdfUploader: f({
+    pdf: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
     },
   })
     .middleware(() => {

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
@@ -12,6 +12,7 @@ import {
   X,
   Newspaper,
   Loader2,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,7 @@ const CATEGORIES = [
   { value: "training-workshop", label: "Training & Workshop" },
   { value: "activities", label: "Activities" },
   { value: "circulars", label: "Circulars & Notifications" },
+  { value: "publications", label: "Publications" },
 ];
 
 interface UpdateItem {
@@ -43,6 +45,7 @@ interface UpdateItem {
   excerpt: string | null;
   content: string;
   image: string | null;
+  pdfUrl: string | null;
   publishedAt: string;
   active: boolean;
 }
@@ -181,6 +184,7 @@ export default function UpdatesAdmin() {
               excerpt: "",
               content: "",
               image: "",
+              pdfUrl: "",
               active: true,
             })
           }
@@ -202,21 +206,29 @@ export default function UpdatesAdmin() {
                 <p className="text-sm font-bold text-[#1a1550]">
                   {editing.id ? "Edit" : "New"} Update
                 </p>
-
-                <ImageUpload
-                  value={editing.image || ""}
-                  onChange={(url) => setEditing({ ...editing, image: url })}
-                  label="Featured Image"
-                />
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className={labelCls}>Category</label>
                     <select
                       value={editing.category || "news-events"}
-                      onChange={(e) =>
-                        setEditing({ ...editing, category: e.target.value })
-                      }
+                      onChange={(e) => {
+                        const newCategory = e.target.value;
+                        const isPdfCategory =
+                          newCategory === "circulars" ||
+                          newCategory === "publications";
+                        const wasPdfCategory =
+                          editing.category === "circulars" ||
+                          editing.category === "publications";
+
+                        setEditing({
+                          ...editing,
+                          category: newCategory,
+                          // Clear image when switching to PDF category
+                          // Clear pdfUrl when switching to non-PDF category
+                          image: isPdfCategory ? null : editing.image,
+                          pdfUrl: isPdfCategory ? editing.pdfUrl : null,
+                        });
+                      }}
                       className={`w-full ${selectCls}`}
                     >
                       {CATEGORIES.map((c) => (
@@ -273,7 +285,28 @@ export default function UpdatesAdmin() {
                     />
                   </div>
                 </div>
-
+                {editing.category === "circulars" ||
+                editing.category === "publications" ? (
+                  <ImageUpload
+                    value={editing.pdfUrl || ""}
+                    onChange={(url) =>
+                      setEditing({ ...editing, pdfUrl: url, image: null })
+                    }
+                    label="PDF Document"
+                    endpoint="pdfUploader"
+                    fileType="pdf"
+                  />
+                ) : (
+                  <ImageUpload
+                    value={editing.image || ""}
+                    onChange={(url) =>
+                      setEditing({ ...editing, image: url, pdfUrl: null })
+                    }
+                    label="Featured Image"
+                    endpoint="imageUploader"
+                    fileType="image"
+                  />
+                )}
                 <div>
                   <label className={labelCls}>Excerpt</label>
                   <textarea
@@ -286,14 +319,12 @@ export default function UpdatesAdmin() {
                     className={`w-full resize-none ${inputCls} py-2 px-3 h-auto`}
                   />
                 </div>
-
                 <RichEditor
                   content={editing.content || ""}
                   onChange={(html) => setEditing({ ...editing, content: html })}
                   label="Content"
                   placeholder="Write the full content..."
                 />
-
                 <label className="flex items-center gap-2 text-xs text-[#1a1550]">
                   <input
                     type="checkbox"
@@ -305,7 +336,6 @@ export default function UpdatesAdmin() {
                   />
                   Active
                 </label>
-
                 <div className="flex gap-2">
                   <Button
                     size="sm"
@@ -367,15 +397,21 @@ export default function UpdatesAdmin() {
                 >
                   <td className="px-3 py-2.5">
                     {item.image ? (
-                      <div className="relative w-10 h-7 rounded overflow-hidden bg-[#1077a6]/[0.05]">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                          unoptimized
-                        />
-                      </div>
+                      item.category === "circulars" ? (
+                        <div className="w-10 h-7 rounded bg-red-50 border border-red-100 flex items-center justify-center">
+                          <FileText className="w-3 h-3 text-red-400" />
+                        </div>
+                      ) : (
+                        <div className="relative w-10 h-7 rounded overflow-hidden bg-[#1077a6]/[0.05]">
+                          <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        </div>
+                      )
                     ) : (
                       <div className="w-10 h-7 rounded bg-[#1077a6]/[0.08] flex items-center justify-center">
                         <Newspaper className="w-3 h-3 text-[#1077a6]/40" />

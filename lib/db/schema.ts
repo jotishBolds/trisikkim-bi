@@ -111,9 +111,27 @@ export const galleryImages = pgTable("gallery_images", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// ─── Video Gallery Categories (separate from photo categories) ─────
+export const videoGalleryCategories = pgTable("video_gallery_categories", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  label: varchar("label", { length: 255 }).notNull(),
+  description: text("description"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // ─── Gallery Videos (YouTube) ───────────────────────────────────────
 export const galleryVideos = pgTable("gallery_videos", {
   id: serial("id").primaryKey(),
+  categoryId: integer("category_id").references(
+    () => videoGalleryCategories.id,
+    {
+      onDelete: "set null",
+    },
+  ),
   title: varchar("title", { length: 500 }).notNull(),
   youtubeUrl: text("youtube_url").notNull(),
   description: text("description"),
@@ -145,7 +163,7 @@ export const pages = pgTable("pages", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// ─── Updates (News, Events, Circulars, Training) ────────────────────
+// ─── Updates (News, Events, Circulars, Training, Publications) ─────
 export const updates = pgTable("updates", {
   id: serial("id").primaryKey(),
   category: varchar("category", { length: 50 }).notNull(),
@@ -154,12 +172,26 @@ export const updates = pgTable("updates", {
   excerpt: text("excerpt"),
   content: text("content").notNull(),
   image: text("image"),
+  pdfUrl: text("pdf_url"), // For publications and circulars
   publishedAt: timestamp("published_at").defaultNow().notNull(),
   active: boolean("active").notNull().default(true),
   translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+// ─── Publications ────────────────────────────────────────────────────
+export const publications = pgTable("publications", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  pdfUrl: text("pdf_url").notNull(),
+  publishedAt: timestamp("published_at").defaultNow().notNull(),
+  active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // ─── OTP Tokens ─────────────────────────────────────────────────────
 export const otpTokens = pgTable("otp_tokens", {
   id: serial("id").primaryKey(),
@@ -182,6 +214,7 @@ export type Staff = typeof staff.$inferSelect;
 export type Tribe = typeof tribes.$inferSelect;
 export type GalleryCategory = typeof galleryCategories.$inferSelect;
 export type GalleryImage = typeof galleryImages.$inferSelect;
+export type VideoGalleryCategory = typeof videoGalleryCategories.$inferSelect;
 export type ContactMessage = typeof contactMessages.$inferSelect;
 export type Page = typeof pages.$inferSelect;
 export type Update = typeof updates.$inferSelect;
@@ -190,3 +223,5 @@ export type GalleryVideo = typeof galleryVideos.$inferSelect;
 export type NewGalleryVideo = typeof galleryVideos.$inferInsert;
 
 export type NewStaff = typeof staff.$inferInsert;
+export type Publication = typeof publications.$inferSelect;
+export type NewPublication = typeof publications.$inferInsert;

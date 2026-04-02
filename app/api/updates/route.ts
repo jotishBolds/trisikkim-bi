@@ -53,9 +53,27 @@ export async function POST(request: NextRequest) {
       excerpt,
       content,
       image,
+      pdfUrl,
       active,
       publishedAt,
     } = body;
+
+    // CR-09: Circulars must have a PDF (not an image) as their attachment
+    if (category === "circulars" && image) {
+      const lowerImage = (image as string).toLowerCase();
+      const hasImageExtension =
+        /\.(png|jpe?g|gif|webp|bmp|svg|avif)(\?|$)/.test(lowerImage);
+      if (hasImageExtension) {
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              "Only PDF files are accepted for circulars and notifications.",
+          },
+          { status: 400 },
+        );
+      }
+    }
     const translations = await translateForStorage(
       { title, excerpt, content },
       ["title", "excerpt"],
@@ -70,6 +88,7 @@ export async function POST(request: NextRequest) {
         excerpt,
         content,
         image,
+        pdfUrl,
         active,
         translations,
         publishedAt: publishedAt ? new Date(publishedAt) : new Date(),

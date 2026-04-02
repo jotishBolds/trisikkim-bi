@@ -1,52 +1,20 @@
-import { notFound } from "next/navigation";
-import { TribeDetailContent } from "./tribe-detail-content";
-import { db } from "@/lib/db";
-import { tribes } from "@/lib/db/schema";
-import { asc } from "drizzle-orm";
+"use client";
 
-export default async function TribeDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+import { useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 
-  const allTribes = await db
-    .select()
-    .from(tribes)
-    .orderBy(asc(tribes.sortOrder));
-  const tribe = allTribes.find((t) => t.id === id);
+export default function TribeDetailRedirect() {
+  const router = useRouter();
+  const params = useParams();
 
-  if (!tribe) {
-    notFound();
-  }
-
-  const currentIdx = allTribes.findIndex((t) => t.id === tribe.id);
-  const prevTribe = currentIdx > 0 ? allTribes[currentIdx - 1] : null;
-  const nextTribe =
-    currentIdx < allTribes.length - 1 ? allTribes[currentIdx + 1] : null;
-
-  const tribeData = {
-    id: tribe.id,
-    name: tribe.name,
-    heroImage: tribe.heroImage,
-    excerpt: tribe.excerpt,
-    content: tribe.content,
-    gallery: (tribe.gallery as Array<{ url: string; label: string }>) ?? [],
-  };
-
-  const prevData = prevTribe
-    ? { id: prevTribe.id, name: prevTribe.name }
-    : null;
-  const nextData = nextTribe
-    ? { id: nextTribe.id, name: nextTribe.name }
-    : null;
+  useEffect(() => {
+    const id = params.id;
+    router.replace(`/en/tribes/${id}`);
+  }, [router, params.id]);
 
   return (
-    <TribeDetailContent
-      tribe={tribeData}
-      prevTribe={prevData}
-      nextTribe={nextData}
-    />
+    <div className="flex items-center justify-center min-h-screen">
+      <p>Redirecting to tribe details...</p>
+    </div>
   );
 }

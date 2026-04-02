@@ -29,6 +29,7 @@
     "newsEvents": "News and Events",
     "activities": "Activities",
     "circulars": "Circulars & Notifications",
+    "publications": "Publications",
     "gallery": "Gallery",
     "contactUs": "Contact Us",
     "screenReaderAccess": "Screen Reader Access",
@@ -120,6 +121,7 @@
     "title": "Gallery",
     "subtitle": "Photo & Video Gallery",
     "allSections": "All Sections",
+    "allVideos": "All Videos",
     "loading": "Loading gallery...",
     "photos": "Photos",
     "noPhotos": "No photos available.",
@@ -154,11 +156,14 @@
     "noUpdatesDesc": "Check back later for new content in this category.",
     "readFullUpdate": "Read full update",
     "latestFrom": "Latest updates from the Tribal Research Institute & Training Centre.",
+    "pdfOnlyError": "Only PDF files are accepted for circulars and notifications.",
+    "viewPdf": "View PDF",
     "categories": {
       "training-workshop": "Training & Workshop",
       "news-events": "News & Events",
       "activities": "Activities",
-      "circulars": "Circulars & Notifications"
+      "circulars": "Circulars & Notifications",
+      "publications": "Publications"
     }
   },
   "footer": {
@@ -278,5 +283,27 @@
     "showing": "Showing",
     "of": "of",
     "staffMembers": "staff members"
+  },
+  "publications": {
+    "title": "Publications",
+    "subtitle": "Official Publications & Documents",
+    "description": "Official publications, reports and documents published by the Tribal Research Institute & Training Centre, Sikkim.",
+    "viewPdf": "View PDF",
+    "download": "Download",
+    "downloadPdf": "Download PDF",
+    "openNewTab": "Open in New Tab",
+    "backToPublications": "All Publications",
+    "noItems": "No publications available yet.",
+    "toolbarLabel": "Publications — TRITC Sikkim",
+    "loadingDocument": "Loading Document",
+    "percentComplete": "complete",
+    "unableToLoad": "Unable to load PDF",
+    "unableToLoadDesc": "The document could not be displayed. Please try downloading it directly.",
+    "footerLabel": "Government of Sikkim — Social Welfare Department",
+    "page": "page",
+    "pages": "pages",
+    "scrollToZoom": "Scroll to zoom",
+    "fullscreenTip": "Click fullscreen for best viewing",
+    "downloadTip": "Download for offline use"
   }
 }
