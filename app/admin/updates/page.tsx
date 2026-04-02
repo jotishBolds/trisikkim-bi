@@ -370,7 +370,9 @@ export default function UpdatesAdmin() {
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-[#1077a6] text-white">
-                <th className="px-3 py-2.5 text-left font-semibold">Image</th>
+                <th className="px-3 py-2.5 text-left font-semibold">
+                  Image/Pdf
+                </th>
                 <th className="px-3 py-2.5 text-left font-semibold">Title</th>
                 <th className="px-3 py-2.5 text-left font-semibold hidden md:table-cell">
                   Category

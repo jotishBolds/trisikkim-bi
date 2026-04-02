@@ -77,13 +77,13 @@ function getNavData(
 }
 
 const LOGOS = [
-  { src: "/Emblem_of_India.png", alt: "Emblem of India", height: 60 },
-  { src: "/main-logo.png", alt: "Government of Sikkim", height: 60 },
+  { src: "/Emblem_of_India.png", alt: "Emblem of India", height: 64 },
+  { src: "/main-logo.png", alt: "Government of Sikkim", height: 76 },
 ];
 
 const RIGHT_LOGOS = [
-  { src: "/tribal.png", alt: "TRITC Sikkim", height: 60 },
-  { src: "/Sunawlo-Sikkim.webp", alt: "Saamarth Sikkim", height: 60 },
+  { src: "/tribal.png", alt: "TRITC Sikkim", height: 76 },
+  { src: "/Sunawlo-Sikkim.webp", alt: "Saamarth Sikkim", height: 76 },
 ];
 
 const dropdownVariants: Variants = {
@@ -166,7 +166,6 @@ export default function Navbar() {
 
   const switchLang = (newLang: Locale) => {
     if (newLang === lang) return;
-    // Replace the current locale prefix with the new one
     const rest = pathname.replace(new RegExp(`^/${lang}`), "") || "/";
     document.cookie = `locale=${newLang};path=/;max-age=${365 * 24 * 60 * 60};samesite=lax`;
     router.push(`/${newLang}${rest}`);
@@ -225,7 +224,7 @@ export default function Navbar() {
                   key={logo.alt}
                   src={logo.src}
                   alt={logo.alt}
-                  height={44}
+                  height={logo.height}
                 />
               ))}
               <VDivider />
@@ -241,13 +240,14 @@ export default function Navbar() {
                 </p>
               </div>
             </div>
+
             <div className="flex items-center gap-6">
               {RIGHT_LOGOS.map((logo) => (
                 <LogoImage
                   key={logo.alt}
                   src={logo.src}
                   alt={logo.alt}
-                  height={60}
+                  height={logo.height}
                 />
               ))}
             </div>
@@ -271,7 +271,7 @@ export default function Navbar() {
                     key={logo.alt}
                     src={logo.src}
                     alt={logo.alt}
-                    height={44}
+                    height={50}
                   />
                 ))}
               </div>
