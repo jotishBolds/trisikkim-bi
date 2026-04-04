@@ -22,6 +22,23 @@ export const metadata: Metadata = {
   title: "Tribal Research Institute & Training Centre – Government of Sikkim",
   description:
     "Official website of the Tribal Research Institute & Training Centre, Social Welfare Department, Government of Sikkim.",
+  icons: [
+    { rel: "icon", url: "/favicon/favicon.ico" },
+    { rel: "icon", url: "/favicon/favicon-16x16.png", sizes: "16x16" },
+    { rel: "icon", url: "/favicon/favicon-32x32.png", sizes: "32x32" },
+    { rel: "apple-touch-icon", url: "/favicon/apple-touch-icon.png" },
+    {
+      rel: "icon",
+      url: "/favicon/android-chrome-192x192.png",
+      sizes: "192x192",
+    },
+    {
+      rel: "icon",
+      url: "/favicon/android-chrome-512x512.png",
+      sizes: "512x512",
+    },
+  ],
+  manifest: "/favicon/site.webmanifest",
 };
 
 export default function RootLayout({
