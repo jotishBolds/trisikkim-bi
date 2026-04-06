@@ -1,5 +1,11 @@
 import nodemailer from "nodemailer";
 
+if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+  throw new Error(
+    "Missing required environment variables: GMAIL_USER and GMAIL_APP_PASSWORD must be set."
+  );
+}
+
 export const transporter = nodemailer.createTransport({
   host: "smtp.mgovcloud.in",
   port: 465,
