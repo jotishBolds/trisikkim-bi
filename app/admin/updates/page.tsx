@@ -56,6 +56,28 @@ const labelCls = "text-[11px] font-medium text-[#1a1550]/40 mb-1 block";
 const selectCls =
   "h-9 text-xs border border-[#1077a6]/[0.15] rounded-lg px-3 bg-white focus:border-[#1077a6] focus:ring-1 focus:ring-[#1077a6]/10 text-[#1a1550] outline-none";
 
+const getPdfUploaderEndpoint = (category: string) => {
+  switch (category) {
+    case "publications":
+      return "publicationPdfUploader" as const;
+    case "circulars":
+      return "circularPdfUploader" as const;
+    default:
+      return "pdfUploader" as const;
+  }
+};
+
+const getPdfSizeLabel = (category: string) => {
+  switch (category) {
+    case "publications":
+      return "15MB";
+    case "circulars":
+      return "10MB";
+    default:
+      return "4MB";
+  }
+};
+
 export default function UpdatesAdmin() {
   const [items, setItems] = useState<UpdateItem[]>([]);
   const [error, setError] = useState("");
@@ -139,6 +161,15 @@ export default function UpdatesAdmin() {
       </div>
     );
 
+  const isPdfCategory =
+    editing?.category === "circulars" || editing?.category === "publications";
+  const pdfEndpoint = editing?.category
+    ? getPdfUploaderEndpoint(editing.category)
+    : "pdfUploader";
+  const pdfSizeLabel = editing?.category
+    ? getPdfSizeLabel(editing.category)
+    : "4MB";
+
   return (
     <motion.div
       className="space-y-3"
@@ -213,20 +244,16 @@ export default function UpdatesAdmin() {
                       value={editing.category || "news-events"}
                       onChange={(e) => {
                         const newCategory = e.target.value;
-                        const isPdfCategory =
+                        const isPdfCat =
                           newCategory === "circulars" ||
                           newCategory === "publications";
-                        const wasPdfCategory =
-                          editing.category === "circulars" ||
-                          editing.category === "publications";
 
                         setEditing({
                           ...editing,
                           category: newCategory,
-                          // Clear image when switching to PDF category
-                          // Clear pdfUrl when switching to non-PDF category
-                          image: isPdfCategory ? null : editing.image,
-                          pdfUrl: isPdfCategory ? editing.pdfUrl : null,
+
+                          image: isPdfCat ? null : editing.image,
+                          pdfUrl: isPdfCat ? editing.pdfUrl : null,
                         });
                       }}
                       className={`w-full ${selectCls}`}
@@ -285,15 +312,15 @@ export default function UpdatesAdmin() {
                     />
                   </div>
                 </div>
-                {editing.category === "circulars" ||
-                editing.category === "publications" ? (
+
+                {isPdfCategory ? (
                   <ImageUpload
                     value={editing.pdfUrl || ""}
                     onChange={(url) =>
                       setEditing({ ...editing, pdfUrl: url, image: null })
                     }
-                    label="PDF Document"
-                    endpoint="pdfUploader"
+                    label={`PDF Document (max ${pdfSizeLabel})`}
+                    endpoint={pdfEndpoint}
                     fileType="pdf"
                   />
                 ) : (
@@ -307,6 +334,7 @@ export default function UpdatesAdmin() {
                     fileType="image"
                   />
                 )}
+
                 <div>
                   <label className={labelCls}>Excerpt</label>
                   <textarea
@@ -398,22 +426,20 @@ export default function UpdatesAdmin() {
                   className="border-t border-[#1077a6]/[0.06] hover:bg-[#1077a6]/[0.02]"
                 >
                   <td className="px-3 py-2.5">
-                    {item.image ? (
-                      item.category === "circulars" ? (
-                        <div className="w-10 h-7 rounded bg-red-50 border border-red-100 flex items-center justify-center">
-                          <FileText className="w-3 h-3 text-red-400" />
-                        </div>
-                      ) : (
-                        <div className="relative w-10 h-7 rounded overflow-hidden bg-[#1077a6]/[0.05]">
-                          <Image
-                            src={item.image}
-                            alt={item.title}
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
-                        </div>
-                      )
+                    {item.pdfUrl ? (
+                      <div className="w-10 h-7 rounded bg-red-50 border border-red-100 flex items-center justify-center">
+                        <FileText className="w-3 h-3 text-red-400" />
+                      </div>
+                    ) : item.image ? (
+                      <div className="relative w-10 h-7 rounded overflow-hidden bg-[#1077a6]/[0.05]">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
                     ) : (
                       <div className="w-10 h-7 rounded bg-[#1077a6]/[0.08] flex items-center justify-center">
                         <Newspaper className="w-3 h-3 text-[#1077a6]/40" />

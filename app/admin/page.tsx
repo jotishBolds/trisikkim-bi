@@ -1,3 +1,4 @@
+// components/admin/AdminDashboard.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import {
   Award,
   AlertCircle,
   TrendingUp,
+  FolderArchive, // NEW
 } from "lucide-react";
 
 interface DashboardStats {
@@ -23,6 +25,7 @@ interface DashboardStats {
   unreadMessages: number;
   dignitaries: number;
   updates: number;
+  archives: number; // NEW
 }
 
 const CARD_THEMES = [
@@ -92,6 +95,15 @@ const CARD_THEMES = [
     textMuted: "rgba(255,255,255,0.65)",
     border: "rgba(255,255,255,0.2)",
   },
+  // NEW theme for Archives
+  {
+    gradient: "from-[#6366f1] via-[#8b5cf6] to-[#a855f7]",
+    glow: "rgba(99,102,241,0.35)",
+    shimmer: "rgba(255,255,255,0.12)",
+    iconBg: "rgba(255,255,255,0.18)",
+    textMuted: "rgba(255,255,255,0.65)",
+    border: "rgba(255,255,255,0.2)",
+  },
 ];
 
 export default function AdminDashboard() {
@@ -119,7 +131,7 @@ export default function AdminDashboard() {
   if (!stats) {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {Array.from({ length: 9 }).map((_, i) => (
           <div
             key={i}
             className="rounded-xl p-4 animate-pulse h-[110px]"
@@ -187,6 +199,13 @@ export default function AdminDashboard() {
           : "All read",
       hasUnread: stats.unreadMessages > 0,
       unreadCount: stats.unreadMessages,
+    },
+    // NEW: Archives card
+    {
+      label: "Archives",
+      value: stats.archives,
+      icon: FolderArchive,
+      trend: "Documents",
     },
   ];
 

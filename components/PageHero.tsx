@@ -6,10 +6,11 @@ import type { ReactNode } from "react";
 type PageHeroProps = {
   badge?: string;
   title: string;
+  caption?: string;
   icon?: ReactNode;
 };
 
-export default function PageHero({ title }: PageHeroProps) {
+export default function PageHero({ title, caption }: PageHeroProps) {
   return (
     <div className="bg-[#1077A6] relative overflow-hidden">
       <div
@@ -33,6 +34,17 @@ export default function PageHero({ title }: PageHeroProps) {
           </h1>
 
           <div className="w-14 h-[3px] rounded-full bg-[#f4c430]" />
+
+          {caption && (
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="mt-4 text-white/90 text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl"
+            >
+              {caption}
+            </motion.p>
+          )}
         </motion.div>
       </div>
     </div>

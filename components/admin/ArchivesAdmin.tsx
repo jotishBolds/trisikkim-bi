@@ -1,3 +1,4 @@
+// components/admin/ArchivesAdmin.tsx
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -12,16 +13,18 @@ import {
   FileText,
   Loader2,
   Calendar,
+  FolderArchive,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import ImageUpload from "@/components/admin/ImageUpload";
 
-interface Publication {
+interface Archive {
   id: number;
   title: string;
   description: string | null;
+  category: string | null;
   pdfUrl: string;
   publishedAt: string;
   active: boolean;
@@ -31,16 +34,16 @@ const inputCls =
   "h-9 text-xs border-[#1077a6]/[0.15] rounded-lg focus:border-[#1077a6] focus:ring-1 focus:ring-[#1077a6]/10 text-[#1a1550] placeholder:text-[#1a1550]/20";
 const labelCls = "text-[11px] font-medium text-[#1a1550]/40 mb-1 block";
 
-export default function PublicationsAdmin() {
-  const [items, setItems] = useState<Publication[]>([]);
+export default function ArchivesAdmin() {
+  const [items, setItems] = useState<Archive[]>([]);
   const [error, setError] = useState("");
-  const [editing, setEditing] = useState<Partial<Publication> | null>(null);
+  const [editing, setEditing] = useState<Partial<Archive> | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const fetchItems = useCallback(async () => {
     try {
-      const r = await fetch("/api/publications?includeInactive=true");
+      const r = await fetch("/api/archives?includeInactive=true");
       const d = await r.json();
       if (d.success) setItems(d.data);
       else setError(d.error);
@@ -66,7 +69,7 @@ export default function PublicationsAdmin() {
     try {
       const isNew = !editing.id;
       const r = await fetch(
-        isNew ? "/api/publications" : `/api/publications/${editing.id}`,
+        isNew ? "/api/archives" : `/api/archives/${editing.id}`,
         {
           method: isNew ? "POST" : "PUT",
           headers: { "Content-Type": "application/json" },
@@ -86,9 +89,9 @@ export default function PublicationsAdmin() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Delete this publication?")) return;
+    if (!confirm("Delete this archive entry?")) return;
     try {
-      const r = await fetch(`/api/publications/${id}`, { method: "DELETE" });
+      const r = await fetch(`/api/archives/${id}`, { method: "DELETE" });
       const d = await r.json();
       if (d.success) fetchItems();
       else setError(d.error);
@@ -125,9 +128,9 @@ export default function PublicationsAdmin() {
 
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2">
-          <FileText className="w-3.5 h-3.5 text-[#1077a6]" />
+          <FolderArchive className="w-3.5 h-3.5 text-[#1077a6]" />
           <span className="text-xs font-semibold text-[#1a1550]">
-            Publications
+            Archive Documents
           </span>
         </div>
         <Button
@@ -136,13 +139,14 @@ export default function PublicationsAdmin() {
             setEditing({
               title: "",
               description: "",
+              category: "",
               pdfUrl: "",
               active: true,
             })
           }
           className="h-8 text-xs gap-1.5 bg-[#1077a6] hover:bg-[#1077a6]/90 rounded-lg"
         >
-          <Plus className="w-3.5 h-3.5" /> Add Publication
+          <Plus className="w-3.5 h-3.5" /> Add Archive
         </Button>
       </div>
 
@@ -156,7 +160,7 @@ export default function PublicationsAdmin() {
             <Card className="border-[#1077a6]/20 shadow-sm">
               <CardContent className="p-4 space-y-3">
                 <p className="text-sm font-bold text-[#1a1550]">
-                  {editing.id ? "Edit" : "New"} Publication
+                  {editing.id ? "Edit" : "New"} Archive Entry
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -167,10 +171,26 @@ export default function PublicationsAdmin() {
                       onChange={(e) =>
                         setEditing({ ...editing, title: e.target.value })
                       }
-                      placeholder="Publication title"
+                      placeholder="Document title"
                       className={inputCls}
                     />
                   </div>
+
+                  <div>
+                    <label className={labelCls}>Category (optional)</label>
+                    <Input
+                      value={editing.category || ""}
+                      onChange={(e) =>
+                        setEditing({ ...editing, category: e.target.value })
+                      }
+                      placeholder="e.g., 2023, Annual Report, etc."
+                      className={inputCls}
+                    />
+                    <p className="text-[9px] text-[#1a1550]/30 mt-1">
+                      Year or document type for filtering
+                    </p>
+                  </div>
+
                   <div>
                     <label className={labelCls}>Date</label>
                     <Input
@@ -201,7 +221,7 @@ export default function PublicationsAdmin() {
                       setEditing({ ...editing, description: e.target.value })
                     }
                     rows={3}
-                    placeholder="Brief description of this publication"
+                    placeholder="Brief description of this document"
                     className={`w-full resize-none ${inputCls} py-2 px-3 h-auto`}
                   />
                 </div>
@@ -209,8 +229,8 @@ export default function PublicationsAdmin() {
                 <ImageUpload
                   value={editing.pdfUrl || ""}
                   onChange={(url) => setEditing({ ...editing, pdfUrl: url })}
-                  label="PDF File (max 15MB)"
-                  endpoint="publicationPdfUploader"
+                  label="PDF File (max 16MB)"
+                  endpoint="archivePdfUploader"
                   fileType="pdf"
                 />
 
@@ -263,6 +283,9 @@ export default function PublicationsAdmin() {
                 <th className="text-left px-4 py-2.5 font-semibold text-[#1a1550]/50">
                   Title
                 </th>
+                <th className="text-left px-4 py-2.5 font-semibold text-[#1a1550]/50 hidden lg:table-cell">
+                  Category
+                </th>
                 <th className="text-left px-4 py-2.5 font-semibold text-[#1a1550]/50 hidden sm:table-cell">
                   Date
                 </th>
@@ -278,10 +301,10 @@ export default function PublicationsAdmin() {
               {items.length === 0 && (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     className="px-4 py-8 text-center text-[#1a1550]/30"
                   >
-                    No publications yet.
+                    No archive entries yet.
                   </td>
                 </tr>
               )}
@@ -301,6 +324,17 @@ export default function PublicationsAdmin() {
                       <p className="text-[#1a1550]/40 mt-0.5 ml-5.5 line-clamp-1">
                         {item.description}
                       </p>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-[#1a1550]/50 hidden lg:table-cell">
+                    {item.category ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#1077a6]/10 text-[#1077a6]">
+                        {item.category}
+                      </span>
+                    ) : (
+                      <span className="text-[#1a1550]/20 text-[10px]">
+                        Uncategorized
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-[#1a1550]/50 hidden sm:table-cell">

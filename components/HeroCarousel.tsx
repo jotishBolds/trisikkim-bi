@@ -1,4 +1,3 @@
-// components/hero/HeroCarousel.tsx
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -16,6 +15,7 @@ interface SlideData {
   id: number;
   image: string;
   headline: string;
+  caption: string;
   translations?: Translations | null;
 }
 
@@ -55,6 +55,7 @@ export default function HeroCarousel() {
       id: 1,
       image: "/tri.jpeg",
       headline: dict.hero?.fallbackHeadline || "Welcome",
+      caption: "",
     },
   ];
   const [slides, setSlides] = useState<SlideData[]>(fallbackSlides);
@@ -79,6 +80,7 @@ export default function HeroCarousel() {
   const slide = {
     ...rawSlide,
     headline: t?.headline || rawSlide.headline,
+    caption: t?.caption || rawSlide.caption, // NEW: Translate caption
   };
 
   const goTo = useCallback((idx: number, dir: number) => {
@@ -161,7 +163,17 @@ export default function HeroCarousel() {
         </div>
       </div>
 
-      <div className="bg-[#1077A6] relative">
+      <div className="bg-[#1077A6] relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#f4c430 1px, transparent 1px), linear-gradient(90deg, #f4c430 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
+
         <div className="absolute top-0 left-0 right-0 h-1 bg-[#0d5f82]">
           <motion.div
             className="h-full bg-[#f4c430]"
@@ -170,31 +182,46 @@ export default function HeroCarousel() {
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-5 sm:py-6 md:py-8">
-            {/* Title */}
-            <AnimatePresence mode="wait">
-              <motion.h1
-                key={current}
-                variants={textVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="font-display font-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight"
-              >
-                {slide.headline.split("\n").map((line, i) => (
-                  <span key={i}>
-                    {i === 1 ? (
-                      <span className="text-[#f4c430]"> {line}</span>
-                    ) : (
-                      line
-                    )}
-                  </span>
-                ))}
-              </motion.h1>
-            </AnimatePresence>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 py-5 sm:py-6 md:py-8">
+            <div className="flex-1">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current}
+                  variants={textVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                >
+                  <h1 className="font-display font-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight">
+                    {slide.headline.split("\n").map((line, i) => (
+                      <span key={i}>
+                        {i === 1 ? (
+                          <span className="text-[#f4c430]"> {line}</span>
+                        ) : (
+                          line
+                        )}
+                      </span>
+                    ))}
+                  </h1>
 
-            <div className="flex items-center gap-4 sm:gap-6">
+                  <div className="w-14 h-[3px] rounded-full bg-[#f4c430] mt-3" />
+
+                  {slide.caption && (
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.25 }}
+                      className="mt-4 text-white/90 text-sm sm:text-base leading-relaxed max-w-3xl"
+                    >
+                      {slide.caption}
+                    </motion.p>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="flex items-center gap-4 sm:gap-6 sm:pt-2">
               <div className="flex items-center gap-2">
                 {slides.map((s, i) => (
                   <button
