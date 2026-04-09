@@ -1,4 +1,3 @@
-// app/api/hero-slides/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { heroSlides } from "@/lib/db/schema";
@@ -35,14 +34,27 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // CR-10: Only translate headline
-    const translations = await translateForStorage(body, ["headline"]);
+    if (body.caption && body.caption.trim().length < 100) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Caption must be at least 100 characters long.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const translations = await translateForStorage(body, [
+      "headline",
+      "caption",
+    ]);
 
     const [slide] = await db
       .insert(heroSlides)
       .values({
         image: body.image,
         headline: body.headline,
+        caption: body.caption || "",
         sortOrder: body.sortOrder || 0,
         active: body.active ?? true,
         translations,

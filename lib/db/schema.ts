@@ -26,6 +26,7 @@ export const heroSlides = pgTable("hero_slides", {
   id: serial("id").primaryKey(),
   image: text("image").notNull(),
   headline: text("headline").notNull(),
+  caption: text("caption").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
   active: boolean("active").notNull().default(true),
   translations: jsonb("translations"),
@@ -179,6 +180,19 @@ export const updates = pgTable("updates", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+// ─── Archives ────────────────────────────────────────────────────────
+export const archives = pgTable("archives", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }), // Year or Document Type
+  pdfUrl: text("pdf_url").notNull(),
+  publishedAt: timestamp("published_at").defaultNow().notNull(),
+  active: boolean("active").notNull().default(true),
+  translations: jsonb("translations"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
 // ─── Publications ────────────────────────────────────────────────────
 export const publications = pgTable("publications", {
   id: serial("id").primaryKey(),
@@ -225,3 +239,5 @@ export type NewGalleryVideo = typeof galleryVideos.$inferInsert;
 export type NewStaff = typeof staff.$inferInsert;
 export type Publication = typeof publications.$inferSelect;
 export type NewPublication = typeof publications.$inferInsert;
+export type Archive = typeof archives.$inferSelect;
+export type NewArchive = typeof archives.$inferInsert;

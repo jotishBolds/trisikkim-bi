@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+// app/api/admin/stats/route.ts
+import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import {
   heroSlides,
@@ -9,6 +10,7 @@ import {
   contactMessages,
   dignitaries,
   updates,
+  archives, // NEW
 } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { count, eq } from "drizzle-orm";
@@ -43,6 +45,7 @@ export async function GET() {
       .select({ count: count() })
       .from(dignitaries);
     const [updatesCount] = await db.select({ count: count() }).from(updates);
+    const [archivesCount] = await db.select({ count: count() }).from(archives); // NEW
 
     return NextResponse.json({
       success: true,
@@ -56,6 +59,7 @@ export async function GET() {
         unreadMessages: unreadCount.count,
         dignitaries: dignitariesCount.count,
         updates: updatesCount.count,
+        archives: archivesCount.count, // NEW
       },
     });
   } catch (error) {

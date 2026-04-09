@@ -21,6 +21,7 @@ import {
   BookOpen,
   Loader2,
   ExternalLink,
+  FolderArchive,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -33,6 +34,7 @@ const NAV = [
   { label: "Staff", href: "/admin/staff", icon: Users },
   { label: "Gallery", href: "/admin/gallery", icon: ImageIcon },
   { label: "Updates", href: "/admin/updates", icon: Newspaper },
+  { label: "Archives", href: "/admin/archives", icon: FolderArchive }, // NEW
   { label: "About Page", href: "/admin/about", icon: BookOpen, exact: true },
   { label: "Messages", href: "/admin/messages", icon: MessageSquare },
   { label: "Settings", href: "/admin/settings", icon: Settings },

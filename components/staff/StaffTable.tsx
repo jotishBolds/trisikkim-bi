@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Mail, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface StaffMember {
@@ -113,7 +113,7 @@ export default function StaffTable({
     <>
       <div className="hidden md:block bg-white rounded-2xl border border-[#1077A6]/10 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px]">
+          <table className="w-full min-w-[800px]">
             <thead>
               <tr style={{ background: "#1077A6" }}>
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white/60 w-14">
@@ -129,7 +129,7 @@ export default function StaffTable({
                   Cadre
                 </th>
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
-                  Email
+                  Contact
                 </th>
               </tr>
             </thead>
@@ -137,7 +137,6 @@ export default function StaffTable({
             <tbody className="divide-y divide-[#1077A6]/6">
               {paginated.map((staff, i) => {
                 const av = avatarBg(i);
-
                 const globalIndex = (page - 1) * pageSize + i;
                 return (
                   <motion.tr
@@ -191,18 +190,36 @@ export default function StaffTable({
                     </td>
 
                     <td className="px-5 py-4">
-                      {staff.email ? (
-                        <a
-                          href={`mailto:${staff.email}`}
-                          className="text-[13px] text-[#1077A6] hover:underline underline-offset-2"
-                        >
-                          {staff.email}
-                        </a>
-                      ) : (
-                        <span className="text-[#1a1550]/25 italic text-[12px]">
-                          —
-                        </span>
-                      )}
+                      <div className="space-y-1.5">
+                        {staff.email ? (
+                          <div className="flex items-center gap-2">
+                            <Mail className="w-3.5 h-3.5 text-[#1077A6]/50 flex-shrink-0" />
+                            <a
+                              href={`mailto:${staff.email}`}
+                              className="text-[13px] text-[#1077A6] hover:underline underline-offset-2 truncate max-w-[200px]"
+                              title={staff.email}
+                            >
+                              {staff.email}
+                            </a>
+                          </div>
+                        ) : null}
+                        {staff.phone ? (
+                          <div className="flex items-center gap-2">
+                            <Phone className="w-3.5 h-3.5 text-[#1077A6]/50 flex-shrink-0" />
+                            <a
+                              href={`tel:${staff.phone}`}
+                              className="text-[13px] text-[#1077A6] hover:underline underline-offset-2"
+                            >
+                              {staff.phone}
+                            </a>
+                          </div>
+                        ) : null}
+                        {!staff.email && !staff.phone && (
+                          <span className="text-[#1a1550]/25 italic text-[12px]">
+                            —
+                          </span>
+                        )}
+                      </div>
                     </td>
                   </motion.tr>
                 );
@@ -271,13 +288,28 @@ export default function StaffTable({
                     {staff.cadre}
                   </p>
                 )}
+
                 {staff.email && (
-                  <a
-                    href={`mailto:${staff.email}`}
-                    className="block text-[12px] text-[#1077A6] hover:underline underline-offset-2 truncate"
-                  >
-                    {staff.email}
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-3 h-3 text-[#1077A6]/50 flex-shrink-0" />
+                    <a
+                      href={`mailto:${staff.email}`}
+                      className="text-[12px] text-[#1077A6] hover:underline underline-offset-2 truncate"
+                    >
+                      {staff.email}
+                    </a>
+                  </div>
+                )}
+                {staff.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-3 h-3 text-[#1077A6]/50 flex-shrink-0" />
+                    <a
+                      href={`tel:${staff.phone}`}
+                      className="text-[12px] text-[#1077A6] hover:underline underline-offset-2"
+                    >
+                      {staff.phone}
+                    </a>
+                  </div>
                 )}
               </div>
 
@@ -370,7 +402,6 @@ export default function StaffTable({
                 ),
               )}
 
-              {/* Next */}
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}

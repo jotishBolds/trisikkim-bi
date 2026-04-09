@@ -41,6 +41,45 @@ export const ourFileRouter = {
     .onUploadComplete(({ file }) => {
       return { url: file.ufsUrl };
     }),
+
+  publicationPdfUploader: f({
+    pdf: {
+      maxFileSize: "16MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(() => {
+      return {};
+    })
+    .onUploadComplete(({ file }) => {
+      return { url: file.ufsUrl };
+    }),
+
+  archivePdfUploader: f({
+    pdf: {
+      maxFileSize: "16MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(() => {
+      return {};
+    })
+    .onUploadComplete(({ file }) => {
+      return { url: file.ufsUrl };
+    }),
+
+  circularPdfUploader: f({
+    pdf: {
+      maxFileSize: "16MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(() => {
+      return {};
+    })
+    .onUploadComplete(({ file }) => {
+      return { url: file.ufsUrl };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

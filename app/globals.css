@@ -1,3 +1,4 @@
+/* app/globals.css */
 @import "tailwindcss";
 @import "../node_modules/tw-animate-css/dist/tw-animate.css";
 
@@ -81,6 +82,27 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* ── R2-02: TRI Sikkim Brand Colors ─────────────────────────────────── */
+  /* Primary brand colors */
+  --tri-blue: #1077a6;
+  --tri-blue-dark: #0d5f82;
+  --tri-blue-light: #e8f4fb;
+
+  /* NEW: High-contrast text colors (WCAG AA compliant) */
+  --tri-text-primary: #1a3a6b; /* Dark Blue - Primary text */
+  --tri-text-secondary: #1b6b3a; /* Dark Green - Accent text */
+  --tri-text-dark: #1a1550; /* Existing dark purple - Headlines */
+  --tri-text-body: #2d3748; /* Dark gray - Body text */
+  --tri-text-muted: #4a5568; /* Medium gray - Secondary text */
+
+  /* Accent colors (for backgrounds, buttons - NOT text on light bg) */
+  --tri-gold: #f4c430;
+  --tri-gold-dark: #d4a520;
+
+  /* Legacy grey replacements */
+  --tri-gray-text: #374151; /* Replaces light grays for text */
+  --tri-gray-muted: #4b5563; /* Replaces muted grays */
 }
 
 .dark {
@@ -126,10 +148,236 @@
   }
 }
 
+/* ── R2-02: High-Contrast Text Color Overrides ──────────────────────── */
+/* 
+ * Replaces yellow and light grey text with WCAG AA compliant dark colors.
+ * Contrast ratios: Body text ≥ 4.5:1, Large text ≥ 3:1
+ */
+
+/* Base text colors - ensure dark, readable text */
+body {
+  color: var(--tri-text-body);
+}
+
+/* Headings - Dark Blue primary */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading,
+[class*="font-display"] {
+  color: var(--tri-text-primary);
+}
+
+/* Override low-contrast text patterns */
+/* Yellow text on light backgrounds - replace with dark */
+.text-yellow-400,
+.text-yellow-500,
+.text-yellow-600,
+.text-amber-400,
+.text-amber-500,
+[class*="text-[#f4c430]"]:not(button):not([role="button"]):not(.btn) {
+  color: var(--tri-text-primary) !important;
+}
+
+/* Light grey text - replace with darker grey */
+.text-gray-300,
+.text-gray-400,
+.text-slate-300,
+.text-slate-400,
+.text-zinc-300,
+.text-zinc-400,
+.text-neutral-300,
+.text-neutral-400 {
+  color: var(--tri-text-muted) !important;
+}
+
+/* Very light text on light backgrounds */
+[class*="text-[#1a1550]/20"],
+[class*="text-[#1a1550]/25"],
+[class*="text-[#1a1550]/30"] {
+  color: var(--tri-gray-muted) !important;
+}
+
+/* Muted text improvements */
+[class*="text-[#1a1550]/40"],
+[class*="text-[#1a1550]/50"] {
+  color: var(--tri-gray-text) !important;
+}
+
+/* Content paragraphs */
+.prose,
+.prose p,
+article p,
+main p,
+.content p {
+  color: var(--tri-text-body);
+}
+
+/* Links and interactive elements */
+a:not(.btn):not(button):not([role="button"]) {
+  color: var(--tri-blue);
+}
+
+a:not(.btn):not(button):not([role="button"]):hover {
+  color: var(--tri-blue-dark);
+}
+
+/* Secondary/accent text - Dark Green */
+.text-accent,
+.accent-text,
+.secondary-text {
+  color: var(--tri-text-secondary);
+}
+
+/* Exceptions: White text on dark backgrounds is fine */
+.bg-\[\#1077A6\] *,
+.bg-\[\#1a1550\] *,
+[class*="bg-[#1077A6]"] *,
+[class*="bg-[#1a1550]"] *,
+.dark *,
+nav[class*="bg-[#1077A6]"] *,
+header[class*="bg-[#1077A6]"] * {
+  /* Allow white/light text on dark backgrounds */
+}
+
+/* Keep gold/yellow for backgrounds and accents - NOT text */
+.bg-\[\#f4c430\],
+[class*="bg-[#f4c430]"],
+.bg-yellow-400,
+.bg-amber-400 {
+  /* Background usage is fine */
+  color: var(--tri-text-dark); /* Ensure text on gold bg is dark */
+}
+
+/* Button text on gold/yellow backgrounds */
+button.bg-\[\#f4c430\],
+[role="button"].bg-\[\#f4c430\],
+.btn.bg-\[\#f4c430\] {
+  color: var(--tri-text-dark) !important;
+}
+
+/* ── R2-03: Justified Text Alignment for Content Paragraphs ─────────── */
+/* 
+ * Applied to content areas only - excludes navigation, headings, 
+ * captions, form labels, and button text.
+ * Falls back to left-align on mobile (<640px) to prevent excessive word spacing.
+ */
+
+/* Prose content (Tailwind Typography plugin) */
+.prose p,
+.prose li,
+.prose blockquote {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  word-break: break-word;
+}
+
+/* Article and main content areas */
+article p,
+main p,
+.content p,
+.description p,
+.excerpt p,
+[class*="content"] > p,
+[class*="description"] > p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  word-break: break-word;
+}
+
+/* Tribe detail pages, About pages, Update detail views */
+.tribe-content p,
+.about-content p,
+.update-content p,
+.archive-content p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* Dangerously set HTML content */
+[dangerouslySetInnerHTML] p,
+.rich-content p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* Mobile fallback - left align for better readability on narrow screens */
+@media (max-width: 639px) {
+  .prose p,
+  .prose li,
+  .prose blockquote,
+  article p,
+  main p,
+  .content p,
+  .description p,
+  .excerpt p,
+  [class*="content"] > p,
+  [class*="description"] > p,
+  .tribe-content p,
+  .about-content p,
+  .update-content p,
+  .archive-content p,
+  [dangerouslySetInnerHTML] p,
+  .rich-content p {
+    text-align: left;
+    hyphens: none;
+    -webkit-hyphens: none;
+  }
+}
+
+/* ── Exclusions: Elements that should NOT be justified ─────────────── */
+nav p,
+header p,
+footer p,
+.nav p,
+.navbar p,
+.hero p,
+.card p,
+.caption,
+.figcaption,
+figcaption,
+label,
+button,
+.btn,
+[role="button"],
+.badge,
+.tag,
+.pill,
+.tooltip,
+.alert p,
+.notice p,
+.error p,
+.success p,
+.warning p,
+.info p,
+.truncate,
+.line-clamp-1,
+.line-clamp-2,
+.line-clamp-3,
+[class*="truncate"],
+[class*="line-clamp"] {
+  text-align: left !important;
+  hyphens: none !important;
+}
+
+/* Short text fragments - single line items */
+p.single-line,
+p.short-text,
+.excerpt-short p,
+.teaser p {
+  text-align: left !important;
+}
+
 /* ── Accessibility Modes ─────────────────────────────────────────────── */
 
 /* ── Font size steps (applied on <html>) ─────── */
-/* Changing html font-size scales all rem-based sizes site-wide */
 html.a11y-text-1 {
   font-size: 112.5% !important;
 }

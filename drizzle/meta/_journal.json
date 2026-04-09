@@ -71,6 +71,20 @@
       "when": 1775020699862,
       "tag": "0009_peaceful_dust",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1775641408720,
+      "tag": "0010_lethal_wild_child",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1775643326807,
+      "tag": "0011_sweet_talos",
+      "breakpoints": true
     }
   ]
 }

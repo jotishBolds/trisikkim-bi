@@ -1,3 +1,4 @@
+// components/admin/ImageUpload.tsx
 "use client";
 
 import { useState, useCallback } from "react";
@@ -5,13 +6,41 @@ import { useUploadThing } from "@/lib/uploadthing-client";
 import { Upload, X, Loader2, AlertCircle, FileText } from "lucide-react";
 import Image from "next/image";
 
+type UploadEndpoint =
+  | "imageUploader"
+  | "galleryUploader"
+  | "pdfUploader"
+  | "publicationPdfUploader"
+  | "archivePdfUploader"
+  | "circularPdfUploader";
+
 interface ImageUploadProps {
   value: string;
   onChange: (url: string) => void;
   label?: string;
-  endpoint?: "imageUploader" | "galleryUploader" | "pdfUploader";
+  endpoint?: UploadEndpoint;
   fileType?: "image" | "pdf";
 }
+
+// File size limits in bytes
+const FILE_SIZE_LIMITS: Record<UploadEndpoint, number> = {
+  imageUploader: 32 * 1024 * 1024, // 32MB
+  galleryUploader: 32 * 1024 * 1024, // 32MB
+  pdfUploader: 4 * 1024 * 1024, // 4MB (legacy)
+  publicationPdfUploader: 15 * 1024 * 1024, // 15MB (user-facing limit)
+  archivePdfUploader: 15 * 1024 * 1024, // 15MB (user-facing limit)
+  circularPdfUploader: 10 * 1024 * 1024, // 10MB (user-facing limit)
+};
+
+// Human-readable size labels
+const FILE_SIZE_LABELS: Record<UploadEndpoint, string> = {
+  imageUploader: "32MB",
+  galleryUploader: "32MB",
+  pdfUploader: "4MB",
+  publicationPdfUploader: "15MB",
+  archivePdfUploader: "15MB",
+  circularPdfUploader: "10MB",
+};
 
 export default function ImageUpload({
   value,
@@ -36,6 +65,9 @@ export default function ImageUpload({
     },
   });
 
+  const maxFileSize = FILE_SIZE_LIMITS[endpoint];
+  const maxFileSizeLabel = FILE_SIZE_LABELS[endpoint];
+
   const handleFile = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -45,19 +77,17 @@ export default function ImageUpload({
 
       // Client-side validation
       if (fileType === "pdf") {
-        if (file.size > 4 * 1024 * 1024) {
-          setError("File must be under 4MB");
+        if (file.size > maxFileSize) {
+          setError(`File must be under ${maxFileSizeLabel}`);
           return;
         }
         if (file.type !== "application/pdf") {
-          setError(
-            "Only PDF files are accepted for circulars and notifications.",
-          );
+          setError("Only PDF files are accepted.");
           return;
         }
       } else {
-        if (file.size > 32 * 1024 * 1024) {
-          setError("File must be under 32MB");
+        if (file.size > maxFileSize) {
+          setError(`File must be under ${maxFileSizeLabel}`);
           return;
         }
         if (!file.type.startsWith("image/")) {
@@ -69,7 +99,7 @@ export default function ImageUpload({
       setUploading(true);
       await startUpload([file]);
     },
-    [startUpload, fileType],
+    [startUpload, fileType, maxFileSize, maxFileSizeLabel],
   );
 
   return (
@@ -121,10 +151,10 @@ export default function ImageUpload({
           ) : (
             <div className="flex flex-col items-center gap-2">
               <Upload className="w-6 h-6 text-[#1077A6]/40" />
-              <span className="text-xs text-[#1a1550]/50">
+              <span className="text-xs text-[#1a1550]/50 text-center px-2">
                 {fileType === "pdf"
-                  ? "Click to upload PDF (max 4MB)"
-                  : "Click to upload image (min 10MB, max 32MB)"}
+                  ? `Click to upload PDF (max ${maxFileSizeLabel})`
+                  : `Click to upload image (max ${maxFileSizeLabel})`}
               </span>
             </div>
           )}

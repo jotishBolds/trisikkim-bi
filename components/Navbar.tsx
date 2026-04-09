@@ -17,6 +17,7 @@ import {
   Mail,
   Accessibility,
   Globe,
+  FolderArchive, // NEW
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation, langHref } from "@/lib/i18n/use-translation";
@@ -69,6 +70,12 @@ function getNavData(
       label: dict.nav.gallery,
       href: langHref(lang, "/gallery"),
       icon: ImageIcon,
+    },
+
+    {
+      label: dict.nav.archive ?? "Archive",
+      href: langHref(lang, "/archive"),
+      icon: FolderArchive,
     },
     { label: dict.nav.contactUs, href: langHref(lang, "/contact"), icon: Mail },
   ] as const;
