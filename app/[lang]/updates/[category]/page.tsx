@@ -80,7 +80,7 @@ function UpdateCard({
   readFullLabel: string;
 }) {
   const badgeClass =
-    CATEGORY_COLORS[item.category] ?? "bg-gray-100 text-gray-600";
+    CATEGORY_COLORS[item.category] ?? "bg-[#1A3A6B]/8 text-[#1A3A6B]/70";
   const words = item.content.replace(/<[^>]+>/g, "").split(/\s+/).length;
   const mins = Math.max(1, Math.round(words / 200));
   const tr = lang !== "en" ? item.translations?.hi : null;
@@ -171,7 +171,7 @@ function DetailView({
   lang: string;
 }) {
   const badgeClass =
-    CATEGORY_COLORS[item.category] ?? "bg-gray-100 text-gray-600";
+    CATEGORY_COLORS[item.category] ?? "bg-[#1A3A6B]/8 text-[#1A3A6B]/70";
   const words = item.content.replace(/<[^>]+>/g, "").split(/\s+/).length;
   const mins = Math.max(1, Math.round(words / 200));
   const tr = lang !== "en" ? item.translations?.hi : null;

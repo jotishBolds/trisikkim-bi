@@ -702,8 +702,8 @@ function VideoEmptyState({ dict }: { dict: Record<string, any> }) {
         <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#1077A6]/10 to-[#1077A6]/5 grid place-items-center">
           <Video className="w-9 h-9 text-[#1077A6]/40" />
         </div>
-        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#f4c430]/20 grid place-items-center">
-          <Play className="w-3 h-3 text-[#f4c430]" fill="#f4c430" />
+        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#1A3A6B]/15 grid place-items-center">
+          <Play className="w-3 h-3 text-[#1A3A6B]" fill="#1A3A6B" />
         </div>
       </div>
       <div className="text-center">
@@ -984,8 +984,8 @@ function VideoCategoryOverview({
                 {t(dict, "videosCount", "Videos")}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 bg-[#f4c430]/10 border border-[#f4c430]/20 px-3 py-1.5 rounded-xl">
-              <LayoutGrid className="w-3.5 h-3.5 text-[#f4c430]" />
+            <div className="flex items-center gap-1.5 bg-[#1A3A6B]/[0.06] border border-[#1A3A6B]/10 px-3 py-1.5 rounded-xl">
+              <LayoutGrid className="w-3.5 h-3.5 text-[#1A3A6B]" />
               <span className="text-[#1a1550] text-xs font-semibold">
                 {activeCats.length + (uncategorized.length > 0 ? 1 : 0)}
               </span>

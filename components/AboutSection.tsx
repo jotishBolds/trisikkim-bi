@@ -72,7 +72,7 @@ export default function AboutSection() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-center text-[11px] font-bold uppercase tracking-[.18em] text-[#f4c430] mb-8"
+            className="text-center text-[11px] font-bold uppercase tracking-[.18em] text-[#1077A6] mb-8"
           >
             {d.distinguishedLeadership}
           </motion.p>
@@ -208,19 +208,19 @@ export default function AboutSection() {
                 number="01"
                 title={d.card01Title}
                 description={d.card01Desc}
-                accent="#f4c430"
+                accent="#1A3A6B"
               />
               <TRICard
                 number="02"
                 title={d.card02Title}
                 description={d.card02Desc}
-                accent="#f4c430"
+                accent="#1A3A6B"
               />
               <TRICard
                 number="03"
                 title={d.card03Title}
                 description={d.card03Desc}
-                accent="#f4c430"
+                accent="#1A3A6B"
               />
             </div>
           </motion.div>
@@ -319,7 +319,7 @@ function SectionLabel({
       <div className="w-6 h-6 rounded bg-[#f4c430]/15 flex items-center justify-center">
         <Icon className="w-3.5 h-3.5 text-[#1a1550]" />
       </div>
-      <span className="text-[11px] font-bold uppercase tracking-[.18em] text-[#f4c430]">
+      <span className="text-[11px] font-bold uppercase tracking-[.18em] text-[#1077A6]">
         {text}
       </span>
     </div>

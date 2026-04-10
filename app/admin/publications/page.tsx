@@ -318,7 +318,7 @@ export default function PublicationsAdmin() {
                       className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                         item.active
                           ? "bg-green-100 text-green-700"
-                          : "bg-gray-100 text-gray-500"
+                          : "bg-[#1A3A6B]/8 text-[#1A3A6B]/60"
                       }`}
                     >
                       {item.active ? "Active" : "Inactive"}

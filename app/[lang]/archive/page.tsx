@@ -50,7 +50,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Report: "bg-green-100 text-green-700",
   Policy: "bg-rose-100 text-rose-700",
   Minutes: "bg-cyan-100 text-cyan-700",
-  default: "bg-gray-100 text-gray-600",
+  default: "bg-[#1A3A6B]/8 text-[#1A3A6B]/70",
 };
 
 function SkeletonCard() {
@@ -421,7 +421,7 @@ export default function ArchivePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A3A6B]/40" />
                   <Input
                     placeholder={t.searchPlaceholder}
                     value={searchTerm}
@@ -434,7 +434,7 @@ export default function ArchivePage() {
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1A3A6B]/40 hover:text-[#1A3A6B]/70"
                     >
                       <X className="w-4 h-4" />
                     </button>

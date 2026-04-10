@@ -191,7 +191,7 @@ export default function StaffTable({
 
                     <td className="px-5 py-4">
                       <div className="space-y-1.5">
-                        {staff.email ? (
+                        {staff.email && (
                           <div className="flex items-center gap-2">
                             <Mail className="w-3.5 h-3.5 text-[#1077A6]/50 flex-shrink-0" />
                             <a
@@ -202,23 +202,22 @@ export default function StaffTable({
                               {staff.email}
                             </a>
                           </div>
-                        ) : null}
-                        {staff.phone ? (
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-3.5 h-3.5 text-[#1077A6]/50 flex-shrink-0" />
+                        )}
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-3.5 h-3.5 text-[#1077A6]/50 flex-shrink-0" />
+                          {staff.phone ? (
                             <a
                               href={`tel:${staff.phone}`}
                               className="text-[13px] text-[#1077A6] hover:underline underline-offset-2"
                             >
                               {staff.phone}
                             </a>
-                          </div>
-                        ) : null}
-                        {!staff.email && !staff.phone && (
-                          <span className="text-[#1a1550]/25 italic text-[12px]">
-                            —
-                          </span>
-                        )}
+                          ) : (
+                            <span className="text-[#1a1550]/25 italic text-[12px]">
+                              —
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </td>
                   </motion.tr>
@@ -300,17 +299,21 @@ export default function StaffTable({
                     </a>
                   </div>
                 )}
-                {staff.phone && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-3 h-3 text-[#1077A6]/50 flex-shrink-0" />
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3 h-3 text-[#1077A6]/50 flex-shrink-0" />
+                  {staff.phone ? (
                     <a
                       href={`tel:${staff.phone}`}
                       className="text-[12px] text-[#1077A6] hover:underline underline-offset-2"
                     >
                       {staff.phone}
                     </a>
-                  </div>
-                )}
+                  ) : (
+                    <span className="text-[#1a1550]/25 italic text-[11px]">
+                      —
+                    </span>
+                  )}
+                </div>
               </div>
 
               <span className="flex-shrink-0 text-[11px] font-mono text-[#1a1550]/25 mt-0.5">

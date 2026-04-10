@@ -199,10 +199,10 @@ export function TribeDetailContent({
               transition={{ duration: 0.5 }}
               className="flex items-center gap-3 mb-3"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#f4c430]/15 border border-[#f4c430]/20 flex items-center justify-center">
-                <Images className="w-4 h-4 text-[#f4c430]" />
+              <div className="w-8 h-8 rounded-lg bg-[#1B6B3A]/10 border border-[#1B6B3A]/20 flex items-center justify-center">
+                <Images className="w-4 h-4 text-[#1B6B3A]" />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-[.2em] text-[#f4c430]">
+              <span className="text-[11px] font-bold uppercase tracking-[.2em] text-[#1B6B3A]">
                 Gallery
               </span>
               <span className="text-[11px] text-[#1a1550]/30 font-medium">
