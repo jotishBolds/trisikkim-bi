@@ -99,7 +99,7 @@ function ArchiveCard({
       onClick={onClick}
       className="group bg-white rounded-2xl overflow-hidden border border-[#1077A6]/10 hover:border-[#f4c430]/40 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
     >
-      <div className="relative h-48 bg-gradient-to-br from-red-50 to-red-100/50 overflow-hidden flex-shrink-0">
+      <div className="relative h-48 bg-linear-to-br from-red-50 to-red-100/50 overflow-hidden shrink-0">
         <div className="w-full h-full flex items-center justify-center">
           <div className="relative">
             <FileText className="w-16 h-16 text-red-400 group-hover:scale-110 transition-transform duration-300" />
@@ -407,7 +407,7 @@ export default function ArchivePage() {
           >
             {error && (
               <div className="flex items-center gap-2 bg-red-50 text-red-700 rounded-lg p-4 mb-8 border border-red-200 text-sm">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}
+                <AlertCircle className="w-4 h-4 shrink-0" /> {error}
               </div>
             )}
 

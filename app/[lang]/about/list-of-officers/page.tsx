@@ -92,7 +92,7 @@ export default function ListOfOfficersPage() {
           className="flex items-start gap-4 mb-8"
         >
           <div
-            className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center border mt-0.5"
+            className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center border mt-0.5"
             style={{ background: "#1077A615", borderColor: "#1077A630" }}
           >
             <Users className="w-5 h-5 text-[#1077A6]" />

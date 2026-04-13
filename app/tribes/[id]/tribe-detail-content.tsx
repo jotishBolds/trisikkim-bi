@@ -58,7 +58,7 @@ export function TribeDetailContent({
               priority
               unoptimized
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1077A6]/98 via-[#1077A6]/75 to-[#1a1550]/40" />
+            <div className="absolute inset-0 bg-linear-to-r from-[#1077A6]/98 via-[#1077A6]/75 to-[#1a1550]/40" />
           </>
         )}
 
@@ -209,7 +209,7 @@ export function TribeDetailContent({
                 {gallery.length} photo{gallery.length !== 1 ? "s" : ""}
               </span>
             </motion.div>
-            <div className="w-full h-px bg-gradient-to-r from-[#1077A6]/15 via-[#f4c430]/25 to-transparent mb-8" />
+            <div className="w-full h-px bg-linear-to-r from-[#1077A6]/15 via-[#f4c430]/25 to-transparent mb-8" />
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
               {gallery.map((item, i) => (
@@ -240,7 +240,7 @@ export function TribeDetailContent({
                         <ZoomIn className="w-4 h-4 text-white" />
                       </div>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1550]/60 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#1a1550]/60 via-transparent to-transparent" />
                     {item.label && (
                       <div className="absolute bottom-0 left-0 right-0 p-3">
                         <p className="text-white text-[11px] font-semibold leading-snug line-clamp-2">

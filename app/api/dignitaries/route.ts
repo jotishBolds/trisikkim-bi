@@ -32,10 +32,39 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
-    const translations = await translateForStorage(body, ["name", "role"]);
+    const { name, role, image, sortOrder, active } = body;
+    if (!name || typeof name !== "string" || !name.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Name is required." },
+        { status: 400 },
+      );
+    }
+    if (!role || typeof role !== "string" || !role.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Role/designation is required." },
+        { status: 400 },
+      );
+    }
+    if (!image || typeof image !== "string" || !image.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Photo is required." },
+        { status: 400 },
+      );
+    }
+    const translations = await translateForStorage(
+      { name: name.trim(), role: role.trim() },
+      ["name", "role"],
+    );
     const [item] = await db
       .insert(dignitaries)
-      .values({ ...body, translations })
+      .values({
+        name: name.trim(),
+        role: role.trim(),
+        image: image.trim(),
+        sortOrder: sortOrder ?? 0,
+        active: active ?? true,
+        translations,
+      })
       .returning();
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {

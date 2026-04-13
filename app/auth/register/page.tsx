@@ -165,7 +165,7 @@ export default function RegisterPage() {
           </p>
           <Button
             asChild
-            className="h-10 px-6 rounded-xl bg-gradient-to-r from-[#1077a6] to-[#0e6590] text-white shadow-lg shadow-[#1077a6]/20 font-semibold text-sm"
+            className="h-10 px-6 rounded-xl bg-linear-to-r from-[#1077a6] to-[#0e6590] text-white shadow-lg shadow-[#1077a6]/20 font-semibold text-sm"
           >
             <Link href="/auth/login" className="gap-2">
               Go to Login
@@ -269,7 +269,7 @@ export default function RegisterPage() {
                       transition={{ duration: 0.25 }}
                       className="flex items-center gap-2 bg-red-50 text-red-700 rounded-xl p-2.5 text-xs sm:text-sm border border-red-100"
                     >
-                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{error}</span>
                     </motion.div>
                   )}
@@ -303,7 +303,7 @@ export default function RegisterPage() {
                       className="pl-10 h-10 border-[#1077a6]/12 rounded-xl text-sm text-[#1a1550] placeholder:text-[#1a1550]/20 focus-visible:ring-[#1077a6]/20 focus-visible:border-[#1077a6] transition-all"
                     />
                     <motion.div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#f4c430] to-[#1077a6] rounded-full"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-linear-to-r from-[#f4c430] to-[#1077a6] rounded-full"
                       initial={{ width: "0%" }}
                       animate={{
                         width: focusedField === "name" ? "85%" : "0%",
@@ -341,7 +341,7 @@ export default function RegisterPage() {
                       className="pl-10 h-10 border-[#1077a6]/12 rounded-xl text-sm text-[#1a1550] placeholder:text-[#1a1550]/20 focus-visible:ring-[#1077a6]/20 focus-visible:border-[#1077a6] transition-all"
                     />
                     <motion.div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#f4c430] to-[#1077a6] rounded-full"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-linear-to-r from-[#f4c430] to-[#1077a6] rounded-full"
                       initial={{ width: "0%" }}
                       animate={{
                         width: focusedField === "email" ? "85%" : "0%",
@@ -401,7 +401,7 @@ export default function RegisterPage() {
                       </AnimatePresence>
                     </motion.button>
                     <motion.div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#f4c430] to-[#1077a6] rounded-full"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-linear-to-r from-[#f4c430] to-[#1077a6] rounded-full"
                       initial={{ width: "0%" }}
                       animate={{
                         width: focusedField === "password" ? "85%" : "0%",
@@ -439,7 +439,7 @@ export default function RegisterPage() {
                       className="pl-10 h-10 border-[#1077a6]/12 rounded-xl text-sm text-[#1a1550] placeholder:text-[#1a1550]/20 focus-visible:ring-[#1077a6]/20 focus-visible:border-[#1077a6] transition-all"
                     />
                     <motion.div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-[#f4c430] to-[#1077a6] rounded-full"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-linear-to-r from-[#f4c430] to-[#1077a6] rounded-full"
                       initial={{ width: "0%" }}
                       animate={{
                         width:
@@ -502,10 +502,10 @@ export default function RegisterPage() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-10 sm:h-11 rounded-xl text-sm font-semibold bg-gradient-to-r from-[#1077a6] to-[#0e6590] hover:from-[#0e6590] hover:to-[#1a1550] text-white shadow-lg shadow-[#1077a6]/20 hover:shadow-[#1077a6]/30 transition-all duration-500 group relative overflow-hidden"
+                    className="w-full h-10 sm:h-11 rounded-xl text-sm font-semibold bg-linear-to-r from-[#1077a6] to-[#0e6590] hover:from-[#0e6590] hover:to-[#1a1550] text-white shadow-lg shadow-[#1077a6]/20 hover:shadow-[#1077a6]/30 transition-all duration-500 group relative overflow-hidden"
                   >
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-[#f4c430]/0 via-[#f4c430]/10 to-[#f4c430]/0"
+                      className="absolute inset-0 bg-linear-to-r from-[#f4c430]/0 via-[#f4c430]/10 to-[#f4c430]/0"
                       animate={{ x: ["-200%", "200%"] }}
                       transition={{
                         duration: 3,

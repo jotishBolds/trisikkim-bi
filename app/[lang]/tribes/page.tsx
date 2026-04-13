@@ -24,7 +24,7 @@ interface TribeData {
 function SkeletonCard() {
   return (
     <div className="rounded-2xl overflow-hidden animate-pulse bg-white border border-[#1077A6]/8">
-      <div className="h-64 bg-gradient-to-br from-[#1077A6]/10 to-[#1a1550]/8" />
+      <div className="h-64 bg-linear-to-br from-[#1077A6]/10 to-[#1a1550]/8" />
       <div className="p-6 space-y-3">
         <div className="h-6 w-2/3 bg-[#1a1550]/8 rounded-full" />
         <div className="h-4 w-full bg-[#1a1550]/6 rounded-full" />
@@ -134,7 +134,7 @@ function TribeCard({
         href={langHref(lang, `/tribes/${tribe.id}`)}
         className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-[#1077A6]/10 hover:border-[#f4c430]/40 hover:shadow-2xl hover:shadow-[#1077A6]/10 transition-all duration-400 h-full"
       >
-        <div className="relative h-64 overflow-hidden bg-gradient-to-br from-[#1077A6]/10 to-[#1a1550]/10 flex-shrink-0">
+        <div className="relative h-64 overflow-hidden bg-linear-to-br from-[#1077A6]/10 to-[#1a1550]/10 shrink-0">
           {tribe.image ? (
             <Image
               src={tribe.image}
@@ -149,7 +149,7 @@ function TribeCard({
               <Users className="w-12 h-12 text-[#1077A6]/20" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1550]/70 via-[#1a1550]/10 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#1a1550]/70 via-[#1a1550]/10 to-transparent" />
           <div className="absolute top-4 left-4">
             <span className="inline-flex items-center gap-1.5 bg-[#1a1550]/50 backdrop-blur-sm text-[#f4c430] text-[10px] font-bold uppercase tracking-[.14em] px-2.5 py-1.5 rounded-full border border-[#f4c430]/20">
               <span className="w-1.5 h-1.5 rounded-full bg-[#f4c430]" />

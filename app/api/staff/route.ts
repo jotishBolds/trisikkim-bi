@@ -32,14 +32,44 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
-    const translations = await translateForStorage(body, [
-      "name",
-      "designation",
-      "cadre",
-    ]);
+    const { name, designation, cadre, email, phone, sortOrder, active } = body;
+    if (!name || typeof name !== "string" || !name.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Staff name is required." },
+        { status: 400 },
+      );
+    }
+    if (
+      !designation ||
+      typeof designation !== "string" ||
+      !designation.trim()
+    ) {
+      return NextResponse.json(
+        { success: false, error: "Designation is required." },
+        { status: 400 },
+      );
+    }
+    const translations = await translateForStorage(
+      {
+        name: name.trim(),
+        designation: designation.trim(),
+        cadre: cadre ?? "",
+      },
+      ["name", "designation", "cadre"],
+    );
     const [item] = await db
       .insert(staff)
-      .values({ ...body, type: "staff", translations })
+      .values({
+        name: name.trim(),
+        designation: designation.trim(),
+        cadre: cadre ?? null,
+        email: email ?? null,
+        phone: phone ?? null,
+        type: "staff",
+        sortOrder: sortOrder ?? 0,
+        active: active ?? true,
+        translations,
+      })
       .returning();
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {

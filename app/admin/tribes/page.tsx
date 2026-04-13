@@ -51,6 +51,14 @@ export default function TribesAdmin() {
   const [editing, setEditing] = useState<Partial<TribeItem> | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  const toSlug = (name: string) =>
+    name
+      .toUpperCase()
+      .trim()
+      .replace(/[^A-Z0-9 ]/g, "")
+      .replace(/\s+/g, " ");
 
   const fetch_ = useCallback(async () => {
     try {
@@ -72,11 +80,24 @@ export default function TribesAdmin() {
   const handleSave = async () => {
     if (!editing) return;
     setError("");
+    const errs: Record<string, string> = {};
+    if (!editing.id?.trim()) errs.id = "ID is required.";
+    if (!editing.name?.trim()) errs.name = "Name is required.";
+    if (!editing.heroImage?.trim())
+      errs.heroImage = "Hero banner image is required.";
+    if (!editing.excerpt?.trim()) errs.excerpt = "Short excerpt is required.";
+    if (Object.keys(errs).length > 0) {
+      setFormErrors(errs);
+      return;
+    }
+    setFormErrors({});
     setSaving(true);
     try {
       const isNew = !items.find((i) => i.id === editing.id);
       const r = await fetch(
-        isNew ? "/api/tribes" : `/api/tribes/${editing.id}`,
+        isNew
+          ? "/api/tribes"
+          : `/api/tribes/${encodeURIComponent(editing.id!)}`,
         {
           method: isNew ? "POST" : "PUT",
           headers: { "Content-Type": "application/json" },
@@ -98,7 +119,9 @@ export default function TribesAdmin() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete?")) return;
     try {
-      const r = await fetch(`/api/tribes/${id}`, { method: "DELETE" });
+      const r = await fetch(`/api/tribes/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
       const d = await r.json();
       if (d.success) fetch_();
       else setError(d.error);
@@ -136,7 +159,8 @@ export default function TribesAdmin() {
       <div className="flex justify-end">
         <Button
           size="sm"
-          onClick={() =>
+          onClick={() => {
+            setFormErrors({});
             setEditing({
               id: "",
               name: "",
@@ -148,8 +172,8 @@ export default function TribesAdmin() {
               gallery: [],
               sortOrder: 0,
               active: true,
-            })
-          }
+            });
+          }}
           className="h-8 text-xs gap-1.5 bg-[#1077a6] hover:bg-[#1077a6]/90 rounded-lg"
         >
           <Plus className="w-3.5 h-3.5" /> Add Tribe
@@ -176,13 +200,20 @@ export default function TribesAdmin() {
                     onChange={(url) => setEditing({ ...editing, image: url })}
                     label="Thumbnail"
                   />
-                  <ImageUpload
-                    value={editing.heroImage || ""}
-                    onChange={(url) =>
-                      setEditing({ ...editing, heroImage: url })
-                    }
-                    label="Hero Banner"
-                  />
+                  <div>
+                    <ImageUpload
+                      value={editing.heroImage || ""}
+                      onChange={(url) =>
+                        setEditing({ ...editing, heroImage: url })
+                      }
+                      label="Hero Banner"
+                    />
+                    {formErrors.heroImage && (
+                      <p className="text-[10px] text-red-500 mt-0.5">
+                        {formErrors.heroImage}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -194,18 +225,34 @@ export default function TribesAdmin() {
                         setEditing({ ...editing, id: e.target.value })
                       }
                       disabled={!!items.find((i) => i.id === editing.id)}
-                      className={`${inputCls} disabled:opacity-40`}
+                      className={`${inputCls} disabled:opacity-40 ${formErrors.id ? "border-red-400" : ""}`}
                     />
+                    {formErrors.id && (
+                      <p className="text-[10px] text-red-500 mt-0.5">
+                        {formErrors.id}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className={labelCls}>Name</label>
                     <Input
                       value={editing.name || ""}
-                      onChange={(e) =>
-                        setEditing({ ...editing, name: e.target.value })
-                      }
-                      className={inputCls}
+                      onChange={(e) => {
+                        const name = e.target.value;
+                        const isNew = !items.find((i) => i.id === editing.id);
+                        setEditing({
+                          ...editing,
+                          name,
+                          ...(isNew ? { id: toSlug(name) } : {}),
+                        });
+                      }}
+                      className={`${inputCls} ${formErrors.name ? "border-red-400" : ""}`}
                     />
+                    {formErrors.name && (
+                      <p className="text-[10px] text-red-500 mt-0.5">
+                        {formErrors.name}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className={labelCls}>Accent Color</label>
@@ -251,8 +298,13 @@ export default function TribesAdmin() {
                       setEditing({ ...editing, excerpt: e.target.value })
                     }
                     rows={2}
-                    className={`w-full resize-none ${inputCls} py-2 px-3 h-auto`}
+                    className={`w-full resize-none ${inputCls} py-2 px-3 h-auto ${formErrors.excerpt ? "border-red-400" : ""}`}
                   />
+                  {formErrors.excerpt && (
+                    <p className="text-[10px] text-red-500 mt-0.5">
+                      {formErrors.excerpt}
+                    </p>
+                  )}
                 </div>
 
                 <RichEditor
@@ -367,7 +419,10 @@ export default function TribesAdmin() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => setEditing(null)}
+                    onClick={() => {
+                      setEditing(null);
+                      setFormErrors({});
+                    }}
                     className="h-8 text-xs gap-1.5 rounded-lg border-[#1077a6]/20"
                   >
                     <X className="w-3.5 h-3.5" /> Cancel

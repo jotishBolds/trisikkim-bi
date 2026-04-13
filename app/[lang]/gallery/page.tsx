@@ -543,7 +543,7 @@ export default function GalleryPage() {
                   className="object-contain"
                   unoptimized
                 />
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 sm:p-5">
+                <div className="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-4 sm:p-5">
                   <p className="text-white font-semibold text-sm">
                     {getLabel(sections[lightbox.si], lang)}
                   </p>
@@ -640,10 +640,10 @@ function NavChip({
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 flex-shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold transition-all duration-200 whitespace-nowrap",
+        "flex items-center gap-1.5 shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold transition-all duration-200 whitespace-nowrap",
         active
           ? variant === "video"
-            ? "bg-gradient-to-r from-[#1077A6] to-[#0d5f85] text-white shadow-sm shadow-[#1077A6]/20"
+            ? "bg-linear-to-r from-[#1077A6] to-[#0d5f85] text-white shadow-sm shadow-[#1077A6]/20"
             : "bg-[#1077A6] text-white shadow-sm"
           : "bg-[#f4f3fb] text-[#1a1550]/55 hover:bg-[#1077A6]/10 hover:text-[#1077A6]",
       )}
@@ -674,11 +674,11 @@ function Empty({ icon, text }: { icon: React.ReactNode; text: string }) {
 function SectionDivider({ text }: { text: string }) {
   return (
     <div className="flex items-center gap-2 mb-6">
-      <div className="h-px flex-1 bg-gradient-to-r from-[#1077A6]/15 to-transparent" />
+      <div className="h-px flex-1 bg-linear-to-r from-[#1077A6]/15 to-transparent" />
       <span className="text-[#1a1550]/35 text-xs font-semibold uppercase tracking-widest">
         {text}
       </span>
-      <div className="h-px flex-1 bg-gradient-to-l from-[#1077A6]/15 to-transparent" />
+      <div className="h-px flex-1 bg-linear-to-l from-[#1077A6]/15 to-transparent" />
     </div>
   );
 }
@@ -699,7 +699,7 @@ function VideoEmptyState({ dict }: { dict: Record<string, any> }) {
       className="flex flex-col items-center justify-center py-24 gap-5"
     >
       <div className="relative">
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#1077A6]/10 to-[#1077A6]/5 grid place-items-center">
+        <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-[#1077A6]/10 to-[#1077A6]/5 grid place-items-center">
           <Video className="w-9 h-9 text-[#1077A6]/40" />
         </div>
         <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#1A3A6B]/15 grid place-items-center">
@@ -766,7 +766,7 @@ function AlbumGrid({
                 sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/5 group-hover:from-black/80 transition-all duration-500" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/5 group-hover:from-black/80 transition-all duration-500" />
 
             {section.images.length > 1 && (
               <div className="absolute top-3 left-3 hidden sm:flex -space-x-1.5">
@@ -848,7 +848,7 @@ function AlbumDetail({
           All Albums
         </button>
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1077A6]/15 to-[#1077A6]/5 grid place-items-center flex-shrink-0 mt-0.5">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#1077A6]/15 to-[#1077A6]/5 grid place-items-center shrink-0 mt-0.5">
             <Images className="w-5 h-5 text-[#1077A6]" />
           </div>
           <div className="min-w-0">
@@ -902,7 +902,7 @@ function AlbumDetail({
                     : "(max-width:640px) 50vw,(max-width:1024px) 33vw,25vw"
                 }
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                 <p className="text-white text-[11px] sm:text-xs font-medium truncate">
                   {getAlt(img, lang)}
@@ -961,7 +961,7 @@ function VideoCategoryOverview({
       >
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
           <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1077A6] to-[#0d5f85] grid place-items-center flex-shrink-0 shadow-lg shadow-[#1077A6]/25">
+            <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-[#1077A6] to-[#0d5f85] grid place-items-center shrink-0 shadow-lg shadow-[#1077A6]/25">
               <Play className="w-5 h-5 text-white ml-0.5" fill="white" />
             </div>
             <div>
@@ -1093,7 +1093,7 @@ function VideoCategoryOverview({
                       />
                     )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
                     <div className="absolute inset-0 grid place-items-center">
                       <div className="w-11 h-11 rounded-full bg-white/95 grid place-items-center shadow-xl opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
@@ -1119,7 +1119,7 @@ function VideoCategoryOverview({
                   <div className="bg-white p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-2 h-2 rounded-full bg-[#1077A6] flex-shrink-0" />
+                        <div className="w-2 h-2 rounded-full bg-[#1077A6] shrink-0" />
                         <span className="text-[#1a1550] text-sm font-semibold truncate">
                           {catLabel}
                         </span>
@@ -1144,7 +1144,7 @@ function VideoCategoryOverview({
                           className="flex items-center gap-2 text-[11px] text-[#1a1550]/50"
                         >
                           <Play
-                            className="w-2.5 h-2.5 flex-shrink-0 text-[#1077A6]"
+                            className="w-2.5 h-2.5 shrink-0 text-[#1077A6]"
                             fill="#1077A6"
                           />
                           <span className="truncate">
@@ -1175,7 +1175,7 @@ function VideoCategoryOverview({
               onClick={() => onSelectCategory("uncategorized")}
             >
               <div className="relative rounded-2xl overflow-hidden ring-1 ring-[#1a1550]/10 border-2 border-transparent hover:border-[#f4c430]/40 shadow-md hover:shadow-2xl transition-all duration-500">
-                <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-[#1a1550]/5 to-[#1077A6]/10">
+                <div className="relative aspect-[16/9] overflow-hidden bg-linear-to-br from-[#1a1550]/5 to-[#1077A6]/10">
                   <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-[2px] opacity-40 group-hover:opacity-60 transition-opacity duration-500">
                     {uncategorized.slice(0, 4).map((v) => (
                       <div key={v.id} className="relative">
@@ -1189,7 +1189,7 @@ function VideoCategoryOverview({
                       </div>
                     ))}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-white/30" />
+                  <div className="absolute inset-0 bg-linear-to-t from-white via-white/70 to-white/30" />
 
                   <div className="absolute inset-0 grid place-items-center">
                     <div className="text-center">
@@ -1214,7 +1214,7 @@ function VideoCategoryOverview({
                 <div className="bg-white p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-[#1a1550]/30 flex-shrink-0" />
+                      <div className="w-2 h-2 rounded-full bg-[#1a1550]/30 shrink-0" />
                       <span className="text-[#1a1550] text-sm font-semibold">
                         General Videos
                       </span>
@@ -1232,10 +1232,7 @@ function VideoCategoryOverview({
                         key={v.id}
                         className="flex items-center gap-2 text-[11px] text-[#1a1550]/50"
                       >
-                        <Play
-                          className="w-2.5 h-2.5 flex-shrink-0 text-[#1077A6]"
-                          fill="#1077A6"
-                        />
+                        <Play className="w-2.5 h-2.5 shrink-0 text-[#1077A6]" />
                         <span className="truncate">
                           {getVideoTitle(v, lang)}
                         </span>
@@ -1347,11 +1344,11 @@ function VideoCategoryDetail({
               unoptimized
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a1550] via-[#1a1550]/95 to-[#1a1550]/80" />
+          <div className="absolute inset-0 bg-linear-to-r from-[#1a1550] via-[#1a1550]/95 to-[#1a1550]/80" />
         </div>
 
         <div className="relative px-5 sm:px-8 py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-[#1077A6] to-[#0d5f85] grid place-items-center flex-shrink-0 shadow-xl">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-linear-to-br from-[#1077A6] to-[#0d5f85] grid place-items-center shrink-0 shadow-xl">
             <Film className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
           </div>
           <div className="flex-1 min-w-0">
@@ -1369,14 +1366,10 @@ function VideoCategoryDetail({
               </p>
             )}
           </div>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-xl text-center">
-              <div className="text-white font-bold text-xl">
-                {videos.length}
-              </div>
-              <div className="text-white/50 text-[10px] font-medium uppercase tracking-wider">
-                {t(dict, "videosCount", "Videos")}
-              </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="text-white font-bold text-xl">{videos.length}</div>
+            <div className="text-white/50 text-[10px] font-medium uppercase tracking-wider">
+              {t(dict, "videosCount", "Videos")}
             </div>
           </div>
         </div>
@@ -1448,7 +1441,7 @@ function FlatVideoGrid({
         animate={{ opacity: 1, y: 0 }}
         className="flex items-start gap-3"
       >
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1077A6] to-[#0d5f85] grid place-items-center flex-shrink-0 shadow-lg shadow-[#1077A6]/25">
+        <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-[#1077A6] to-[#0d5f85] grid place-items-center shrink-0 shadow-lg shadow-[#1077A6]/25">
           <Play className="w-5 h-5 text-white ml-0.5" fill="white" />
         </div>
         <div>
@@ -1527,8 +1520,8 @@ function FeaturedVideoCard({
             unoptimized
             sizes="(max-width:1024px) 100vw, 60vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0a0a1a]/90 hidden lg:block" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a1a] via-transparent to-transparent lg:hidden" />
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-transparent to-[#0a0a1a]/90 hidden lg:block" />
+          <div className="absolute inset-0 bg-linear-to-t from-[#0a0a1a] via-transparent to-transparent lg:hidden" />
 
           <div className="absolute inset-0 grid place-items-center">
             <div className="relative">
@@ -1560,7 +1553,7 @@ function FeaturedVideoCard({
           </div>
         </div>
 
-        <div className="relative lg:w-[40%] p-5 sm:p-6 lg:p-8 flex flex-col justify-center bg-gradient-to-br from-[#0a0a1a] via-[#0f1535] to-[#0a0a1a]">
+        <div className="relative lg:w-[40%] p-5 sm:p-6 lg:p-8 flex flex-col justify-center bg-linear-to-br from-[#0a0a1a] via-[#0f1535] to-[#0a0a1a]">
           <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.04] hidden lg:block">
             <div
               className="w-full h-full"
@@ -1641,7 +1634,7 @@ function VideoCard({
 
   return (
     <div className="group cursor-pointer" onClick={() => onPlay(video)}>
-      <div className="relative aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-[#1077A6]/10 to-[#1077A6]/5 border border-[#1077A6]/10 hover:border-[#f4c430]/40 shadow-sm hover:shadow-xl hover:shadow-[#1077A6]/8 transition-all duration-300">
+      <div className="relative aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-linear-to-br from-[#1077A6]/10 to-[#1077A6]/5 border border-[#1077A6]/10 hover:border-[#f4c430]/40 shadow-sm hover:shadow-xl hover:shadow-[#1077A6]/8 transition-all duration-300">
         {!imgError ? (
           <Image
             src={thumb}
@@ -1653,12 +1646,12 @@ function VideoCard({
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1077A6]/20 to-[#0d5f85]/30 grid place-items-center">
+          <div className="absolute inset-0 bg-linear-to-br from-[#1077A6]/20 to-[#0d5f85]/30 grid place-items-center">
             <Video className="w-10 h-10 text-[#1077A6]/40" />
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
         <div className="absolute inset-0 grid place-items-center">
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/90 backdrop-blur-sm grid place-items-center shadow-lg group-hover:bg-[#f4c430] group-hover:scale-110 transition-all duration-300">
@@ -1768,7 +1761,7 @@ function VideoModal({
             className="absolute inset-0 w-full h-full"
           />
         ) : (
-          <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-[#1077A6]/20 to-[#0a0a1a]">
+          <div className="absolute inset-0 grid place-items-center bg-linear-to-br from-[#1077A6]/20 to-[#0a0a1a]">
             <div className="text-center space-y-3">
               <Video className="w-12 h-12 text-white/30 mx-auto" />
               <p className="text-white/50 text-sm">Unable to load video</p>
@@ -1796,7 +1789,7 @@ function VideoModal({
           transition={{ delay: 0.3, duration: 0.4 }}
           className="bg-white/[0.06] backdrop-blur-md border border-white/10 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5"
         >
-          <div className="hidden sm:grid w-10 h-10 rounded-xl bg-[#f4c430]/15 place-items-center flex-shrink-0">
+          <div className="hidden sm:grid w-10 h-10 rounded-xl bg-[#f4c430]/15 place-items-center shrink-0">
             <Play className="w-4 h-4 text-[#f4c430] ml-0.5" fill="#f4c430" />
           </div>
 
@@ -1818,7 +1811,7 @@ function VideoModal({
             )}
           </div>
 
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             {video.publishedAt && (
               <span className="text-white/25 text-xs flex items-center gap-1">
                 <Clock className="w-3 h-3" />

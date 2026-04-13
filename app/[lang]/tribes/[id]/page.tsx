@@ -12,6 +12,7 @@ export default async function TribeDetailPage({
   params: Promise<{ lang: string; id: string }>;
 }) {
   const { lang, id } = await params;
+  const decodedId = decodeURIComponent(id);
 
   if (!isValidLocale(lang)) notFound();
 
@@ -19,7 +20,7 @@ export default async function TribeDetailPage({
     .select()
     .from(tribes)
     .orderBy(asc(tribes.sortOrder));
-  const tribe = allTribes.find((t) => t.id === id);
+  const tribe = allTribes.find((t) => t.id === decodedId);
 
   if (!tribe) notFound();
 

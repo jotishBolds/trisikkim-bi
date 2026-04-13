@@ -58,6 +58,25 @@ export async function POST(request: NextRequest) {
       publishedAt,
     } = body;
 
+    // Validate required fields
+    if (!title || typeof title !== "string" || !title.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Title is required." },
+        { status: 400 },
+      );
+    }
+    if (!category || typeof category !== "string" || !category.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Category is required." },
+        { status: 400 },
+      );
+    }
+    if (!slug || typeof slug !== "string" || !slug.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Slug is required." },
+        { status: 400 },
+      );
+    }
     // CR-09: Circulars must have a PDF (not an image) as their attachment
     if (category === "circulars" && image) {
       const lowerImage = (image as string).toLowerCase();

@@ -273,11 +273,11 @@ export default function GalleryAdmin() {
     const validFiles: File[] = [];
     const updated = [...statuses];
     for (let i = 0; i < selectedFiles.length; i++) {
-      if (selectedFiles[i].size > 1 * 1024 * 1024) {
+      if (selectedFiles[i].size > 25 * 1024 * 1024) {
         updated[i] = {
           ...updated[i],
           status: "error",
-          error: "File must be under 1MB",
+          error: "File must be under 25MB",
         };
       } else if (!selectedFiles[i].type.startsWith("image/")) {
         updated[i] = {
@@ -439,7 +439,7 @@ export default function GalleryAdmin() {
     >
       {error && (
         <div className="flex items-center gap-2 bg-red-50 text-red-600 rounded-lg p-2.5 text-xs border border-red-100">
-          <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           <span>{error}</span>
           <button
             onClick={() => setError("")}
@@ -660,7 +660,7 @@ export default function GalleryAdmin() {
                           <div className="flex flex-col items-center gap-1.5">
                             <Upload className="w-5 h-5 text-[#1077A6]/40" />
                             <span className="text-[10px] text-[#1a1550]/50">
-                              Click to select images (max 1MB each, up to 10)
+                              Click to select images (max 25MB each, up to 10)
                             </span>
                           </div>
                         )}
@@ -689,13 +689,13 @@ export default function GalleryAdmin() {
                             >
                               {(s.status === "uploading" ||
                                 s.status === "saving") && (
-                                <Loader2 className="w-3 h-3 text-[#1077a6] animate-spin flex-shrink-0" />
+                                <Loader2 className="w-3 h-3 text-[#1077a6] animate-spin shrink-0" />
                               )}
                               {s.status === "done" && (
-                                <CheckCircle2 className="w-3 h-3 text-green-500 flex-shrink-0" />
+                                <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />
                               )}
                               {s.status === "error" && (
-                                <AlertCircle className="w-3 h-3 text-red-500 flex-shrink-0" />
+                                <AlertCircle className="w-3 h-3 text-red-500 shrink-0" />
                               )}
                               <span
                                 className={`truncate ${s.status === "error" ? "text-red-500" : "text-[#1a1550]/60"}`}
@@ -751,7 +751,7 @@ export default function GalleryAdmin() {
                         </button>
                       </div>
                       {img.alt && (
-                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/50 to-transparent p-1">
+                        <div className="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/50 to-transparent p-1">
                           <p className="text-white text-[8px] truncate">
                             {img.alt}
                           </p>

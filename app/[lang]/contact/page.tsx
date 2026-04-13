@@ -321,7 +321,7 @@ export default function ContactPage() {
                 className="group flex items-start gap-4 p-4 rounded-xl bg-white border border-[#1077A6]/10 hover:border-[#f4c430]/60 hover:shadow-md transition-all duration-300"
               >
                 <div
-                  className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
+                  className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border transition-all duration-300 group-hover:scale-110"
                   style={{ background: "#1077A610", borderColor: "#1077A625" }}
                 >
                   <item.icon
@@ -449,7 +449,7 @@ export default function ContactPage() {
                       >
                         <div className="bg-[#f0f8ff] border border-[#1077A6]/20 rounded-xl p-4 space-y-4">
                           <div className="flex items-center gap-2 text-[#1077A6] text-[12.5px] font-medium">
-                            <Mail className="w-4 h-4 flex-shrink-0" />
+                            <Mail className="w-4 h-4 shrink-0" />
                             <span>
                               {c.otpSent}{" "}
                               <strong className="text-[#1a1550]">
@@ -514,7 +514,7 @@ export default function ContactPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-2.5 text-green-700 text-[13px] font-medium"
                       >
-                        <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
                         {c.emailVerified} — {form.email}
                       </motion.div>
                     )}

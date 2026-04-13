@@ -161,7 +161,7 @@ export default function StaffTable({
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div
-                          className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold"
+                          className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold"
                           style={{ background: av.bg, color: av.text }}
                         >
                           {initials(staff.name)}
@@ -193,7 +193,7 @@ export default function StaffTable({
                       <div className="space-y-1.5">
                         {staff.email && (
                           <div className="flex items-center gap-2">
-                            <Mail className="w-3.5 h-3.5 text-[#1077A6]/50 flex-shrink-0" />
+                            <Mail className="w-3.5 h-3.5 text-[#1077A6]/50 shrink-0" />
                             <a
                               href={`mailto:${staff.email}`}
                               className="text-[13px] text-[#1077A6] hover:underline underline-offset-2 truncate max-w-[200px]"
@@ -204,7 +204,7 @@ export default function StaffTable({
                           </div>
                         )}
                         <div className="flex items-center gap-2">
-                          <Phone className="w-3.5 h-3.5 text-[#1077A6]/50 flex-shrink-0" />
+                          <Phone className="w-3.5 h-3.5 text-[#1077A6]/50 shrink-0" />
                           {staff.phone ? (
                             <a
                               href={`tel:${staff.phone}`}
@@ -263,7 +263,7 @@ export default function StaffTable({
               className="bg-white rounded-xl border border-[#1077A6]/10 p-4 flex items-start gap-4"
             >
               <div
-                className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-[12px] font-bold"
+                className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-[12px] font-bold"
                 style={{ background: av.bg, color: av.text }}
               >
                 {initials(staff.name)}
@@ -290,7 +290,7 @@ export default function StaffTable({
 
                 {staff.email && (
                   <div className="flex items-center gap-2">
-                    <Mail className="w-3 h-3 text-[#1077A6]/50 flex-shrink-0" />
+                    <Mail className="w-3 h-3 text-[#1077A6]/50 shrink-0" />
                     <a
                       href={`mailto:${staff.email}`}
                       className="text-[12px] text-[#1077A6] hover:underline underline-offset-2 truncate"
@@ -300,7 +300,7 @@ export default function StaffTable({
                   </div>
                 )}
                 <div className="flex items-center gap-2">
-                  <Phone className="w-3 h-3 text-[#1077A6]/50 flex-shrink-0" />
+                  <Phone className="w-3 h-3 text-[#1077A6]/50 shrink-0" />
                   {staff.phone ? (
                     <a
                       href={`tel:${staff.phone}`}
@@ -316,7 +316,7 @@ export default function StaffTable({
                 </div>
               </div>
 
-              <span className="flex-shrink-0 text-[11px] font-mono text-[#1a1550]/25 mt-0.5">
+              <span className="shrink-0 text-[11px] font-mono text-[#1a1550]/25 mt-0.5">
                 {String(globalIndex + 1).padStart(2, "0")}
               </span>
             </motion.div>

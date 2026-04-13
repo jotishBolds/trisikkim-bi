@@ -65,7 +65,7 @@ export default function AboutSection() {
 
   return (
     <section className="bg-white font-body">
-      <div className="bg-gradient-to-b from-[#f4f3fb] to-white border-b border-[#322880]/8">
+      <div className="bg-linear-to-b from-[#f4f3fb] to-white border-b border-[#322880]/8">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
           <motion.p
             variants={fadeUp}
@@ -143,7 +143,7 @@ export default function AboutSection() {
             viewport={{ once: true }}
             className="lg:pt-16"
           >
-            <div className="relative rounded-2xl overflow-hidden mb-8 aspect-[4/3] bg-gradient-to-br from-[#1077A6] to-[#0e6590]">
+            <div className="relative rounded-2xl overflow-hidden mb-8 aspect-[4/3] bg-linear-to-br from-[#1077A6] to-[#0e6590]">
               <Image
                 src="/modi.jpg"
                 alt="Sikkim Landscape"
@@ -152,7 +152,7 @@ export default function AboutSection() {
                 unoptimized
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1077A6]/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-[#1077A6]/80 via-transparent to-transparent" />
               <div className="absolute bottom-5 left-5 right-5">
                 <p className="text-white font-display font-bold text-lg leading-tight">
                   {d.organicState}
@@ -191,7 +191,7 @@ export default function AboutSection() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="h-px bg-gradient-to-r from-transparent via-[#1077A6]/15 to-transparent" />
+        <div className="h-px bg-linear-to-r from-transparent via-[#1077A6]/15 to-transparent" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-14 md:py-20">
@@ -353,7 +353,7 @@ function TRICard({
       className="group flex items-start gap-4 p-5 rounded-xl border border-[#1077A6]/10 bg-[#f4f3fb]/50 hover:bg-white hover:border-[#f4c430]/30 hover:shadow-md transition-all duration-300"
     >
       <div
-        className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-[13px] font-bold font-display transition-all duration-300"
+        className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-[13px] font-bold font-display transition-all duration-300"
         style={{
           background: `${accent}18`,
           color: accent,

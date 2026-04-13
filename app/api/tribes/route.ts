@@ -32,14 +32,64 @@ export async function POST(request: NextRequest) {
       );
     }
     const body = await request.json();
+    const {
+      id,
+      name,
+      image,
+      excerpt,
+      content,
+      accent,
+      heroImage,
+      sections,
+      gallery,
+      sortOrder,
+      active,
+    } = body;
+    if (!id || typeof id !== "string" || !id.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Tribe ID is required." },
+        { status: 400 },
+      );
+    }
+    if (!name || typeof name !== "string" || !name.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Tribe name is required." },
+        { status: 400 },
+      );
+    }
+    if (!heroImage || typeof heroImage !== "string" || !heroImage.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Hero banner image is required." },
+        { status: 400 },
+      );
+    }
+    if (!excerpt || typeof excerpt !== "string" || !excerpt.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Short excerpt is required." },
+        { status: 400 },
+      );
+    }
     const translations = await translateForStorage(
-      body,
+      { name, excerpt, content: content ?? "" },
       ["name", "excerpt"],
       ["content"],
     );
     const [item] = await db
       .insert(tribes)
-      .values({ ...body, translations })
+      .values({
+        id: id.trim(),
+        name: name.trim(),
+        image: image ?? "",
+        excerpt: excerpt.trim(),
+        content: content ?? "",
+        accent: accent ?? "#1077A6",
+        heroImage: heroImage.trim(),
+        sections: sections ?? [],
+        gallery: gallery ?? [],
+        sortOrder: sortOrder ?? 0,
+        active: active ?? true,
+        translations,
+      })
       .returning();
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {

@@ -6,11 +6,29 @@ import { BookOpen } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/use-translation";
 import PageHero from "@/components/PageHero";
 
+function SkeletonContent() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 animate-pulse space-y-4">
+      <div className="h-5 w-1/3 bg-[#1a1550]/8 rounded-full" />
+      <div className="h-4 w-full bg-[#1a1550]/6 rounded-full" />
+      <div className="h-4 w-5/6 bg-[#1a1550]/6 rounded-full" />
+      <div className="h-4 w-4/5 bg-[#1a1550]/6 rounded-full" />
+      <div className="h-4 w-full bg-[#1a1550]/6 rounded-full" />
+      <div className="h-4 w-3/4 bg-[#1a1550]/6 rounded-full" />
+      <div className="mt-4 h-5 w-1/4 bg-[#1a1550]/8 rounded-full" />
+      <div className="h-4 w-full bg-[#1a1550]/6 rounded-full" />
+      <div className="h-4 w-5/6 bg-[#1a1550]/6 rounded-full" />
+    </div>
+  );
+}
+
 export default function AboutPage() {
   const { lang, dict } = useTranslation();
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     fetch("/api/pages/about")
       .then((r) => r.json())
       .then((res) => {
@@ -28,7 +46,8 @@ export default function AboutPage() {
           }
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, [lang]);
 
   return (
@@ -40,7 +59,9 @@ export default function AboutPage() {
         icon={<BookOpen className="w-3.5 h-3.5 text-[#f4c430]" />}
       />
 
-      {content && (
+      {loading ? (
+        <SkeletonContent />
+      ) : content ? (
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -52,7 +73,7 @@ export default function AboutPage() {
             dangerouslySetInnerHTML={{ __html: content }}
           />
         </motion.div>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -137,7 +137,7 @@ function LogoImage({
   return (
     <div
       className={cn(
-        "relative flex-shrink-0 flex items-center justify-center",
+        "relative shrink-0 flex items-center justify-center",
         className,
       )}
       style={{ height }}
@@ -156,7 +156,7 @@ function LogoImage({
 
 function VDivider() {
   return (
-    <div className="hidden md:block h-16 w-px bg-[#322880]/20 mx-4 flex-shrink-0 relative z-10" />
+    <div className="hidden md:block h-16 w-px bg-[#322880]/20 mx-4 shrink-0 relative z-10" />
   );
 }
 
@@ -349,7 +349,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.22, ease: "easeInOut" }}
-              className="md:hidden bg-gradient-to-b from-[#1077A6] to-[#0e6590] border-t border-white/10 overflow-hidden"
+              className="md:hidden bg-linear-to-b from-[#1077A6] to-[#0e6590] border-t border-white/10 overflow-hidden"
             >
               <div
                 className="overflow-y-auto overscroll-contain"
@@ -378,7 +378,7 @@ export default function Navbar() {
                             </div>
                             <ChevronDown
                               className={cn(
-                                "w-4 h-4 text-white/60 transition-transform duration-200 flex-shrink-0",
+                                "w-4 h-4 text-white/60 transition-transform duration-200 shrink-0",
                                 isExpanded && "rotate-180",
                               )}
                             />
@@ -405,7 +405,7 @@ export default function Navbar() {
                                       onClick={() => setMobileOpen(false)}
                                       className="flex items-center gap-3 px-6 py-3 text-white/80 border-b border-white/5 hover:bg-[#f4c430] hover:text-black active:bg-[#f4c430]/80 transition-all duration-150"
                                     >
-                                      <span className="w-1.5 h-1.5 rounded-full bg-[#f4c430]/70 flex-shrink-0" />
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#f4c430]/70 shrink-0" />
                                       <span className="text-sm">
                                         {sub.label}
                                       </span>
@@ -426,7 +426,7 @@ export default function Navbar() {
                         onClick={() => setMobileOpen(false)}
                         className="flex items-center gap-3 px-4 py-3.5 text-white border-b border-white/10 hover:bg-[#f4c430] hover:text-black active:bg-[#f4c430]/80 transition-all duration-150 touch-manipulation"
                       >
-                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <item.icon className="w-4 h-4 shrink-0" />
                         <span className="font-semibold text-sm">
                           {item.label}
                         </span>
@@ -481,7 +481,7 @@ function NavItem({
             "rounded-none",
           )}
         />
-        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none" />
+        <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none" />
         <item.icon
           className={cn(
             "w-[15px] h-[15px] relative z-10 transition-all duration-300",
@@ -531,7 +531,7 @@ function NavItem({
             className="absolute top-full left-0 bg-white shadow-2xl border-t-2 border-[#f4c430] min-w-[240px] z-50 overflow-hidden rounded-b-lg"
             style={{ transformOrigin: "top" }}
           >
-            <div className="h-1 w-full bg-gradient-to-r from-[#f4c430] via-[#f4c430]/80 to-[#f4c430]" />
+            <div className="h-1 w-full bg-linear-to-r from-[#f4c430] via-[#f4c430]/80 to-[#f4c430]" />
             {item.dropdown?.map((sub, i) => (
               <motion.div
                 key={sub.label}
@@ -544,7 +544,7 @@ function NavItem({
                   href={sub.href}
                   className="group/sub relative block px-5 py-[12px] text-[13px] font-medium text-[#322880] border-b border-gray-100 last:border-0 overflow-hidden"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-[#f4c430] to-[#e6b800] opacity-0 group-hover/sub:opacity-100 transition-opacity duration-200" />
+                  <span className="absolute inset-0 bg-linear-to-r from-[#f4c430] to-[#e6b800] opacity-0 group-hover/sub:opacity-100 transition-opacity duration-200" />
                   <span className="absolute left-0 top-1/2 w-0 h-0 bg-[#f4c430] group-hover/sub:w-1 group-hover/sub:h-full group-hover/sub:top-0 transition-all duration-200" />
                   <span className="relative z-10 flex items-center gap-2 pl-2 group-hover/sub:pl-3 transition-all duration-200 group-hover/sub:text-black">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#f4c430] opacity-0 group-hover/sub:opacity-100 transition-all duration-200 group-hover/sub:scale-110 group-hover/sub:shadow-[0_0_8px_rgba(244,196,48,0.6)]" />

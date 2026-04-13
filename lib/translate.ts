@@ -9,9 +9,15 @@
 
 const SARVAM_API_URL = "https://api.sarvam.ai/translate";
 const MAX_CHUNK = 800; // Sarvam limit per request (safe margin)
+const INTER_REQUEST_DELAY_MS = 300; // delay between sequential API calls
+const MAX_RETRIES = 4;
 
 // In-memory translation cache: "lang:hash" → translated text
 const cache = new Map<string, string>();
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function simpleHash(str: string): string {
   let hash = 0;
@@ -55,28 +61,44 @@ async function callSarvamApi(
   targetLang: string,
   apiKey: string,
 ): Promise<string> {
-  const res = await fetch(SARVAM_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "api-subscription-key": apiKey,
-    },
-    body: JSON.stringify({
-      input: text,
-      source_language_code: "en-IN",
-      target_language_code: langCodeMap[targetLang] || "hi-IN",
-      mode: "formal",
-      model: "mayura:v1",
-    }),
-  });
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const res = await fetch(SARVAM_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "api-subscription-key": apiKey,
+      },
+      body: JSON.stringify({
+        input: text,
+        source_language_code: "en-IN",
+        target_language_code: langCodeMap[targetLang] || "hi-IN",
+        mode: "formal",
+        model: "mayura:v1",
+      }),
+    });
 
-  if (!res.ok) {
-    console.error("[translate] API error:", res.status, await res.text());
-    return text;
+    if (res.status === 429) {
+      if (attempt < MAX_RETRIES) {
+        const backoff = Math.min(1000 * 2 ** attempt, 16000);
+        console.warn(
+          `[translate] Rate limited (429). Retrying in ${backoff}ms (attempt ${attempt + 1}/${MAX_RETRIES})`,
+        );
+        await sleep(backoff);
+        continue;
+      }
+      console.error("[translate] API error:", res.status, await res.text());
+      return text;
+    }
+
+    if (!res.ok) {
+      console.error("[translate] API error:", res.status, await res.text());
+      return text;
+    }
+
+    const data = await res.json();
+    return data.translated_text || text;
   }
-
-  const data = await res.json();
-  return data.translated_text || text;
+  return text;
 }
 
 /** Split text into chunks at sentence boundaries within MAX_CHUNK */
@@ -144,6 +166,8 @@ export async function translateText(
         const result = await callSarvamApi(chunk, targetLang, apiKey);
         cache.set(chunkKey, result);
         translatedChunks.push(result);
+        // Throttle sequential requests to stay within rate limits
+        await sleep(INTER_REQUEST_DELAY_MS);
       }
     }
 
@@ -197,7 +221,11 @@ export async function translateBatch(
   targetLang: string,
 ): Promise<string[]> {
   if (targetLang === "en") return texts;
-  return Promise.all(texts.map((t) => translateText(t, targetLang)));
+  const results: string[] = [];
+  for (const t of texts) {
+    results.push(await translateText(t, targetLang));
+  }
+  return results;
 }
 
 /**

@@ -93,7 +93,7 @@ export default function WhosWhoPage() {
             backgroundSize: "40px 40px",
           }}
         />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-64 bg-linear-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
         <div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-[#f4c430]/5 pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-16">
@@ -170,7 +170,7 @@ export default function WhosWhoPage() {
           className="flex items-start gap-4 mb-8"
         >
           <div
-            className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center border mt-0.5"
+            className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center border mt-0.5"
             style={{ background: "#1077A615", borderColor: "#1077A630" }}
           >
             <Users className="w-5 h-5 text-[#1077A6]" />
@@ -234,7 +234,7 @@ export default function WhosWhoPage() {
                   </div>
                   <div className="px-5 py-4 flex items-center gap-3">
                     <div
-                      className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold"
+                      className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold"
                       style={{ background: av.bg, color: av.text }}
                     >
                       {initials(staff.name)}
@@ -291,7 +291,7 @@ export default function WhosWhoPage() {
                 className="bg-white rounded-xl border border-[#1077A6]/10 p-4 flex items-center gap-4"
               >
                 <div
-                  className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-[12px] font-bold"
+                  className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-[12px] font-bold"
                   style={{ background: av.bg, color: av.text }}
                 >
                   {initials(staff.name)}
@@ -309,7 +309,7 @@ export default function WhosWhoPage() {
                     </span>
                   </div>
                 </div>
-                <span className="flex-shrink-0 text-[11px] font-mono text-[#1a1550]/25">
+                <span className="shrink-0 text-[11px] font-mono text-[#1a1550]/25">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </motion.div>

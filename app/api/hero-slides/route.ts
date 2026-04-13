@@ -34,6 +34,23 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    if (!body.image || typeof body.image !== "string" || !body.image.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Slide image is required." },
+        { status: 400 },
+      );
+    }
+    if (
+      !body.headline ||
+      typeof body.headline !== "string" ||
+      !body.headline.trim()
+    ) {
+      return NextResponse.json(
+        { success: false, error: "Headline is required." },
+        { status: 400 },
+      );
+    }
+
     if (body.caption && body.caption.trim().length < 100) {
       return NextResponse.json(
         {

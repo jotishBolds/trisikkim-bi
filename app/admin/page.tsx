@@ -235,7 +235,7 @@ export default function AdminDashboard() {
               }}
             >
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${theme.gradient}`}
+                className={`absolute inset-0 bg-linear-to-br ${theme.gradient}`}
               />
 
               <div

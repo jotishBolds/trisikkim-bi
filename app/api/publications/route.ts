@@ -43,6 +43,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, description, pdfUrl, active, publishedAt } = body;
 
+    if (!title || typeof title !== "string" || !title.trim()) {
+      return NextResponse.json(
+        { success: false, error: "Title is required." },
+        { status: 400 },
+      );
+    }
     if (!pdfUrl || typeof pdfUrl !== "string") {
       return NextResponse.json(
         { success: false, error: "A PDF file is required." },

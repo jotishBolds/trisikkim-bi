@@ -96,7 +96,7 @@ function UpdateCard({
       onClick={onClick}
       className="group bg-white rounded-2xl overflow-hidden border border-[#1077A6]/10 hover:border-[#f4c430]/40 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
     >
-      <div className="relative h-48 bg-gradient-to-br from-[#1077A6]/10 to-[#1a1550]/10 overflow-hidden flex-shrink-0">
+      <div className="relative h-48 bg-linear-to-br from-[#1077A6]/10 to-[#1a1550]/10 overflow-hidden shrink-0">
         {item.pdfUrl ? (
           <div className="w-full h-full flex items-center justify-center bg-red-50">
             <FileText className="w-12 h-12 text-red-500" />
@@ -356,7 +356,7 @@ export default function UpdatesCategoryPage() {
           >
             {error && (
               <div className="flex items-center gap-2 bg-red-50 text-red-700 rounded-lg p-4 mb-8 border border-red-200 text-sm">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}
+                <AlertCircle className="w-4 h-4 shrink-0" /> {error}
               </div>
             )}
 

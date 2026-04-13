@@ -117,7 +117,7 @@ export default function ImageUpload({
               rel="noopener noreferrer"
               className="flex items-center gap-2 p-3 border border-[#1077A6]/15 rounded-lg bg-[#f8f7fc] hover:bg-[#1077A6]/5 transition-colors"
             >
-              <FileText className="w-5 h-5 text-red-500 flex-shrink-0" />
+              <FileText className="w-5 h-5 text-red-500 shrink-0" />
               <span className="text-xs text-[#1a1550] truncate">
                 PDF Document
               </span>

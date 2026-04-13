@@ -172,7 +172,7 @@ export default function HeroCarousel() {
             backgroundSize: "40px 40px",
           }}
         />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-64 bg-linear-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
 
         <div className="absolute top-0 left-0 right-0 h-1 bg-[#0d5f82]">
           <motion.div

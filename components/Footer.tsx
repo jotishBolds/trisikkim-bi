@@ -90,7 +90,7 @@ export default function Footer() {
       />
 
       <footer className="bg-[#1077A6] text-white font-body">
-        <div className="h-[3px] bg-gradient-to-r from-[#f4c430] via-white/20 to-[#f4c430]" />
+        <div className="h-[3px] bg-linear-to-r from-[#f4c430] via-white/20 to-[#f4c430]" />
 
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           <motion.div
@@ -117,7 +117,7 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="flex items-start gap-2 text-[13px] text-white/70 hover:text-black transition-colors duration-200 leading-snug group"
                   >
-                    <ExternalLink className="w-3 h-3 mt-[3px] flex-shrink-0 opacity-40 group-hover:opacity-100 transition-opacity group-hover:text-black" />
+                    <ExternalLink className="w-3 h-3 mt-[3px] shrink-0 opacity-40 group-hover:opacity-100 transition-opacity group-hover:text-black" />
                     <span className="group-hover:bg-[#f4c430] group-hover:px-1 group-hover:py-0.5 group-hover:-my-0.5 group-hover:rounded transition-all duration-200">
                       {link.label}
                     </span>
@@ -235,7 +235,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function IconBox({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 text-[#f4c430] group-hover:bg-[#f4c430]/20 transition-colors duration-200">
+    <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-[#f4c430] group-hover:bg-[#f4c430]/20 transition-colors duration-200">
       {children}
     </div>
   );

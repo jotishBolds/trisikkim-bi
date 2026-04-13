@@ -11,10 +11,11 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const decodedId = decodeURIComponent(id);
     const [tribe] = await db
       .select()
       .from(tribes)
-      .where(eq(tribes.id, id))
+      .where(eq(tribes.id, decodedId))
       .limit(1);
     if (!tribe) {
       return NextResponse.json(
@@ -45,6 +46,7 @@ export async function PUT(
       );
     }
     const { id } = await params;
+    const decodedId = decodeURIComponent(id);
     const body = await request.json();
     const {
       name,
@@ -79,7 +81,7 @@ export async function PUT(
         translations,
         updatedAt: new Date(),
       })
-      .where(eq(tribes.id, id))
+      .where(eq(tribes.id, decodedId))
       .returning();
     if (!updated) {
       return NextResponse.json(
@@ -110,9 +112,10 @@ export async function DELETE(
       );
     }
     const { id } = await params;
+    const decodedId = decodeURIComponent(id);
     const [deleted] = await db
       .delete(tribes)
-      .where(eq(tribes.id, id))
+      .where(eq(tribes.id, decodedId))
       .returning();
     if (!deleted) {
       return NextResponse.json(
