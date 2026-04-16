@@ -80,7 +80,7 @@ export default function HeroCarousel() {
   const slide = {
     ...rawSlide,
     headline: t?.headline || rawSlide.headline,
-    caption: t?.caption || rawSlide.caption, // NEW: Translate caption
+    caption: t?.caption || rawSlide.caption,
   };
 
   const goTo = useCallback((idx: number, dir: number) => {
@@ -133,7 +133,7 @@ export default function HeroCarousel() {
       onMouseLeave={() => setPaused(false)}
       aria-label="Hero image carousel"
     >
-      <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px] overflow-hidden bg-gray-100">
+      <div className="relative w-full h-[320px] sm:h-[420px] md:h-[520px] lg:h-[600px] overflow-hidden bg-[#1077a6]">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={current}
@@ -155,26 +155,32 @@ export default function HeroCarousel() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-          <span className="text-white text-xs sm:text-sm font-mono">
-            {String(current + 1).padStart(2, "0")} /{" "}
-            {String(slides.length).padStart(2, "0")}
-          </span>
-        </div>
-      </div>
-
-      <div className="bg-[#1077A6] relative overflow-hidden">
         <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(16,119,166,0.92) 0%, rgba(16,119,166,0.70) 20%, rgba(16,119,166,0.40) 35%, rgba(16,119,166,0.15) 45%, rgba(16,119,166,0) 55%)",
+          }}
+        />
+
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(16,119,166,0.25) 0%, rgba(16,119,166,0) 50%), linear-gradient(to right, rgba(16,119,166,0.20) 0%, transparent 40%)",
+          }}
+        />
+
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(#f4c430 1px, transparent 1px), linear-gradient(90deg, #f4c430 1px, transparent 1px)",
             backgroundSize: "40px 40px",
           }}
         />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-linear-to-l from-[#f4c430]/8 to-transparent pointer-events-none" />
 
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[#0d5f82]">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20">
           <motion.div
             className="h-full bg-[#f4c430]"
             style={{ width: `${progress}%` }}
@@ -182,9 +188,16 @@ export default function HeroCarousel() {
           />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 py-5 sm:py-6 md:py-8">
-            <div className="flex-1">
+        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 bg-[#1077a6]/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/15">
+          <span className="text-white text-xs sm:text-sm font-mono">
+            {String(current + 1).padStart(2, "0")} /{" "}
+            {String(slides.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-4 sm:px-8 md:px-12 pb-6 sm:pb-8 md:pb-10">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <div className="flex-1 min-w-0">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={current}
@@ -212,7 +225,7 @@ export default function HeroCarousel() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: 0.25 }}
-                      className="mt-4 text-white/90 text-sm sm:text-base leading-relaxed max-w-3xl"
+                      className="mt-3 text-white/90 text-sm sm:text-base leading-relaxed max-w-2xl"
                     >
                       {slide.caption}
                     </motion.p>
@@ -221,7 +234,9 @@ export default function HeroCarousel() {
               </AnimatePresence>
             </div>
 
-            <div className="flex items-center gap-4 sm:gap-6 sm:pt-2">
+            {/* Dots + Nav */}
+            <div className="flex items-center gap-4 shrink-0">
+              {/* Dot indicators */}
               <div className="flex items-center gap-2">
                 {slides.map((s, i) => (
                   <button
@@ -242,6 +257,7 @@ export default function HeroCarousel() {
                 ))}
               </div>
 
+              {/* Prev / Next */}
               <div className="flex gap-2">
                 <NavButton onClick={prev} dir="prev" />
                 <NavButton onClick={next} dir="next" />
@@ -269,9 +285,9 @@ function NavButton({
       aria-label={dir === "prev" ? "Previous slide" : "Next slide"}
       className={cn(
         "w-9 h-9 sm:w-10 sm:h-10 rounded-full",
-        "bg-white/10 border border-white/20",
+        "bg-white/15 border border-white/25",
         "flex items-center justify-center text-white",
-        "hover:bg-white/20 hover:border-white/40",
+        "hover:bg-white/25 hover:border-white/50",
         "transition-all duration-200",
       )}
     >

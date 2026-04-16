@@ -118,8 +118,10 @@ export default function AboutSection() {
             <SectionTitle>{d.aboutSikkim}</SectionTitle>
 
             <div className="space-y-4 text-[15px] text-[#1a1550]/80 leading-[1.85] mt-6">
-              <p>{d.sikkimPara1}</p>
-              <p>
+              <p className="text-justify hyphens-auto break-words">
+                {d.sikkimPara1}
+              </p>
+              <p className="text-justify hyphens-auto break-words">
                 {d.sikkimPara2.split(d.unescoWorldHeritage).length > 1 ? (
                   <>
                     {d.sikkimPara2.split(d.unescoWorldHeritage)[0]}
@@ -132,7 +134,9 @@ export default function AboutSection() {
                   d.sikkimPara2
                 )}
               </p>
-              <p>{d.sikkimPara3}</p>
+              <p className="text-justify hyphens-auto break-words">
+                {d.sikkimPara3}
+              </p>
             </div>
           </motion.div>
 
@@ -148,18 +152,17 @@ export default function AboutSection() {
                 src="/modi.jpg"
                 alt="Sikkim Landscape"
                 fill
-                className="object-cover "
+                className="object-cover"
                 unoptimized
               />
-
               <div className="absolute inset-0 bg-linear-to-t from-[#1077A6]/80 via-transparent to-transparent" />
               <div className="absolute bottom-5 left-5 right-5">
-                <p className="text-white font-display font-bold text-lg leading-tight">
+                {/* <p className="text-white font-display font-bold text-lg leading-tight">
                   {d.organicState}
                 </p>
                 <p className="text-[#f4c430] text-[12px] mt-1 tracking-wide">
                   {d.northeastHimalayas}
-                </p>
+                </p> */}
               </div>
             </div>
 
@@ -236,7 +239,7 @@ export default function AboutSection() {
             <SectionTitle>{d.aboutTritc}</SectionTitle>
 
             <div className="space-y-4 text-[15px] text-[#1a1550]/80 leading-[1.85] mt-6">
-              <p>
+              <p className="text-justify hyphens-auto break-words">
                 {d.institutePara1.split(d.researchMassInfo).length > 1 ? (
                   <>
                     {d.institutePara1.split(d.researchMassInfo)[0]}
@@ -249,8 +252,12 @@ export default function AboutSection() {
                   d.institutePara1
                 )}
               </p>
-              <p>{d.institutePara2}</p>
-              <p>{d.institutePara3}</p>
+              <p className="text-justify hyphens-auto break-words">
+                {d.institutePara2}
+              </p>
+              <p className="text-justify hyphens-auto break-words">
+                {d.institutePara3}
+              </p>
             </div>
 
             <motion.div
@@ -298,7 +305,6 @@ function DignitaryCard({
           />
         </div>
       </div>
-
       <h3 className="font-display font-bold text-[#1a1550] text-[14px] leading-snug group-hover:text-[#f4c430] transition-colors duration-200">
         {name}
       </h3>
@@ -366,7 +372,7 @@ function TRICard({
         <h4 className="font-display font-bold text-[#1a1550] text-[14.5px] mb-1.5 leading-tight">
           {title}
         </h4>
-        <p className="text-[#1a1550]/55 text-[13px] leading-relaxed">
+        <p className="text-[#1a1550]/55 text-[13px] leading-relaxed text-justify hyphens-auto break-words">
           {description}
         </p>
       </div>

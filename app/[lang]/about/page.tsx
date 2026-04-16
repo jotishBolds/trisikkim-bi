@@ -8,7 +8,7 @@ import PageHero from "@/components/PageHero";
 
 function SkeletonContent() {
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 animate-pulse space-y-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12 animate-pulse space-y-4">
       <div className="h-5 w-1/3 bg-[#1a1550]/8 rounded-full" />
       <div className="h-4 w-full bg-[#1a1550]/6 rounded-full" />
       <div className="h-4 w-5/6 bg-[#1a1550]/6 rounded-full" />
@@ -52,7 +52,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f7fc] font-body">
-      {/* CR-10: PageHero replaces old hero block */}
       <PageHero
         badge={dict.about.subtitle}
         title={dict.about.title}
@@ -66,10 +65,63 @@ export default function AboutPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="max-w-7xl mx-auto px-4 md:px-8 py-12"
+          className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12"
         >
+          {/* Inline style guarantees justify overrides prose */}
+          <style>{`
+            .about-content,
+            .about-content p,
+            .about-content li,
+            .about-content td,
+            .about-content th,
+            .about-content dd,
+            .about-content blockquote,
+            .about-content span,
+            .about-content div {
+              text-align: justify !important;
+              word-break: break-word !important;
+              overflow-wrap: break-word !important;
+              hyphens: auto !important;
+              -webkit-hyphens: auto !important;
+            }
+            .about-content h1,
+            .about-content h2,
+            .about-content h3,
+            .about-content h4,
+            .about-content h5,
+            .about-content h6 {
+              text-align: left !important;
+            }
+            .about-content ul,
+            .about-content ol {
+              text-align: left !important;
+            }
+            .about-content img {
+              max-width: 100% !important;
+              height: auto !important;
+            }
+            .about-content table {
+              width: 100% !important;
+              overflow-x: auto !important;
+              display: block !important;
+            }
+            @media (max-width: 640px) {
+              .about-content {
+                font-size: 0.9rem !important;
+                line-height: 1.7 !important;
+              }
+              .about-content table {
+                font-size: 0.8rem !important;
+              }
+              .about-content iframe {
+                width: 100% !important;
+                height: auto !important;
+                aspect-ratio: 16/9;
+              }
+            }
+          `}</style>
           <div
-            className="prose prose-sm md:prose-base max-w-none prose-headings:text-[#1a1550] prose-a:text-[#1077A6] text-[#1a1550]/80"
+            className="about-content prose prose-sm md:prose-base max-w-none prose-headings:text-[#1a1550] prose-a:text-[#1077A6] text-[#1a1550]/80 leading-relaxed"
             dangerouslySetInnerHTML={{ __html: content }}
           />
         </motion.div>

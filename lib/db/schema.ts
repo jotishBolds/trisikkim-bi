@@ -215,6 +215,15 @@ export const otpTokens = pgTable("otp_tokens", {
   verified: boolean("verified").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+// ─── Announcements ───────────────────────────────────────────────────
+export const announcements = pgTable("announcements", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 500 }).notNull(),
+  link: text("link"), // optional URL
+  active: boolean("active").notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
 
 export type OtpToken = typeof otpTokens.$inferSelect;
 
@@ -241,3 +250,5 @@ export type Publication = typeof publications.$inferSelect;
 export type NewPublication = typeof publications.$inferInsert;
 export type Archive = typeof archives.$inferSelect;
 export type NewArchive = typeof archives.$inferInsert;
+export type Announcement = typeof announcements.$inferSelect;
+export type NewAnnouncement = typeof announcements.$inferInsert;

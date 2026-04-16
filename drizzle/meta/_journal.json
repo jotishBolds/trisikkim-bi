@@ -85,6 +85,13 @@
       "when": 1775643326807,
       "tag": "0011_sweet_talos",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1776332626923,
+      "tag": "0012_blue_white_tiger",
+      "breakpoints": true
     }
   ]
 }

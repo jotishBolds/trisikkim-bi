@@ -111,9 +111,10 @@ export default function StaffTable({
 
   return (
     <>
+      {/* ── Desktop Table ── */}
       <div className="hidden md:block bg-white rounded-2xl border border-[#1077A6]/10 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
+          <table className="w-full min-w-[900px]">
             <thead>
               <tr style={{ background: "#1077A6" }}>
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white/60 w-14">
@@ -128,8 +129,13 @@ export default function StaffTable({
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
                   Cadre
                 </th>
+                {/* ── NEW: separate Email column ── */}
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
-                  Contact
+                  Email
+                </th>
+                {/* ── Renamed to Phone ── */}
+                <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
+                  Phone
                 </th>
               </tr>
             </thead>
@@ -152,12 +158,14 @@ export default function StaffTable({
                     }}
                     className="cursor-default"
                   >
+                    {/* # */}
                     <td className="px-5 py-4">
                       <span className="text-[12px] font-mono font-semibold text-[#1a1550]/35">
                         {String(globalIndex + 1).padStart(2, "0")}
                       </span>
                     </td>
 
+                    {/* Name */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div
@@ -172,6 +180,7 @@ export default function StaffTable({
                       </div>
                     </td>
 
+                    {/* Designation */}
                     <td className="px-5 py-4">
                       <span
                         className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-semibold"
@@ -181,6 +190,7 @@ export default function StaffTable({
                       </span>
                     </td>
 
+                    {/* Cadre */}
                     <td className="px-5 py-4 text-[13px] text-[#1a1550]/60">
                       {staff.cadre || (
                         <span className="text-[#1a1550]/25 italic text-[12px]">
@@ -189,36 +199,39 @@ export default function StaffTable({
                       )}
                     </td>
 
+                    {/* ── Email — own column ── */}
                     <td className="px-5 py-4">
-                      <div className="space-y-1.5">
-                        {staff.email && (
-                          <div className="flex items-center gap-2">
-                            <Mail className="w-3.5 h-3.5 text-[#1077A6]/50 shrink-0" />
-                            <a
-                              href={`mailto:${staff.email}`}
-                              className="text-[13px] text-[#1077A6] hover:underline underline-offset-2 truncate max-w-[200px]"
-                              title={staff.email}
-                            >
-                              {staff.email}
-                            </a>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-3.5 h-3.5 text-[#1077A6]/50 shrink-0" />
-                          {staff.phone ? (
-                            <a
-                              href={`tel:${staff.phone}`}
-                              className="text-[13px] text-[#1077A6] hover:underline underline-offset-2"
-                            >
-                              {staff.phone}
-                            </a>
-                          ) : (
-                            <span className="text-[#1a1550]/25 italic text-[12px]">
-                              —
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                      {staff.email ? (
+                        <a
+                          href={`mailto:${staff.email}`}
+                          className="inline-flex items-center gap-1.5 text-[13px] text-[#1077A6] hover:underline underline-offset-2 max-w-[200px]"
+                          title={staff.email}
+                        >
+                          <Mail className="w-3.5 h-3.5 shrink-0 text-[#1077A6]/50" />
+                          <span className="truncate">{staff.email}</span>
+                        </a>
+                      ) : (
+                        <span className="text-[#1a1550]/25 italic text-[12px]">
+                          —
+                        </span>
+                      )}
+                    </td>
+
+                    {/* ── Phone — own column ── */}
+                    <td className="px-5 py-4">
+                      {staff.phone ? (
+                        <a
+                          href={`tel:${staff.phone}`}
+                          className="inline-flex items-center gap-1.5 text-[13px] text-[#1077A6] hover:underline underline-offset-2"
+                        >
+                          <Phone className="w-3.5 h-3.5 shrink-0 text-[#1077A6]/50" />
+                          {staff.phone}
+                        </a>
+                      ) : (
+                        <span className="text-[#1a1550]/25 italic text-[12px]">
+                          —
+                        </span>
+                      )}
                     </td>
                   </motion.tr>
                 );
@@ -248,6 +261,7 @@ export default function StaffTable({
         )}
       </div>
 
+      {/* ── Mobile Cards ── */}
       <div className="md:hidden space-y-3">
         {paginated.map((staff, i) => {
           const av = avatarBg(i);
@@ -262,6 +276,7 @@ export default function StaffTable({
               viewport={{ once: true, margin: "-10px" }}
               className="bg-white rounded-xl border border-[#1077A6]/10 p-4 flex items-start gap-4"
             >
+              {/* Avatar */}
               <div
                 className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-[12px] font-bold"
                 style={{ background: av.bg, color: av.text }}
@@ -270,15 +285,20 @@ export default function StaffTable({
               </div>
 
               <div className="min-w-0 flex-1 space-y-1.5">
+                {/* Name */}
                 <p className="font-semibold text-[#1a1550] text-[14px] leading-tight">
                   {getName(staff)}
                 </p>
+
+                {/* Designation badge */}
                 <span
                   className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
                   style={getBadgeStyle(staff.designation)}
                 >
                   {getDesignation(staff)}
                 </span>
+
+                {/* Cadre */}
                 {staff.cadre && (
                   <p className="text-[12px] text-[#1a1550]/50">
                     <span className="font-medium text-[#1a1550]/40">
@@ -288,34 +308,44 @@ export default function StaffTable({
                   </p>
                 )}
 
-                {staff.email && (
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-3 h-3 text-[#1077A6]/50 shrink-0" />
-                    <a
-                      href={`mailto:${staff.email}`}
-                      className="text-[12px] text-[#1077A6] hover:underline underline-offset-2 truncate"
-                    >
-                      {staff.email}
-                    </a>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <Phone className="w-3 h-3 text-[#1077A6]/50 shrink-0" />
-                  {staff.phone ? (
-                    <a
-                      href={`tel:${staff.phone}`}
-                      className="text-[12px] text-[#1077A6] hover:underline underline-offset-2"
-                    >
-                      {staff.phone}
-                    </a>
-                  ) : (
+                {/* Email */}
+                {staff.email ? (
+                  <a
+                    href={`mailto:${staff.email}`}
+                    className="flex items-center gap-1.5 text-[12px] text-[#1077A6] hover:underline underline-offset-2 min-w-0"
+                  >
+                    <Mail className="w-3 h-3 shrink-0 text-[#1077A6]/50" />
+                    <span className="truncate">{staff.email}</span>
+                  </a>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <Mail className="w-3 h-3 shrink-0 text-[#1a1550]/20" />
                     <span className="text-[#1a1550]/25 italic text-[11px]">
                       —
                     </span>
-                  )}
-                </div>
+                  </div>
+                )}
+
+                {/* Phone */}
+                {staff.phone ? (
+                  <a
+                    href={`tel:${staff.phone}`}
+                    className="flex items-center gap-1.5 text-[12px] text-[#1077A6] hover:underline underline-offset-2"
+                  >
+                    <Phone className="w-3 h-3 shrink-0 text-[#1077A6]/50" />
+                    {staff.phone}
+                  </a>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <Phone className="w-3 h-3 shrink-0 text-[#1a1550]/20" />
+                    <span className="text-[#1a1550]/25 italic text-[11px]">
+                      —
+                    </span>
+                  </div>
+                )}
               </div>
 
+              {/* Row number */}
               <span className="shrink-0 text-[11px] font-mono text-[#1a1550]/25 mt-0.5">
                 {String(globalIndex + 1).padStart(2, "0")}
               </span>
@@ -338,6 +368,7 @@ export default function StaffTable({
         )}
       </div>
 
+      {/* ── Pagination ── */}
       {members.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <div className="flex items-center gap-3">

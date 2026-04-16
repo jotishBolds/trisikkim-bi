@@ -58,15 +58,14 @@
     "sikkimPara2": "A part of the Eastern Himalaya, Sikkim is notable for its biodiversity, including alpine and subtropical climates, as well as being a host to Kangchenjunga, the highest peak in India and the third highest on Earth. Notably, Khangchendzonga National Park, situated within Sikkim's borders, holds the prestigious status of being a UNESCO World Heritage Site. Covering almost 35% of the state, this protected area showcases remarkable natural beauty and ecological significance.",
     "sikkimPara3": "Long a sovereign political entity, Sikkim became a protectorate of India in 1950 and an Indian state in 1975. Despite its small size, Sikkim is of great political and strategic importance for India because of its location along several international boundaries. The state covers an area of 2,740 square miles (7,096 sq km) and had a population of 607,688 as of 2011.",
     "unescoWorldHeritage": "UNESCO World Heritage Site",
-    "organicState": "The Organic State of India",
-    "northeastHimalayas": "Northeast Himalayas · Gangtok Capital",
+
     "totalArea": "Total Area",
     "population": "Population (2011)",
     "kangchenjungaPeak": "Kangchenjunga Peak",
     "unescoArea": "UNESCO Heritage Area",
     "aboutInstitute": "Our Institution",
-    "aboutTritc": "About Tribal Research Institute",
-    "institutePara1": "The Schemes of the Government of India reveals that, through the Ministry of Tribal Affairs, Government of India has decided to continue the scheme Grants-in-Aid to Tribal Research Institutes, Sikkim as a component of the \"Research and Mass Information\" scheme, with revised financial norms and identified interventions.",
+    "aboutTritc": "About Tribal Research Institute & Training Centre",
+    "institutePara1": "The Schemes of the Government of India reveals that, through the Ministry of Tribal Affairs, Government of India has decided to continue the scheme Grants-in-Aid to Tribal Research Institutes & Training Centre, Sikkim as a component of the \"Research and Mass Information\" scheme, with revised financial norms and identified interventions.",
     "institutePara2": "Identifying challenges in the field of socio-economic development of Schedule Tribe's and understanding, promoting, and preserving their culture become important when formulating various developmental programs. The basic objectives of the scheme are to strengthen Tribal Research Institute (TRI) in the area of research and documentation (Preservation of Tribal Community), training and capacity-building on laws/constitutional provisions, capacity building of functionaries and the Tribal representation on socio-economic programs.",
     "institutePara3": "Grants will be given to Tribal Research Institute (TRI) set up for various State Governments, keeping in view the considerable percentage of Scheduled Tribe population in the State of Sikkim.",
     "researchMassInfo": "Research and Mass Information",
@@ -79,7 +78,7 @@
   },
   "about": {
     "subtitle": "About Us",
-    "title": "Tribal Research Institute",
+    "title": "Tribal Research Institute & Training Centre",
     "description": "Strengthening research, documentation, and capacity-building for the tribal communities of Sikkim."
   },
   "contact": {
