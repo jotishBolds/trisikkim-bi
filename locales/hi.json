@@ -205,7 +205,11 @@
     "designation": "पद",
     "cadre": "कैडर",
     "email": "ईमेल",
+    "phone": "फ़ोन",
     "noStaff": "कोई कर्मचारी नहीं मिला।"
+  },
+  "announcement": {
+    "notice": "सूचना"
   },
   "orgChart": {
     "subtitle": "परिचय / संगठन",

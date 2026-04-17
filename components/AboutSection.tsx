@@ -308,7 +308,7 @@ function DignitaryCard({
       <h3 className="font-display font-bold text-[#1a1550] text-[14px] leading-snug group-hover:text-[#f4c430] transition-colors duration-200">
         {name}
       </h3>
-      <p className="text-[#1a1550]/50 text-[12.5px] mt-1">{role}</p>
+      <p className="text-[#1a1550] text-[12.5px] mt-1">{role}</p>
     </div>
   );
 }

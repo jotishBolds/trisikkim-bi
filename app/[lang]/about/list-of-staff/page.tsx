@@ -126,6 +126,15 @@ export default function ListOfStaffPage() {
             onClearQuery={() => setQuery("")}
             tName={tName}
             tDesignation={tDesignation}
+            noResultsLabel={dict.common.noResults}
+            clearLabel={dict.common.search}
+            colName={dict.whosWho.name}
+            colDesignation={dict.whosWho.designation}
+            colCadre={dict.whosWho.cadre}
+            colEmail={dict.whosWho.email}
+            colPhone={dict.whosWho.phone}
+            showingLabel={t.showing}
+            ofLabel={t.of}
           />
         )}
 

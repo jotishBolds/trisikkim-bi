@@ -65,6 +65,13 @@ interface Props {
   clearLabel?: string;
   tName?: (s: StaffMember) => string;
   tDesignation?: (s: StaffMember) => string;
+  colName?: string;
+  colDesignation?: string;
+  colCadre?: string;
+  colEmail?: string;
+  colPhone?: string;
+  showingLabel?: string;
+  ofLabel?: string;
 }
 
 export default function StaffTable({
@@ -75,6 +82,13 @@ export default function StaffTable({
   clearLabel = "Clear search",
   tName,
   tDesignation,
+  colName = "Name",
+  colDesignation = "Designation",
+  colCadre = "Cadre",
+  colEmail = "Email",
+  colPhone = "Phone",
+  showingLabel = "Showing",
+  ofLabel = "of",
 }: Props) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -121,21 +135,21 @@ export default function StaffTable({
                   #
                 </th>
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
-                  Name
+                  {colName}
                 </th>
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
-                  Designation
+                  {colDesignation}
                 </th>
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
-                  Cadre
+                  {colCadre}
                 </th>
                 {/* ── NEW: separate Email column ── */}
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
-                  Email
+                  {colEmail}
                 </th>
                 {/* ── Renamed to Phone ── */}
                 <th className="px-5 py-4 text-left text-[11px] font-bold uppercase tracking-[.16em] text-white">
-                  Phone
+                  {colPhone}
                 </th>
               </tr>
             </thead>
@@ -302,7 +316,7 @@ export default function StaffTable({
                 {staff.cadre && (
                   <p className="text-[12px] text-[#1a1550]/50">
                     <span className="font-medium text-[#1a1550]/40">
-                      Cadre:{" "}
+                      {colCadre}:{" "}
                     </span>
                     {staff.cadre}
                   </p>
@@ -373,7 +387,7 @@ export default function StaffTable({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
           <div className="flex items-center gap-3">
             <p className="text-[12px] text-[#1a1550]/40">
-              Showing{" "}
+              {showingLabel}{" "}
               <span className="font-semibold text-[#1a1550]/70">
                 {(page - 1) * pageSize + 1}
               </span>{" "}
@@ -381,7 +395,7 @@ export default function StaffTable({
               <span className="font-semibold text-[#1a1550]/70">
                 {Math.min(page * pageSize, members.length)}
               </span>{" "}
-              of{" "}
+              {ofLabel}{" "}
               <span className="font-semibold text-[#1a1550]/70">
                 {members.length}
               </span>

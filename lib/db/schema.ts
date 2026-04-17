@@ -222,6 +222,7 @@ export const announcements = pgTable("announcements", {
   link: text("link"), // optional URL
   active: boolean("active").notNull().default(true),
   sortOrder: integer("sort_order").notNull().default(0),
+  translations: jsonb("translations"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

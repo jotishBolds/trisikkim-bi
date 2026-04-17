@@ -43,6 +43,7 @@ export async function PUT(
         link: body.link?.trim() || null,
         active: body.active ?? true,
         sortOrder: body.sortOrder ?? 0,
+        translations: body.translations ?? null,
       })
       .where(eq(announcements.id, numericId))
       .returning();
