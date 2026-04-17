@@ -158,7 +158,7 @@ function getVideoCatDesc(c: VideoCategory, lang: string) {
 function getSafeYouTubeThumbnail(url: string): string {
   try {
     const id = extractYouTubeId(url);
-    if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    if (id) return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
   } catch {}
   try {
     return getYouTubeThumbnail(url);

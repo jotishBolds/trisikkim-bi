@@ -22,7 +22,7 @@ export function getYouTubeThumbnail(
 ): string {
   const id = extractYouTubeId(url);
   return id
-    ? `https://img.youtube.com/vi/${id}/${quality}.jpg`
+    ? `https://i.ytimg.com/vi/${id}/${quality}.jpg`
     : "/placeholder.jpg";
 }
 
