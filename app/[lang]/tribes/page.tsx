@@ -134,7 +134,7 @@ function TribeCard({
         href={langHref(lang, `/tribes/${tribe.id}`)}
         className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-[#1077A6]/10 hover:border-[#f4c430]/40 hover:shadow-2xl hover:shadow-[#1077A6]/10 transition-all duration-400 h-full"
       >
-        {/* Image area — min-h so long titles never clip */}
+        {/* min-h-64 lets the image area grow if the title wraps to 2+ lines */}
         <div className="relative min-h-64 overflow-hidden bg-linear-to-br from-[#1077A6]/10 to-[#1a1550]/10 shrink-0">
           {tribe.image ? (
             <Image
@@ -153,7 +153,6 @@ function TribeCard({
 
           <div className="absolute inset-0 bg-linear-to-t from-[#1a1550]/75 via-[#1a1550]/20 to-transparent" />
 
-          {/* Badge */}
           <div className="absolute top-4 left-4">
             <span className="inline-flex items-center gap-1.5 bg-[#1a1550]/50 backdrop-blur-sm text-[#f4c430] text-[10px] font-bold uppercase tracking-[.14em] px-2.5 py-1.5 rounded-full border border-[#f4c430]/20">
               <span className="w-1.5 h-1.5 rounded-full bg-[#f4c430]" />
@@ -161,13 +160,18 @@ function TribeCard({
             </span>
           </div>
 
-          {/* Title — fluid size, wraps, never truncates */}
+          {/* 
+            clamp(14px, 1.5vw, 24px):
+            - 14px  → minimum on very small screens
+            - 1.5vw → scales with viewport (cards are ~33vw so title is ~0.5vw per char)
+            - 24px  → maximum cap on large screens
+            break-words + whitespace-normal → never truncates, always wraps
+          */}
           <div className="absolute bottom-0 left-0 right-0 p-5">
             <h2
-              className="font-display font-black text-white leading-snug tracking-tight group-hover:text-[#f4c430] transition-colors duration-300"
+              className="font-display font-black text-white leading-snug tracking-tight break-words whitespace-normal group-hover:text-[#f4c430] transition-colors duration-300"
               style={{
-                fontSize: "clamp(13px, 1.8vw, 24px)",
-                wordBreak: "break-word",
+                fontSize: "clamp(14px, 1.5vw, 24px)",
                 overflowWrap: "anywhere",
               }}
             >
@@ -176,7 +180,6 @@ function TribeCard({
           </div>
         </div>
 
-        {/* Card body */}
         <div className="p-5 flex flex-col flex-1">
           {tribe.excerpt ? (
             <p className="text-[#1a1550]/55 text-[13.5px] leading-relaxed line-clamp-3 flex-1">
