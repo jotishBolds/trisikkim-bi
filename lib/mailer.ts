@@ -18,14 +18,15 @@ export const transporter = nodemailer.createTransport({
 
 export async function sendOtpEmail(email: string, otp: string) {
   await transporter.sendMail({
-    from: `"TRI Sikkim" <${process.env.GMAIL_USER}>`,
+    from: `"Tribal Research Institute & Training Centre" <${process.env.GMAIL_USER}>`,
     to: email,
-    subject: "Your OTP — TRI Sikkim Contact Form",
+    subject:
+      "Your OTP — Tribal Research Institute & Training Centre Contact Form",
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f8f7fc;border-radius:12px;">
         <div style="text-align:center;margin-bottom:24px;">
-          <h2 style="color:#1077A6;font-size:22px;margin:0;">TRI Sikkim</h2>
-          <p style="color:#1a1550;opacity:0.5;font-size:13px;margin-top:4px;">Tribal Research and Training Institute</p>
+          <h2 style="color:#1077A6;font-size:22px;margin:0;">Tribal Research Institute & Training Centre</h2>
+          
         </div>
 
         <div style="background:white;border-radius:10px;padding:28px;border:1px solid rgba(16,119,166,0.12);">

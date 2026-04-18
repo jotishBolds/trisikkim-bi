@@ -204,9 +204,13 @@
     "designation": "Designation",
     "cadre": "Cadre",
     "email": "Email",
+    "phone": "Phone",
     "name": "Name",
     "position": "Position",
     "noStaff": "No staff found."
+  },
+  "announcement": {
+    "notice": "Notice"
   },
   "orgChart": {
     "subtitle": "About / Organisation",

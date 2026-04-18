@@ -4,7 +4,6 @@ import { announcements } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { asc } from "drizzle-orm";
 
-
 export async function GET() {
   try {
     const data = await db
@@ -20,7 +19,6 @@ export async function GET() {
     );
   }
 }
-
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,6 +46,7 @@ export async function POST(request: NextRequest) {
         link: body.link?.trim() || null,
         active: body.active ?? true,
         sortOrder: body.sortOrder ?? 0,
+        translations: body.translations ?? null,
       })
       .returning();
 

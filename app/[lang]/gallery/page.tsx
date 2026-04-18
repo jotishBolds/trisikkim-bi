@@ -158,7 +158,7 @@ function getVideoCatDesc(c: VideoCategory, lang: string) {
 function getSafeYouTubeThumbnail(url: string): string {
   try {
     const id = extractYouTubeId(url);
-    if (id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    if (id) return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
   } catch {}
   try {
     return getYouTubeThumbnail(url);
@@ -166,10 +166,17 @@ function getSafeYouTubeThumbnail(url: string): string {
   return "/placeholder-video.jpg";
 }
 
+// AFTER
 function getSafeEmbedUrl(url: string): string | null {
   try {
     const id = extractYouTubeId(url);
-    if (id) return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+    if (id) {
+      const origin =
+        typeof window !== "undefined"
+          ? window.location.origin
+          : (process.env.NEXT_PUBLIC_SITE_URL ?? "");
+      return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&origin=${origin}&enablejsapi=1`;
+    }
   } catch {}
   try {
     return getYouTubeEmbedUrl(url);
@@ -1753,11 +1760,13 @@ function VideoModal({
         onClick={(e) => e.stopPropagation()}
       >
         {embedUrl ? (
+          // AFTER
           <iframe
             src={embedUrl}
             title={title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
+            referrerPolicy="strict-origin-when-cross-origin"
             className="absolute inset-0 w-full h-full"
           />
         ) : (

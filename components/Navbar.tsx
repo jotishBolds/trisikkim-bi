@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation, langHref } from "@/lib/i18n/use-translation";
+import { useTranslatedArray } from "@/lib/i18n/use-translated-text";
 import { locales, localeNames, type Locale } from "@/lib/i18n/config";
 
 interface Announcement {
@@ -177,9 +178,14 @@ function VDivider() {
 }
 
 function AnnouncementBanner() {
+  const { lang, dict } = useTranslation();
   const [items, setItems] = useState<Announcement[]>([]);
   const [paused, setPaused] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
+  const translatedTitles = useTranslatedArray(
+    items.map((i) => i.title),
+    lang,
+  );
 
   useEffect(() => {
     fetch("/api/announcements/public")
@@ -226,7 +232,7 @@ function AnnouncementBanner() {
         >
           <Megaphone className="w-3.5 h-3.5 text-[#1a1550] shrink-0" />
           <span className="text-[#1a1550] text-[10px] font-black uppercase tracking-widest whitespace-nowrap hidden sm:block select-none">
-            Notice
+            {dict.announcement?.notice ?? "Notice"}
           </span>
         </div>
 
@@ -237,31 +243,37 @@ function AnnouncementBanner() {
             ref={trackRef}
             className={`tritc-scroll-track${paused ? " paused" : ""}`}
           >
-            {items.map((item) => (
-              <span key={item.id} className="inline-flex items-center shrink-0">
+            {items.map((item, idx) => {
+              const displayTitle = translatedTitles[idx] ?? item.title;
+              return (
                 <span
-                  className="text-white/40 text-[9px] mx-4 select-none"
-                  aria-hidden
+                  key={item.id}
+                  className="inline-flex items-center shrink-0"
                 >
-                  ◆
-                </span>
-                {item.link ? (
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white text-[12px] sm:text-[13px] font-medium hover:text-[#f4c430] hover:underline underline-offset-2 transition-colors duration-200 cursor-pointer"
-                    onClick={(e) => e.stopPropagation()}
+                  <span
+                    className="text-white/40 text-[9px] mx-4 select-none"
+                    aria-hidden
                   >
-                    {item.title}
-                  </a>
-                ) : (
-                  <span className="text-white text-[12px] sm:text-[13px] font-medium">
-                    {item.title}
+                    ◆
                   </span>
-                )}
-              </span>
-            ))}
+                  {item.link ? (
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white text-[12px] sm:text-[13px] font-medium hover:text-[#f4c430] hover:underline underline-offset-2 transition-colors duration-200 cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {displayTitle}
+                    </a>
+                  ) : (
+                    <span className="text-white text-[12px] sm:text-[13px] font-medium">
+                      {displayTitle}
+                    </span>
+                  )}
+                </span>
+              );
+            })}
           </div>
         </div>
       </div>
