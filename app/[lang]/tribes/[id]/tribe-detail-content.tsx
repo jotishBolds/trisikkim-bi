@@ -106,9 +106,9 @@ export function TribeDetailContent({
               </div>
 
               <h1
-                className="font-display font-black text-white leading-[0.9] tracking-[-0.02em] mb-7 whitespace-nowrap overflow-hidden text-ellipsis"
+                className="font-display font-black text-white leading-[0.9] tracking-[-0.02em] mb-7 break-words"
                 style={{
-                  fontSize: "clamp(32px, 8vw, 160px)",
+                  fontSize: "clamp(40px, 6vw, 180px)",
                   textShadow: "0 2px 60px rgba(0,0,0,0.35)",
                 }}
               >
