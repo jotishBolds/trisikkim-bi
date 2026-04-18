@@ -134,7 +134,7 @@ function TribeCard({
         href={langHref(lang, `/tribes/${tribe.id}`)}
         className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-[#1077A6]/10 hover:border-[#f4c430]/40 hover:shadow-2xl hover:shadow-[#1077A6]/10 transition-all duration-400 h-full"
       >
-        {/* ── Image area: min-h-64 so title never gets clipped ── */}
+        {/* Image area — min-h so long titles never clip */}
         <div className="relative min-h-64 overflow-hidden bg-linear-to-br from-[#1077A6]/10 to-[#1a1550]/10 shrink-0">
           {tribe.image ? (
             <Image
@@ -151,7 +151,6 @@ function TribeCard({
             </div>
           )}
 
-          {/* Slightly deeper gradient so multi-line titles stay readable */}
           <div className="absolute inset-0 bg-linear-to-t from-[#1a1550]/75 via-[#1a1550]/20 to-transparent" />
 
           {/* Badge */}
@@ -162,15 +161,22 @@ function TribeCard({
             </span>
           </div>
 
-          {/* Title — wraps freely, never truncated */}
+          {/* Title — fluid size, wraps, never truncates */}
           <div className="absolute bottom-0 left-0 right-0 p-5">
-            <h2 className="font-display font-black text-white text-[20px] md:text-[22px] leading-snug tracking-tight break-words group-hover:text-[#f4c430] transition-colors duration-300">
+            <h2
+              className="font-display font-black text-white leading-snug tracking-tight group-hover:text-[#f4c430] transition-colors duration-300"
+              style={{
+                fontSize: "clamp(13px, 1.8vw, 24px)",
+                wordBreak: "break-word",
+                overflowWrap: "anywhere",
+              }}
+            >
               {translatedName}
             </h2>
           </div>
         </div>
 
-        {/* ── Card body ── */}
+        {/* Card body */}
         <div className="p-5 flex flex-col flex-1">
           {tribe.excerpt ? (
             <p className="text-[#1a1550]/55 text-[13.5px] leading-relaxed line-clamp-3 flex-1">
