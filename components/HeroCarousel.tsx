@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n/use-translation";
 
@@ -20,6 +20,7 @@ interface SlideData {
 }
 
 const INTERVAL = 5500;
+const POLL_INTERVAL = 3000;
 
 const imageVariants: Variants = {
   enter: (dir: number) => ({
@@ -49,39 +50,52 @@ const textVariants: Variants = {
 };
 
 export default function HeroCarousel() {
-  const { lang, dict } = useTranslation();
-  const fallbackSlides: SlideData[] = [
-    {
-      id: 1,
-      image: "/tri.jpeg",
-      headline: dict.hero?.fallbackHeadline || "Welcome",
-      caption: "",
-    },
-  ];
-  const [slides, setSlides] = useState<SlideData[]>(fallbackSlides);
+  const { lang } = useTranslation();
+  const [slides, setSlides] = useState<SlideData[] | null>(null); // null = loading
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const prevSlidesRef = useRef<string>("");
 
-  useEffect(() => {
-    fetch("/api/hero-slides")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success && d.data.length > 0) setSlides(d.data);
-      })
-      .catch(() => {});
+  const fetchSlides = useCallback(async () => {
+    try {
+      const res = await fetch("/api/hero-slides", {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      });
+      const d = await res.json();
+
+      if (d.success) {
+        const newJson = JSON.stringify(d.data);
+
+        if (newJson !== prevSlidesRef.current) {
+          prevSlidesRef.current = newJson;
+          setSlides(d.data); // could be empty array []
+
+          setCurrent((prev) =>
+            d.data.length === 0 ? 0 : Math.min(prev, d.data.length - 1),
+          );
+        }
+      }
+    } catch {
+      if (slides === null) setSlides([]);
+    }
   }, []);
 
-  const rawSlide = slides[current] || slides[0];
-  const t = lang !== "en" ? rawSlide.translations?.hi : null;
-  const slide = {
-    ...rawSlide,
-    headline: t?.headline || rawSlide.headline,
-    caption: t?.caption || rawSlide.caption,
-  };
+  useEffect(() => {
+    fetchSlides();
+  }, [fetchSlides]);
+
+  useEffect(() => {
+    pollRef.current = setInterval(fetchSlides, POLL_INTERVAL);
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, [fetchSlides]);
 
   const goTo = useCallback((idx: number, dir: number) => {
     setDirection(dir);
@@ -90,24 +104,26 @@ export default function HeroCarousel() {
   }, []);
 
   const next = useCallback(() => {
+    if (!slides || slides.length === 0) return;
     goTo((current + 1) % slides.length, 1);
-  }, [current, slides.length, goTo]);
+  }, [current, slides, goTo]);
 
   const prev = useCallback(() => {
+    if (!slides || slides.length === 0) return;
     goTo((current - 1 + slides.length) % slides.length, -1);
-  }, [current, slides.length, goTo]);
+  }, [current, slides, goTo]);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || !slides || slides.length <= 1) return;
     intervalRef.current = setInterval(next, INTERVAL);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [paused, next]);
+  }, [paused, next, slides]);
 
   useEffect(() => {
     setProgress(0);
-    if (paused) return;
+    if (paused || !slides || slides.length <= 1) return;
     const step = 100 / (INTERVAL / 50);
     progressRef.current = setInterval(() => {
       setProgress((p) => Math.min(p + step, 100));
@@ -115,7 +131,7 @@ export default function HeroCarousel() {
     return () => {
       if (progressRef.current) clearInterval(progressRef.current);
     };
-  }, [current, paused]);
+  }, [current, paused, slides]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -125,6 +141,63 @@ export default function HeroCarousel() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [prev, next]);
+
+  if (slides === null) {
+    return (
+      <section className="w-full">
+        <div className="relative w-full h-[320px] sm:h-[420px] md:h-[520px] lg:h-[600px] bg-[#1077a6] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3 text-white/50">
+            <div className="w-8 h-8 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+            <span className="text-sm">Loading...</span>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (slides.length === 0) {
+    return (
+      <section className="w-full">
+        <div
+          className="relative w-full h-[320px] sm:h-[420px] md:h-[520px] lg:h-[600px] flex items-center justify-center overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(135deg, #1077a6 0%, #0d5a80 50%, #1a1550 100%)",
+          }}
+        >
+          <div
+            className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(#f4c430 1px, transparent 1px), linear-gradient(90deg, #f4c430 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+          <div className="flex flex-col items-center gap-4 text-center px-6 z-10">
+            <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+              <ImageOff className="w-7 h-7 text-white/40" />
+            </div>
+            <div>
+              <p className="text-white/60 text-lg font-semibold">
+                No slides uploaded yet
+              </p>
+              <p className="text-white/30 text-sm mt-1">
+                Add slides from the admin panel to display them here.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const rawSlide = slides[current] ?? slides[0];
+  const t = lang !== "en" ? rawSlide.translations?.hi : null;
+  const slide = {
+    ...rawSlide,
+    headline: t?.headline || rawSlide.headline,
+    caption: t?.caption || rawSlide.caption,
+  };
 
   return (
     <section
@@ -162,7 +235,6 @@ export default function HeroCarousel() {
               "linear-gradient(to top, rgba(16,119,166,0.92) 0%, rgba(16,119,166,0.70) 20%, rgba(16,119,166,0.40) 35%, rgba(16,119,166,0.15) 45%, rgba(16,119,166,0) 55%)",
           }}
         />
-
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -180,20 +252,24 @@ export default function HeroCarousel() {
           }}
         />
 
-        <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20">
-          <motion.div
-            className="h-full bg-[#f4c430]"
-            style={{ width: `${progress}%` }}
-            transition={{ duration: 0 }}
-          />
-        </div>
+        {slides.length > 1 && (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20">
+            <motion.div
+              className="h-full bg-[#f4c430]"
+              style={{ width: `${progress}%` }}
+              transition={{ duration: 0 }}
+            />
+          </div>
+        )}
 
-        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 bg-[#1077a6]/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/15">
-          <span className="text-white text-xs sm:text-sm font-mono">
-            {String(current + 1).padStart(2, "0")} /{" "}
-            {String(slides.length).padStart(2, "0")}
-          </span>
-        </div>
+        {slides.length > 1 && (
+          <div className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 bg-[#1077a6]/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/15">
+            <span className="text-white text-xs sm:text-sm font-mono">
+              {String(current + 1).padStart(2, "0")} /{" "}
+              {String(slides.length).padStart(2, "0")}
+            </span>
+          </div>
+        )}
 
         <div className="absolute bottom-0 left-0 right-0 z-20 px-4 sm:px-8 md:px-12 pb-6 sm:pb-8 md:pb-10">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
@@ -206,17 +282,19 @@ export default function HeroCarousel() {
                   animate="center"
                   exit="exit"
                 >
-                  <h1 className="font-display font-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight">
-                    {slide.headline.split("\n").map((line, i) => (
-                      <span key={i}>
-                        {i === 1 ? (
-                          <span className="text-[#f4c430]"> {line}</span>
-                        ) : (
-                          line
-                        )}
-                      </span>
-                    ))}
-                  </h1>
+                  {slide.headline && (
+                    <h1 className="font-display font-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight">
+                      {slide.headline.split("\n").map((line, i) => (
+                        <span key={i}>
+                          {i === 1 ? (
+                            <span className="text-[#f4c430]"> {line}</span>
+                          ) : (
+                            line
+                          )}
+                        </span>
+                      ))}
+                    </h1>
+                  )}
 
                   <div className="w-14 h-[3px] rounded-full bg-[#f4c430] mt-3" />
 
@@ -234,35 +312,33 @@ export default function HeroCarousel() {
               </AnimatePresence>
             </div>
 
-            {/* Dots + Nav */}
-            <div className="flex items-center gap-4 shrink-0">
-              {/* Dot indicators */}
-              <div className="flex items-center gap-2">
-                {slides.map((s, i) => (
-                  <button
-                    key={s.id}
-                    onClick={() => goTo(i, i > current ? 1 : -1)}
-                    aria-label={`Go to slide ${i + 1}`}
-                    className="group p-1"
-                  >
-                    <span
-                      className={cn(
-                        "block rounded-full transition-all duration-300",
-                        i === current
-                          ? "w-8 h-2 bg-[#f4c430]"
-                          : "w-2 h-2 bg-white/40 group-hover:bg-white/70",
-                      )}
-                    />
-                  </button>
-                ))}
+            {slides.length > 1 && (
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="flex items-center gap-2">
+                  {slides.map((s, i) => (
+                    <button
+                      key={s.id}
+                      onClick={() => goTo(i, i > current ? 1 : -1)}
+                      aria-label={`Go to slide ${i + 1}`}
+                      className="group p-1"
+                    >
+                      <span
+                        className={cn(
+                          "block rounded-full transition-all duration-300",
+                          i === current
+                            ? "w-8 h-2 bg-[#f4c430]"
+                            : "w-2 h-2 bg-white/40 group-hover:bg-white/70",
+                        )}
+                      />
+                    </button>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <NavButton onClick={prev} dir="prev" />
+                  <NavButton onClick={next} dir="next" />
+                </div>
               </div>
-
-              {/* Prev / Next */}
-              <div className="flex gap-2">
-                <NavButton onClick={prev} dir="prev" />
-                <NavButton onClick={next} dir="next" />
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
