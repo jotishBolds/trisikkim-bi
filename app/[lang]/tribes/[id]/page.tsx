@@ -1,10 +1,19 @@
 import { notFound } from "next/navigation";
-
 import { db } from "@/lib/db";
 import { tribes } from "@/lib/db/schema";
 import { asc } from "drizzle-orm";
 import { isValidLocale, type Locale } from "@/lib/i18n/config";
 import { TribeDetailContent } from "./tribe-detail-content";
+
+function normalizeSlug(raw: string) {
+  return raw
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 export default async function TribeDetailPage({
   params,
@@ -12,7 +21,8 @@ export default async function TribeDetailPage({
   params: Promise<{ lang: string; id: string }>;
 }) {
   const { lang, id } = await params;
-  const decodedId = decodeURIComponent(id);
+
+  const decodedId = normalizeSlug(decodeURIComponent(id));
 
   if (!isValidLocale(lang)) notFound();
 
@@ -20,7 +30,8 @@ export default async function TribeDetailPage({
     .select()
     .from(tribes)
     .orderBy(asc(tribes.sortOrder));
-  const tribe = allTribes.find((t) => t.id === decodedId);
+
+  const tribe = allTribes.find((t) => normalizeSlug(t.id) === decodedId);
 
   if (!tribe) notFound();
 
@@ -29,7 +40,6 @@ export default async function TribeDetailPage({
   const nextTribe =
     currentIdx < allTribes.length - 1 ? allTribes[currentIdx + 1] : null;
 
-  // Use stored translations from DB if available
   const tr = tribe.translations as
     | { hi?: { name?: string; excerpt?: string; content?: string } }
     | null

@@ -55,10 +55,12 @@ export default function TribesAdmin() {
 
   const toSlug = (name: string) =>
     name
-      .toUpperCase()
+      .toLowerCase()
       .trim()
-      .replace(/[^A-Z0-9 ]/g, "")
-      .replace(/\s+/g, " ");
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
 
   const fetch_ = useCallback(async () => {
     try {
@@ -218,14 +220,24 @@ export default function TribesAdmin() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className={labelCls}>ID (slug)</label>
+                    <label className={labelCls}>
+                      ID (slug){" "}
+                      <span className="text-[#1077a6]/50 font-normal">
+                        — auto-generated from name
+                      </span>
+                    </label>
                     <Input
                       value={editing.id || ""}
                       onChange={(e) =>
-                        setEditing({ ...editing, id: e.target.value })
+                        setEditing({
+                          ...editing,
+
+                          id: toSlug(e.target.value),
+                        })
                       }
                       disabled={!!items.find((i) => i.id === editing.id)}
-                      className={`${inputCls} disabled:opacity-40 ${formErrors.id ? "border-red-400" : ""}`}
+                      placeholder="e.g. sikkimaa-tribe"
+                      className={`${inputCls} disabled:opacity-40 font-mono ${formErrors.id ? "border-red-400" : ""}`}
                     />
                     {formErrors.id && (
                       <p className="text-[10px] text-red-500 mt-0.5">
@@ -243,9 +255,11 @@ export default function TribesAdmin() {
                         setEditing({
                           ...editing,
                           name,
+
                           ...(isNew ? { id: toSlug(name) } : {}),
                         });
                       }}
+                      placeholder="e.g. Sikkimaa Tribe"
                       className={`${inputCls} ${formErrors.name ? "border-red-400" : ""}`}
                     />
                     {formErrors.name && (
