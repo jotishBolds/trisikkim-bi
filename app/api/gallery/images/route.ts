@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const translations = await translateForStorage(body, ["alt", "caption"]);
-
+    // Insert immediately without waiting for translation so the client
+    // is not blocked by external Sarvam AI API calls.
     const [item] = await db
       .insert(galleryImages)
       .values({
@@ -52,9 +52,24 @@ export async function POST(request: NextRequest) {
         caption: body.caption || null,
         sortOrder: body.sortOrder ?? 0,
         active: body.active ?? true,
-        translations,
+        translations: null,
       })
       .returning();
+
+    // Run translation in the background and update the record afterwards.
+    translateForStorage(body, ["alt", "caption"])
+      .then((translations) => {
+        if (translations) {
+          return db
+            .update(galleryImages)
+            .set({ translations })
+            .where(eq(galleryImages.id, item.id))
+            .execute();
+        }
+      })
+      .catch((err) =>
+        console.error("[gallery/images] background translation failed:", err),
+      );
 
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (error) {

@@ -297,51 +297,57 @@ export default function GalleryAdmin() {
     try {
       const res = await startGalleryUpload(validFiles);
       if (!res) throw new Error("Upload failed");
-      for (let i = 0; i < res.length; i++) {
-        const url = res[i].ufsUrl;
-        const fileName = validFiles[i].name
-          .replace(/\.[^.]+$/, "")
-          .replace(/[-_]/g, " ");
-        setUploadStatuses((prev) =>
-          prev.map((s) =>
-            s.name === validFiles[i].name
-              ? { ...s, status: "saving" as const }
-              : s,
-          ),
-        );
-        try {
-          const r = await fetch("/api/gallery/images", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              categoryId: activeCat,
-              src: url,
-              alt: fileName,
-              caption: "",
-              sortOrder: 0,
-              active: true,
-            }),
-          });
-          const d = await r.json();
-          setUploadStatuses((prev) =>
-            prev.map((s) =>
-              s.name === validFiles[i].name
-                ? d.success
-                  ? { ...s, status: "done" as const }
-                  : { ...s, status: "error" as const, error: d.error }
-                : s,
-            ),
-          );
-        } catch {
-          setUploadStatuses((prev) =>
-            prev.map((s) =>
-              s.name === validFiles[i].name
-                ? { ...s, status: "error" as const, error: "Failed to save" }
-                : s,
-            ),
-          );
-        }
-      }
+
+      // Mark all valid files as "saving" before firing parallel requests
+      setUploadStatuses((prev) =>
+        prev.map((s) =>
+          validFiles.some((f) => f.name === s.name)
+            ? { ...s, status: "saving" as const }
+            : s,
+        ),
+      );
+
+      // Save all uploaded images to the DB in parallel instead of sequentially
+      await Promise.all(
+        res.map(async (uploadResult, i) => {
+          const url = uploadResult.ufsUrl;
+          const fileName = validFiles[i].name
+            .replace(/\.[^.]+$/, "")
+            .replace(/[-_]/g, " ");
+          try {
+            const r = await fetch("/api/gallery/images", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                categoryId: activeCatRef.current,
+                src: url,
+                alt: fileName,
+                caption: "",
+                sortOrder: 0,
+                active: true,
+              }),
+            });
+            const d = await r.json();
+            setUploadStatuses((prev) =>
+              prev.map((s) =>
+                s.name === validFiles[i].name
+                  ? d.success
+                    ? { ...s, status: "done" as const }
+                    : { ...s, status: "error" as const, error: d.error }
+                  : s,
+              ),
+            );
+          } catch {
+            setUploadStatuses((prev) =>
+              prev.map((s) =>
+                s.name === validFiles[i].name
+                  ? { ...s, status: "error" as const, error: "Failed to save" }
+                  : s,
+              ),
+            );
+          }
+        }),
+      );
       fetchPhotos();
     } catch {
       setUploadStatuses((prev) =>
